@@ -14,13 +14,13 @@ std::string to_roman(int value)
 {
     std::vector<std::pair<int, std::string_view>> roman
     {
-       { 1000, "M" },{ 900, "CM" },
-       { 500, "D" },{ 400, "CD" },
-       { 100, "C" },{ 90, "XC" },
-       { 50, "L" },{ 40, "XL" },
-       { 10, "X" },{ 9, "IX" },
-       { 5, "V" },{ 4, "IV" },
-       { 1, "I" }
+       { 1000, "M" }, { 900, "CM" },
+       { 500,  "D" }, { 400, "CD" },
+       { 100,  "C" }, { 90,  "XC" },
+       { 50,   "L" }, { 40,  "XL" },
+       { 10,   "X" }, { 9,   "IX" },
+       { 5,    "V" }, { 4,   "IV" },
+       { 1,    "I" }
     };
 
     std::string result;
@@ -37,7 +37,7 @@ std::string to_roman(int value)
     return result;
 }
 
-std::vector<int> v{ 1,1,2,3,5,8,13,21,34 };
+std::vector<int> v{ 1, 1, 2, 3, 5, 8, 13, 21, 34 };
 
 auto print_elem = [](auto const e) { std::cout << e << ' '; };
 
@@ -78,6 +78,7 @@ void example_ranges_02_02_new() {
 
     std::ranges::for_each(std::crbegin(v), std::crend(v), print_elem);
     std::cout << std::endl;
+
     // or
 
     for (auto const i : v | std::views::reverse)
