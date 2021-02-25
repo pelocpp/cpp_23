@@ -60,6 +60,18 @@ die hier als Templateargumente verwendet werden (hier: `T` und `U`).
 
 Im vorliegenden Beispiel heiﬂt das *Konzept* `Sumable`, nach dem &ldquo;`=`&rdquo; -Zeichen erwartet der Compiler
 ein Pr‰dikat, das zur Kompilierungszeit ausgewertet wird.
+Mit diesem *Konzept* wird eine Funktion `sumAndPrint` nun auf die folgende Weise definiert:
+
+```cpp
+template <Sumable A, Sumable B>
+void sumAndPrint (const A& a, const B& b)
+{
+    std::cout << (a + b) << "\n";
+}
+```
+
+In der Template Klausel erkennen wir, dass an die Stelle des Schl¸sselworts `typename`
+ein Bezeichner eines Konzepts (hier: `Sumable`) tritt.
 Wenn ich beispielsweise ein *Konzept* erstellen mˆchte,
 um die Auswahl mˆglicher Datentypen auf `int` oder `double` zu beschr‰nken,
 kann ich dieses wie folgt definieren:
