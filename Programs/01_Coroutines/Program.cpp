@@ -2,8 +2,11 @@
 // Coroutines
 // ===========================================================================
 
+void example_coroutines();
+
 int main()
 {
+    example_coroutines();
     return 0;
 }
 
