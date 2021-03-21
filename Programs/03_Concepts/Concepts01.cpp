@@ -7,7 +7,8 @@
 template <typename A, typename B>
 void sumAndPrint_01(const A& a, const B& b)
 {
-    std::cout << (a + b) << "\n";
+    std::cout << (a + b);
+    std::cout << std::endl;
 }
 
 template <typename T, typename U = T>
@@ -21,7 +22,8 @@ requires(T a, U b)
 template <Sumable A, Sumable B>
 void sumAndPrint_02(const A& a, const B& b)
 {
-    std::cout << (a + b) << "\n";
+    std::cout << (a + b);
+    std::cout << std::endl;
 }
 
 template <typename T>
@@ -30,7 +32,8 @@ concept SumableOnlyForIntsAndDoubles = std::is_same<T, int>::value || std::is_sa
 template <SumableOnlyForIntsAndDoubles A, SumableOnlyForIntsAndDoubles B>
 void sumAndPrint_03(const A& a, const B& b)
 {
-    std::cout << (a + b) << "\n";
+    std::cout << (a + b);
+    std::cout << std::endl;
 }
 
 void example_concepts_01()
@@ -89,7 +92,8 @@ std::ostream& operator<<(std::ostream& os, const Adder& n)
 template <Sumable2 A, Sumable2 B>
 void sumAndPrint_04(const A& a, const B& b)
 {
-    std::cout << (a + b) << "\n";
+    std::cout << (a + b);
+    std::cout << std::endl;
 }
 
 void example_concepts_03()

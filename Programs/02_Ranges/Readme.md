@@ -124,7 +124,7 @@ auto view = vec | std::views::transform(square) | std::views::drop(2);
 std::cout << *std::begin(view) << std::endl;
 ```
 
-In dem Beispiel wird auf ein `std::vector<int>``-Objekt eine *View* angewendet, 
+In dem Beispiel wird auf ein `std::vector<int>`-Objekt eine *View* angewendet, 
 die das Quadrat jedes Elements berechnet, und danach eine weitere *View*, die die ersten beiden Elemente des Resultat-Vektors löscht.
 Jetzt stellt sich die Frage, wenn wir nur am ersten Element des Resultat-Vektors interessiert sind,
 wieviele &ldquo;Quadrierungsoperationen&rdquo; tatsächlich ausgeführt werden? 
@@ -175,7 +175,7 @@ std::cout << *view.begin () << std::endl;
 
 Es wird `4` ausgegeben, da `4` das 0-te Element des umgekehrten Vektors ist, nachdem die ersten beiden Elemente gelöscht wurden.
 
-Im obigen Beispiel wird der Vektor in den *Reverse*-Adapter und dann in den *Drop*-Adapter "geleitet".
+Im obigen Beispiel wird der Vektor in den *Reverse*-Adapter und dann in den *Drop*-Adapter &ldquo;geleitet&rdquo;.
 Ein &ldquo;kombiniertes&rdquo; *View*-Objekt wird zurückgegeben.
 Die &ldquo;Pipe&rdquo; ist nur eine andere Notation, die die Lesbarkeit verbessert, das heißt
 
@@ -189,10 +189,10 @@ entspricht
 baz(bar(foo(vec), 3), 7);
 ```
 
-Beachten Sie, dass der Zugriff auf das 0. Element der *View* immer noch verzögert ist,
+Beachten Sie, dass der Zugriff auf das 0.-te Element der *View* immer noch verzögert ist,
 sprich um welches Element es geht, wird zum Zeitpunkt des Zugriffs bestimmt.
 
-Wenn wir die Auflösung der &ldquo;Pipe&rdquo;-Notation an dem Beispiel mit dem `` vollziehen,
+Wenn wir die Auflösung der &ldquo;Pipe&rdquo;-Notation an dem Beispiel mit dem `std::views::reverse`-Adapter vollziehen,
 lautet das Code-Fragment:
 
 ```cpp

@@ -34,7 +34,7 @@ die für den Programmersteller nicht immer intuitiv sein müssen,
 auf diese Weise sein Ziel zu erreichen. Lässt sich der `+`-Operator auch auf diese Weise nicht finden,
 wird eine Fehlermeldung erzeugt.
 
-Man kann festhalten: Die Funktionsweise des Compilers ist selbstversändlich korrekt,
+Man kann festhalten: Die Funktionsweise des Compilers ist selbstverständlich korrekt,
 aber ein Fehlschlagen während der eigentlichen Ersetzung der Template Parameter mit realen Datentypen
 ohne vorherige Überprüfung entspricht eher einem *reagierenden* als einem *proaktiven* Verhalten.
 Auf diese Weise sind die Fehlermeldungen aufgrund von Substitutionsfehlern ziemlich schwer zu lesen und zu verstehen.
