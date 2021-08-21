@@ -31,7 +31,7 @@ Zc:__cplusplus	/std:c++20	202002L
 #define Cpp_20 202002L
 #define Cpp_17 201703L
 
-namespace Cpp20Ranges
+namespace Cpp20Views
 {
     // iterating
 #if __cplusplus <= Cpp_17
@@ -75,17 +75,17 @@ namespace Cpp20Ranges
     // iterating
     void r1_17()
     {
-    #if __cplusplus <= Cpp_17
-        auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
+#if __cplusplus <= Cpp_17
+        auto vec = std::vector{ 9, 2, 5, 3, 4 };
         print(vec);
         print2(vec);
-    #endif
+#endif
     }
 
     void r1_20()
     {
 #if __cplusplus >= Cpp_20
-        auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
+        auto vec = std::vector{ 9, 2, 5, 3, 4 };
         print(vec);
         print2(vec);
 #endif
@@ -122,33 +122,33 @@ namespace Cpp20Ranges
 #if __cplusplus <= Cpp_17
         auto vec = std::vector<int>(5);
 
-    std::fill(
-        std::begin(vec),
-        std::end(vec),
-        1
-    );
-    print(vec);
+        std::fill(
+            std::begin(vec),
+            std::end(vec),
+            1
+        );
+        print(vec);
 
-    std::generate(
-        std::begin(vec),
-        std::end(vec),
-        [count = 1]() mutable { return count++; }
-    );
-    print(vec);
+        std::generate(
+            std::begin(vec),
+            std::end(vec),
+            [count = 1]() mutable { return count++; }
+        );
+        print(vec);
 
-    std::generate(
-        std::begin(vec),
-        std::end(vec),
-        std::rand
-    );
-    print(vec);
+        std::generate(
+            std::begin(vec),
+            std::end(vec),
+            std::rand
+        );
+        print(vec);
 
-    std::iota(
-        std::begin(vec),
-        std::end(vec),
-        10
-    );
-    print(vec);
+        std::iota(
+            std::begin(vec),
+            std::end(vec),
+            10
+        );
+        print(vec);
 #endif
     }
 
@@ -156,13 +156,17 @@ namespace Cpp20Ranges
     {
 #if __cplusplus >= Cpp_20
         auto vec = std::vector<int>(5);
+
         std::ranges::fill(vec, 1);
         print(vec);
+
         std::ranges::generate(vec, [count = 1]() mutable { return count++; });
         print(vec);
+
         std::ranges::generate(vec, std::rand);
         print(vec);
-        // std::ranges::iota not yet supported
+
+        // to be done: std::iota
 #endif
     }
 
@@ -170,7 +174,7 @@ namespace Cpp20Ranges
     void r4_17()
     {
 #if __cplusplus <= Cpp_17
-        auto values = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
+        auto values = std::vector{ 9, 2, 5, 3, 4 };
 
         // sort using the classical algorithm
         std::sort(std::begin(values), std::end(values));
@@ -181,7 +185,7 @@ namespace Cpp20Ranges
     void r4_20()
     {
 #if __cplusplus >= Cpp_20
-        auto values = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
+        auto values = std::vector{ 9, 2, 5, 3, 4 };
 
         // sort using the constrained algorithm under std::ranges
         std::ranges::sort(values);
@@ -196,7 +200,7 @@ namespace Cpp20Ranges
     // finding elements
     void r5_17()
     {
-    #if __cplusplus <= Cpp_17
+#if __cplusplus <= Cpp_17
         auto values = std::list{ 4, 3, 2, 3, 1 };
 
         // if the element we are looking for couldn't be found,
@@ -258,27 +262,27 @@ namespace Cpp20Ranges
     void r7_17()
     {
 #if __cplusplus <= Cpp_17
-    auto vec = std::vector{ 5, 4, 3, 2, 1, 0, -1, 0, 1, 2 };
-    auto is_negative = [](auto i) { return i < 0; };
+        auto vec = std::vector{ 3, 2, 2, 1, 0, 2, 1 };
+        auto is_negative = [](auto i) { return i < 0; };
 
-    if (std::none_of(std::begin(vec), std::end(vec), is_negative)) {
-        std::cout << "Contains only positive numbers" << std::endl;
-    }
+        if (std::none_of(std::begin(vec), std::end(vec), is_negative)) {
+            std::cout << "Contains only positive numbers" << std::endl;
+        }
 
-    if (std::all_of(std::begin(vec), std::end(vec), is_negative)) {
-        std::cout << "Contains only negative numbers" << std::endl;
-    }
+        if (std::all_of(std::begin(vec), std::end(vec), is_negative)) {
+            std::cout << "Contains only negative numbers" << std::endl;
+        }
 
-    if (std::any_of(std::begin(vec), std::end(vec), is_negative)) {
-        std::cout << "Contains at least one negative number" << std::endl;
-    }
+        if (std::any_of(std::begin(vec), std::end(vec), is_negative)) {
+            std::cout << "Contains at least one negative number" << std::endl;
+        }
 #endif
     }
 
     void r7_20()
     {
 #if __cplusplus >= Cpp_20
-        auto vec = std::vector{ 5, 4, 3, 2, 1, 0, -1, 0, 1, 2 };
+        auto vec = std::vector{ 3, 2, 2, 1, 0, 2, 1 };
         auto is_negative = [](auto i) { return i < 0; };
 
         if (std::ranges::none_of(vec, is_negative)) {
@@ -340,12 +344,13 @@ namespace Cpp20Ranges
     void r9_17()
     {
 #if __cplusplus <= Cpp_17
+
         auto y{ 0 };
         y = std::min(some_func(), max);
         y = std::max(std::min(some_func(), max), min);
         y = std::clamp(some_func(), min, max);
 
-        auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9, 10 };
+        auto vec = std::vector{ 4, 2, 1, 7, 3, 1, 5 };
         auto min_iter = std::min_element(std::begin(vec), std::end(vec));
         auto max_iter = std::max_element(std::begin(vec), std::end(vec));
         std::cout << "Min: " << *min_iter << ", Max: " << *max_iter << std::endl;
@@ -360,7 +365,7 @@ namespace Cpp20Ranges
         y = std::max(std::min(some_func(), max), min);
         y = std::clamp(some_func(), min, max);
 
-        const auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9, 10 };
+        const auto vec = std::vector{ 4, 2, 1, 7, 3, 1, 5 };
         auto min_iter = std::ranges::min_element(vec);
         auto max_iter = std::ranges::max_element(vec);
         std::cout << "Min: " << *min_iter << ", Max: " << *max_iter << std::endl;
@@ -426,7 +431,7 @@ namespace Cpp20Ranges
             [](const Task& a, const Task& b) {
                 return a.m_priority > b.m_priority;
             }
-        );
+        ); // <<  “extract” a data member 
         std::cout << "Next priorities:" << std::endl;
         std::for_each(std::begin(tasks), std::end(tasks), print);
 #endif
@@ -479,39 +484,18 @@ namespace Cpp20Ranges
 
         std::cout << "List of tasks:" << std::endl;
         std::ranges::for_each(tasks, print);
-        std::ranges::sort(tasks, std::ranges::greater{}, &Task::m_priority); // <<  "extract" a data member 
+        std::ranges::sort(tasks, std::ranges::greater{}, &Task::m_priority); // <<  “extract” a data member 
         std::cout << "Next priorities:" << std::endl;
         std::ranges::for_each(tasks, print);
 #endif
     }
 }
 
-void ranges_ex_01_algorithms()
+void ranges_ex_01_views()
 {
-    using namespace Cpp20Ranges;
+    using namespace Cpp20Views;
 
-    //r1_17();
-    //r1_20();
-    //r2_17();
-    //r2_20();
-    //r3_17();
-    //r3_20();
-    //r4_17();
-    //r4_20();
-    //r5_17();
-    //r5_20();
-    //r6_17();
-    //r6_20();
-    //r7_17();
-    //r7_20();
-    //r8_17();
-    //r8_20();
-    //r9_17();
-    //r9_20();
-    //r10_17();
-    //r10_17a();
-    r10_20();
-    r10_20a();
+
 }
 
 // ===========================================================================
