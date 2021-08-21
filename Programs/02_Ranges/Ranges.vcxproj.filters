@@ -18,6 +18,12 @@
     <None Include="Readme.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ReadmeEx.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ReadmeEx_Algorithms.md">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ranges02.cpp">
@@ -27,6 +33,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Ranges01.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ranges_Ex_01_Algorithms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

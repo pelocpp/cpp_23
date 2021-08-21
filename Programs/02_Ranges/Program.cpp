@@ -5,10 +5,11 @@
 void example_ranges_01();
 void example_ranges_02();
 
+void ranges_ex_01_algorithms();
+
 int main()
 {
-    example_ranges_01();
-    example_ranges_02();
+    ranges_ex_01_algorithms();
     return 0;
 }
 

@@ -146,7 +146,7 @@ Generator<long long> fibonacci() {
 void example_coroutine_01() {
 
     for (auto ch : hello()) { 
-        std::cout << ch; 
+        std::cout << ch << std::endl;
     }
 
     std::cout << std::endl;
@@ -168,7 +168,7 @@ void example_coroutine_02() {
 
 void example_coroutines()
 {
-    // example_coroutine_01();
+    example_coroutine_01();
     example_coroutine_02();
 }
 
