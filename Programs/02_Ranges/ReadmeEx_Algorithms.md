@@ -662,6 +662,12 @@ Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Buch
 &ldquo;[C++ High Performance](https://www.amazon.de/High-Performance-Master-optimizing-functioning/dp/1839216549/)&rdquo;
 von Björn Andrist und Viktor Sehr.
 
+Das Beispiel zu Projektionen wurde
+
+[C++20 Ranges, Projections, std::invoke and if constexpr](https://www.cppstories.com/2020/10/understanding-invoke.html/)
+
+entnommen.
+
 ---
 
 [Zurück](../../Readme.md)

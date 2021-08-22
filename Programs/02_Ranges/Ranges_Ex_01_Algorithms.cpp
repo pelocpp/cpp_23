@@ -73,7 +73,7 @@ namespace Cpp20Ranges
 #endif
 
     // iterating
-    void r1_17()
+    void range1_17_iterating()
     {
     #if __cplusplus <= Cpp_17
         auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
@@ -82,7 +82,7 @@ namespace Cpp20Ranges
     #endif
     }
 
-    void r1_20()
+    void range1_20_iterating()
     {
 #if __cplusplus >= Cpp_20
         auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
@@ -92,7 +92,7 @@ namespace Cpp20Ranges
     }
 
     // transforming
-    void r2_17()
+    void range2_17_transforming()
     {
 #if __cplusplus <= Cpp_17
         auto vec = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -104,7 +104,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r2_20()
+    void range2_20_transforming()
     {
 #if __cplusplus >= Cpp_20
         auto vec = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -117,7 +117,7 @@ namespace Cpp20Ranges
     }
 
     // generating elements
-    void r3_17()
+    void range3_17_generating()
     {
 #if __cplusplus <= Cpp_17
         auto vec = std::vector<int>(5);
@@ -152,7 +152,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r3_20()
+    void range3_20_generating()
     {
 #if __cplusplus >= Cpp_20
         auto vec = std::vector<int>(5);
@@ -167,7 +167,7 @@ namespace Cpp20Ranges
     }
 
     // sorting
-    void r4_17()
+    void range4_17_sorting()
     {
 #if __cplusplus <= Cpp_17
         auto values = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
@@ -178,7 +178,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r4_20()
+    void range4_20_sorting()
     {
 #if __cplusplus >= Cpp_20
         auto values = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
@@ -194,7 +194,7 @@ namespace Cpp20Ranges
     }
 
     // finding elements
-    void r5_17()
+    void range5_17_finding()
     {
     #if __cplusplus <= Cpp_17
         auto values = std::list{ 4, 3, 2, 3, 1 };
@@ -212,7 +212,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r5_20()
+    void range5_20_finding()
     {
 #if __cplusplus >= Cpp_20
         auto values = std::list{ 4, 3, 2, 3, 1 };
@@ -225,7 +225,7 @@ namespace Cpp20Ranges
     }
 
     // finding elements using binary search
-    void r6_17()
+    void range6_17_finding_binary()
     {
 #if __cplusplus <= Cpp_17
         auto vec = std::vector{ 2, 2, 3, 3, 3, 4, 5 };   // sorted!
@@ -244,7 +244,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r6_20()
+    void range6_20_finding_binary()
     {
 #if __cplusplus >= Cpp_20
         auto vec = std::vector{ 2, 2, 3, 3, 3, 4, 5 };     // sorted!
@@ -255,7 +255,7 @@ namespace Cpp20Ranges
     }
 
     // testing for certain conditions (any_of, all_of and none_of) 
-    void r7_17()
+    void range7_17_conditions()
     {
 #if __cplusplus <= Cpp_17
     auto vec = std::vector{ 5, 4, 3, 2, 1, 0, -1, 0, 1, 2 };
@@ -275,7 +275,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r7_20()
+    void range7_20_conditions()
     {
 #if __cplusplus >= Cpp_20
         auto vec = std::vector{ 5, 4, 3, 2, 1, 0, -1, 0, 1, 2 };
@@ -296,7 +296,7 @@ namespace Cpp20Ranges
     }
 
     // counting elements
-    void r8_17()
+    void range8_17_counting()
     {
 #if __cplusplus <= Cpp_17
         auto numbers = std::vector{ 3, 3, 2, 1, 3, 1, 3 };
@@ -314,7 +314,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r8_20()
+    void range8_20_counting()
     {
 #if __cplusplus >= Cpp_20
         auto numbers = std::vector{ 3, 3, 2, 1, 3, 1, 3 };
@@ -337,7 +337,7 @@ namespace Cpp20Ranges
 
     int some_func() { return 50; }
 
-    void r9_17()
+    void range9_17_minmaxclamp()
     {
 #if __cplusplus <= Cpp_17
         auto y{ 0 };
@@ -352,7 +352,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r9_20()
+    void range9_20_minmaxclamp()
     {
 #if __cplusplus >= Cpp_20
         auto y{ 0 };
@@ -371,7 +371,7 @@ namespace Cpp20Ranges
     }
 
     // custom comparator functions
-    void r10_17()
+    void range10_17_custom_comparator()
     {
 #if __cplusplus <= Cpp_17
         auto names = std::vector<std::string>{
@@ -400,7 +400,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    void r10_17a()
+    void range10_17a_custom_comparator()
     {
 #if __cplusplus <= Cpp_17
         struct Task {
@@ -433,7 +433,7 @@ namespace Cpp20Ranges
     }
 
     // constrained algorithms use projections
-    void r10_20()
+    void range10_20_custom_comparator()
     {
 #if __cplusplus >= Cpp_20
 
@@ -457,8 +457,7 @@ namespace Cpp20Ranges
 #endif
     }
 
-    // https://www.cppstories.com/2020/10/understanding-invoke.html/
-    void r10_20a()
+    void range10_20a_custom_comparator()
     {
 #if __cplusplus >= Cpp_20
 
@@ -490,28 +489,28 @@ void ranges_ex_01_algorithms()
 {
     using namespace Cpp20Ranges;
 
-    //r1_17();
-    //r1_20();
-    //r2_17();
-    //r2_20();
-    //r3_17();
-    //r3_20();
-    //r4_17();
-    //r4_20();
-    //r5_17();
-    //r5_20();
-    //r6_17();
-    //r6_20();
-    //r7_17();
-    //r7_20();
-    //r8_17();
-    //r8_20();
-    //r9_17();
-    //r9_20();
-    //r10_17();
-    //r10_17a();
-    r10_20();
-    r10_20a();
+    range1_17_iterating();
+    range1_20_iterating();
+    range2_17_transforming();
+    range2_20_transforming();
+    range3_17_generating();
+    range3_20_generating();
+    range4_17_sorting();
+    range4_20_sorting();
+    range5_17_finding();
+    range5_20_finding();
+    range6_17_finding_binary();
+    range6_20_finding_binary();
+    range7_17_conditions();
+    range7_20_conditions();
+    range8_17_counting();
+    range8_20_counting();
+    range9_17_minmaxclamp();
+    range9_20_minmaxclamp();
+    range10_17_custom_comparator();
+    range10_17a_custom_comparator();
+    range10_20_custom_comparator();
+    range10_20a_custom_comparator();
 }
 
 // ===========================================================================
