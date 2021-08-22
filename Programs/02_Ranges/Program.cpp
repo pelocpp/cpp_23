@@ -3,10 +3,12 @@
 // ===========================================================================
 
 void ranges_ex_01_algorithms();
+void ranges_ex_01_views();
 
 int main()
 {
-    ranges_ex_01_algorithms();
+    // ranges_ex_01_algorithms();
+    ranges_ex_01_views();
     return 0;
 }
 

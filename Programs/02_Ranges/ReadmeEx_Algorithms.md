@@ -51,7 +51,11 @@ std::ranges::sort(values);
 ```
 
 Wir geben nun einen Überblick für die häufigsten Anwendungsfälle für STL-Algorithmen &ndash;
-formuliert in der klassischen und in der bereichs-basierten Notation:
+formuliert in der klassischen und in der bereichs-basierten Notation.
+
+*Hinweis*:
+Man beachte, dass für alle Beispiele in diesem Abschnitt die Include-Datei `<ranges>`
+**nicht** benötigt wird!
 
 ### Iteration über einen Bereich
 
@@ -164,6 +168,8 @@ Ein weiterer Algorithmus zum Erzeugen von Elementen ist `std::iota` (Header-Date
 `std::iota` generiert Werte in aufsteigender Reihenfolge, es muss dazu ein Startwert
 angegeben werden:
 
+###### C++&ndash;17  Variante:
+
 ```cpp
 01: void test()
 02: {
@@ -233,6 +239,8 @@ angegeben werden:
 Über das Sortieren brauchen wir nicht viel Worte zu verlieren.
 Der einfachste Sortier-Algorithmus verbirgt sich hinter `std::sort`:
 
+###### C++&ndash;17  Variante:
+
 ```cpp
 01: void test()
 02: {
@@ -269,6 +277,8 @@ Prinzipiell sollten wir bei der Suche nach Elementen die Information mit einbezi
 ob der Bereich sortiert vorliegt oder nicht. Im Falle eines sortierten Bereichs führt eine lineare Suche
 erheblich schneller ans Ziel als in einem unsortierten Bereich.
 Wir beginnen mit dem `find()`-Algorithmus &ndash; er erfordert keinen sortierten Bereich:
+
+###### C++&ndash;17 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -314,6 +324,7 @@ Wenn wir wissen, dass der Bereich bereits sortiert ist, können wir einen der bin
 Wenn wir diese Funktionen zusammen mit Bereichen verwenden, die wahlfreien Zugriff (*random-access*)
 für ihre Elemente ermöglichen, benötigen diese nur einen *O(log n)* Zeitaufwand:
 
+###### C++&ndash;17 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -357,6 +368,8 @@ true
 Es gibt drei sehr praktische Algorithmen `all_of()`, `any_of()` und `none_of()`.
 Sie besitzen als Parameter einen Bereich und ein unäres Prädikat &ndash; eine Funktion, die ein Argument besitzt
 und `true` oder `false` zurückliefert:
+
+###### C++&ndash;17 &ndash; Variante:
 
 ```cpp
 01:     auto vec = std::vector{ 5, 4, 3, 2, 1, 0, -1, 0, 1, 2 };
@@ -410,6 +423,8 @@ die einem bestimmten Wert entsprechen.
 Der Zeitaufwand des `count()`-Algorithmus steht in linearem Verhältnis zur Größe des Bereichs.
 Ist der Bereich sortiert, wird der Algorithmus mit Zeitaufwand *O(log n)* ausgeführt:
 
+###### C++&ndash;17 &ndash; Variante:
+
 ```cpp
 01: void test()
 02: {
@@ -457,6 +472,8 @@ Ist der Bereich sortiert, wird der Algorithmus mit Zeitaufwand *O(log n)* ausgef
 ### Minimum, Maximum, und &ldquo;Clamping&rdquo;
 
 Wir betrachten die drei Funktionen `min()`, `max()` und `clamp()` an einem Beispiel:
+
+###### C++&ndash;17 &ndash; Variante:
 
 ```cpp
 01: // minimum, maximum, and clamping
@@ -530,6 +547,8 @@ man als *Projektion* bezeichnet. *Projektionen* arbeiten in der Regel mit Standa
 wie `std::less` oder `std::greater` zusammen.
 
 Vergleichen Sie zu diesem Zweck die beiden nachfolgenden Beispiele:
+
+###### C++&ndash;17 &ndash; Variante:
 
 ```cpp
 01: void test()

@@ -12,6 +12,8 @@
 #include <version>
 #include <cassert>
 
+// Note: no #include <ranges> !!!
+
 // https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
 
 /*****

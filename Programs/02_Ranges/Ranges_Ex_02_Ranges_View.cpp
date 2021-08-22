@@ -1,5 +1,5 @@
 // ===========================================================================
-// Ranges_Ex_01_Algorithms.cpp
+// Ranges_Ex_02_Ranges_View.cpp
 // ===========================================================================
 
 #include <iostream>
@@ -11,6 +11,7 @@
 #include <list>
 #include <version>
 #include <cassert>
+#include <ranges>
 
 // https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
 
@@ -72,422 +73,356 @@ namespace Cpp20Views
     }
 #endif
 
-    // iterating
-    void r1_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto vec = std::vector{ 9, 2, 5, 3, 4 };
-        print(vec);
-        print2(vec);
-#endif
-    }
 
-    void r1_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto vec = std::vector{ 9, 2, 5, 3, 4 };
-        print(vec);
-        print2(vec);
-#endif
-    }
-
-    // transforming
-    void r2_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto vec = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-        auto res = std::vector<int>(vec.size());
-        auto lambda = [](auto&& i) { return i * i; };
-
-        std::transform(std::begin(vec), std::end(vec), std::begin(res), lambda);
-        print(res);
-#endif
-    }
-
-    void r2_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto vec = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-        auto res = std::vector<int>(vec.size());
-        auto lambda = [](auto&& i) { return i * i; };
-
-        std::ranges::transform(vec, std::begin(res), lambda);
-        print(res);
-#endif
-    }
-
-    // generating elements
-    void r3_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto vec = std::vector<int>(5);
-
-        std::fill(
-            std::begin(vec),
-            std::end(vec),
-            1
-        );
-        print(vec);
-
-        std::generate(
-            std::begin(vec),
-            std::end(vec),
-            [count = 1]() mutable { return count++; }
-        );
-        print(vec);
-
-        std::generate(
-            std::begin(vec),
-            std::end(vec),
-            std::rand
-        );
-        print(vec);
-
-        std::iota(
-            std::begin(vec),
-            std::end(vec),
-            10
-        );
-        print(vec);
-#endif
-    }
-
-    void r3_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto vec = std::vector<int>(5);
-
-        std::ranges::fill(vec, 1);
-        print(vec);
-
-        std::ranges::generate(vec, [count = 1]() mutable { return count++; });
-        print(vec);
-
-        std::ranges::generate(vec, std::rand);
-        print(vec);
-
-        // to be done: std::iota
-#endif
-    }
-
-    // sorting
-    void r4_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto values = std::vector{ 9, 2, 5, 3, 4 };
-
-        // sort using the classical algorithm
-        std::sort(std::begin(values), std::end(values));
-        print(values);
-#endif
-    }
-
-    void r4_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto values = std::vector{ 9, 2, 5, 3, 4 };
-
-        // sort using the constrained algorithm under std::ranges
-        std::ranges::sort(values);
-        print(values);
-
-        // works too
-        std::ranges::sort(std::begin(values), std::end(values));
-        print(values);
-#endif
-    }
-
-    // finding elements
-    void r5_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto values = std::list{ 4, 3, 2, 3, 1 };
-
-        // if the element we are looking for couldn't be found,
-        // find() returns end() iterator of the collection
-        auto it = std::find(
-            std::begin(values),
-            std::end(values),
-            2
-        );
-        if (it != std::end(values)) {
-            std::cout << *it << std::endl;
-        }
-#endif
-    }
-
-    void r5_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto values = std::list{ 4, 3, 2, 3, 1 };
-
-        auto it = std::ranges::find(values, 2);
-        if (it != std::end(values)) {
-            std::cout << *it << std::endl;
-        }
-#endif
-    }
-
-    // finding elements using binary search
-    void r6_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto vec = std::vector{ 2, 2, 3, 3, 3, 4, 5 };   // sorted!
-
-        assert(std::is_sorted(
-            std::begin(vec),
-            std::end(vec))
-        );
-
-        bool found = std::binary_search(
-            std::begin(vec),
-            std::end(vec),
-            3
-        );
-        std::cout << std::boolalpha << found << std::endl;
-#endif
-    }
-
-    void r6_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto vec = std::vector{ 2, 2, 3, 3, 3, 4, 5 };     // sorted!
-        assert(std::ranges::is_sorted(vec));
-        bool found = std::ranges::binary_search(vec, 3);
-        std::cout << std::boolalpha << found << std::endl;
-#endif
-    }
-
-    // testing for certain conditions (any_of, all_of and none_of) 
-    void r7_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto vec = std::vector{ 3, 2, 2, 1, 0, 2, 1 };
-        auto is_negative = [](auto i) { return i < 0; };
-
-        if (std::none_of(std::begin(vec), std::end(vec), is_negative)) {
-            std::cout << "Contains only positive numbers" << std::endl;
-        }
-
-        if (std::all_of(std::begin(vec), std::end(vec), is_negative)) {
-            std::cout << "Contains only negative numbers" << std::endl;
-        }
-
-        if (std::any_of(std::begin(vec), std::end(vec), is_negative)) {
-            std::cout << "Contains at least one negative number" << std::endl;
-        }
-#endif
-    }
-
-    void r7_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto vec = std::vector{ 3, 2, 2, 1, 0, 2, 1 };
-        auto is_negative = [](auto i) { return i < 0; };
-
-        if (std::ranges::none_of(vec, is_negative)) {
-            std::cout << "Contains only positive numbers" << std::endl;
-        }
-
-        if (std::ranges::all_of(vec, is_negative)) {
-            std::cout << "Contains only negative numbers" << std::endl;
-        }
-
-        if (std::ranges::any_of(vec, is_negative)) {
-            std::cout << "Contains at least one negative number" << std::endl;
-        }
-#endif
-    }
-
-    // counting elements
-    void r8_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto numbers = std::vector{ 3, 3, 2, 1, 3, 1, 3 };
-
-        // counting in linear time
-        auto n = std::count(std::begin(numbers), std::end(numbers), 3);
-        std::cout << n << std::endl;
-
-        // counting in O(log n) time
-        std::sort(std::begin(numbers), std::end(numbers));
-        std::pair<std::vector<int>::iterator, std::vector<int>::iterator> result =
-            std::equal_range(std::begin(numbers), std::end(numbers), 3);
-        n = std::distance(result.first, result.second);
-        std::cout << n << std::endl;
-#endif
-    }
-
-    void r8_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto numbers = std::vector{ 3, 3, 2, 1, 3, 1, 3 };
-
-        // counting in linear time
-        auto n = std::ranges::count(numbers, 3);
-        std::cout << n << std::endl;
-
-        // counting in O(log n) time
-        std::ranges::sort(numbers);
-        std::ranges::subrange result = std::ranges::equal_range(numbers, 3);
-        n = std::ranges::size(result);
-        std::cout << n << std::endl;
-#endif
-    }
-
-    // minimum, maximum, and clamping
-    const auto min = 1;
-    const auto max = 100;
-
-    int some_func() { return 50; }
-
-    void r9_17()
+    // motivation
+    void views1_17_motivation()
     {
 #if __cplusplus <= Cpp_17
 
-        auto y{ 0 };
-        y = std::min(some_func(), max);
-        y = std::max(std::min(some_func(), max), min);
-        y = std::clamp(some_func(), min, max);
-
-        auto vec = std::vector{ 4, 2, 1, 7, 3, 1, 5 };
-        auto min_iter = std::min_element(std::begin(vec), std::end(vec));
-        auto max_iter = std::max_element(std::begin(vec), std::end(vec));
-        std::cout << "Min: " << *min_iter << ", Max: " << *max_iter << std::endl;
-#endif
-    }
-
-    void r9_20()
-    {
-#if __cplusplus >= Cpp_20
-        auto y{ 0 };
-        y = std::min(some_func(), max);
-        y = std::max(std::min(some_func(), max), min);
-        y = std::clamp(some_func(), min, max);
-
-        const auto vec = std::vector{ 4, 2, 1, 7, 3, 1, 5 };
-        auto min_iter = std::ranges::min_element(vec);
-        auto max_iter = std::ranges::max_element(vec);
-        std::cout << "Min: " << *min_iter << ", Max: " << *max_iter << std::endl;
-
-        const auto [min, max] = std::ranges::minmax(vec);
-        std::cout << "Min: " << min << ", Max: " << max << std::endl;
-#endif
-    }
-
-    // custom comparator functions
-    void r10_17()
-    {
-#if __cplusplus <= Cpp_17
-        auto names = std::vector<std::string>{
-            "Alexander", "Dennis", "Bjarne", "Ken", "Stephen", "Dave"
+        struct Student {
+            std::string m_name{};
+            int m_year{};
+            int m_score{};
         };
 
-        std::sort(
-            std::begin(names),
-            std::end(names),
-            [](const std::string& a, const std::string& b) {
-                return a.size() < b.size();
+        auto getMaxScore = [](const std::vector<Student>& students, int year)
+        {
+            auto byYear = [=](const auto& s) { return s.m_year == year; };
+
+            // student list needs to be copied in order to be filtered on the year
+            auto result = std::vector<Student>{};
+
+            std::copy_if(
+                std::begin(students),
+                std::end(students),
+                std::back_inserter(result),
+                byYear
+            );
+
+            auto it = std::max_element(
+                std::begin(result),
+                std::end(result),
+                [](const Student& a, const Student& b) {
+                    return a.m_score < b.m_score;
+                }
+            );
+
+            return it != result.end() ? it->m_score : 0;
+        };
+
+        // Although it's easily achievable in this small example to find a fitting solution,
+        // the goal is to to be able to implement this algorithm by composing small algorithmic building blocks,
+        // rather than implementing it for every use case from scratch using a single for-loop
+        auto getMaxScoreAlternate = [](const std::vector<Student>& students, int year) {
+            auto max_score = 0;
+            for (const auto& student : students) {
+                if (student.m_year == year) {
+                    max_score = std::max(max_score, student.m_score);
+                }
+            }
+            return max_score;
+        };
+
+        auto students = std::vector<Student>{
+            {"Georg", 2021, 120 },
+            {"Hans",  2021, 140 },
+            {"Susan", 2020, 180 },
+            {"Mike",  2020, 110 },
+            {"Hello", 2021, 190 },
+            {"Franz", 2021, 110 },
+        };
+
+        auto score = getMaxScore(students, 2021);
+
+        std::cout << score << std::endl;
+#endif
+    }
+
+    void views1_20_motivation()
+    {
+#if __cplusplus >= Cpp_20
+
+        struct Student {
+            std::string m_name{};
+            int m_year{};
+            int m_score{};
+        };
+
+        auto maxValue = [](auto&& range) {
+            const auto it = std::ranges::max_element(range);
+            return it != range.end() ? *it : 0;
+        };
+
+        auto getMaxScore = [&](const std::vector<Student>& students, int year) {
+            const auto byYear = [=](auto&& s) { return s.m_year == year; };
+            return maxValue(students
+                | std::views::filter(byYear)
+                | std::views::transform(&Student::m_score)
+            );
+        };
+
+        auto students = std::vector<Student>{
+            {"Georg", 2021, 120 },
+            {"Hans",  2021, 140 },
+            {"Susan", 2020, 180 },
+            {"Mike",  2020, 110 },
+            {"Hello", 2021, 190 },
+            {"Franz", 2021, 110 },
+        };
+
+        auto score = getMaxScore(students, 2021);
+
+        std::cout << score << std::endl;
+
+#endif
+    }
+
+    // introduction (understanding views from the Ranges library)
+    void views2_20_introduction()
+    {
+#if __cplusplus >= Cpp_20
+        // simple example
+        auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        auto square = [](auto v) { return v * v; };
+        auto squared_view = std::views::transform(numbers, square);
+        for (auto s : squared_view) { // The square lambda is invoked here
+            std::cout << s << ", ";
+        }
+        std::cout << std::endl;
+#endif
+    }
+
+    void views2_20a_introduction()
+    {
+#if __cplusplus >= Cpp_20
+        // create a filtered view where only a part of the range is visible
+        auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        auto oddView = std::views::filter(numbers, [](auto i) { return (i % 2) == 1; });
+        for (auto odd : oddView) {
+            std::cout << odd << ", ";
+        }
+        std::cout << std::endl;
+#endif
+    }
+
+    void views2_20b_introduction()
+    {
+#if __cplusplus >= Cpp_20
+
+        auto list_of_lists = std::vector<std::vector<int>>{
+            { 1, 2 },
+            { 3, 4, 5 },
+            { 6 },
+            { 7, 8, 9, 10 }
+        };
+
+        auto flattenedView = std::views::join(list_of_lists);
+
+        for (auto v : flattenedView)
+            std::cout << v << ", ";
+        std::cout << std::endl;
+
+        auto maxValue = *std::ranges::max_element(flattenedView);
+        std::cout << "Maximum value: " << maxValue << std::endl;
+#endif
+    }
+
+    // views are composable
+    void views3_20_composable()
+    {
+#if __cplusplus >= Cpp_20
+
+        struct Student {
+            std::string m_name{};
+            int m_year{};
+            int m_score{};
+        };
+
+        auto getMaxScore = [](const std::vector<Student>& s, int year) {
+
+            auto byYear = [=](const auto& s) { return s.m_year == year; };
+
+            auto v1 = std::ranges::ref_view{ s };                  // wrap container in a view
+            auto v2 = std::ranges::filter_view{ v1, byYear };      // apply 'filter' view
+            auto v3 = std::ranges::transform_view{ v2, &Student::m_score };  // apply 'transform' view
+            auto it = std::ranges::max_element(v3);                // apply 'max_element' view
+            return it != v3.end() ? *it : 0;
+        };
+
+        auto getMaxScoreAlternate = [](const std::vector<Student>& s, int year) {
+
+            auto byYear = [=](const auto& s) { return s.m_year == year; };
+
+            auto scores = std::ranges::transform_view{
+                std::ranges::filter_view {
+                    std::ranges::ref_view{s}, 
+                    byYear
+                },
+                &Student::m_score
+            };
+
+            auto it = std::ranges::max_element(scores);
+            return it != scores.end() ? *it : 0;
+        };
+
+        auto students = std::vector<Student>{
+            {"Georg", 2021, 120 },
+            {"Hans",  2021, 140 },
+            {"Susan", 2020, 180 },
+            {"Mike",  2020, 110 },
+            {"Hello", 2021, 190 },
+            {"Franz", 2021, 110 },
+        };
+
+        auto score = getMaxScore(students, 2021);
+        auto scoreAlternate = getMaxScoreAlternate(students, 2021);
+
+        std::cout << score << std::endl;
+        std::cout << scoreAlternate << std::endl;
+#endif
+    }
+
+    // range views come with range adaptors
+    void views4_20_range_adaptors()
+    {
+#if __cplusplus >= Cpp_20
+
+        struct Student {
+            std::string m_name{};
+            int m_year{};
+            int m_score{};
+        };
+
+        auto students = std::vector<Student>{
+            {"Georg", 2021, 120 },
+            {"Hans",  2021, 140 },
+            {"Susan", 2020, 180 },
+            {"Mike",  2020, 110 },
+            {"Hello", 2021, 190 },
+            {"Franz", 2021, 110 },
+        };
+
+        int year = 2021;
+        auto byYear = [=](const auto& s) { return s.m_year == year; };
+
+        auto scores = students | std::views::filter(byYear) | std::views::transform(&Student::m_score);
+
+        auto it = std::ranges::max_element(scores);
+        auto score = it != scores.end() ? *it : 0;
+
+        std::cout << score << std::endl;
+#endif
+    }
+
+    // views don't mutate the underlying container
+    void views5_20_immutable()
+    {
+#if __cplusplus >= Cpp_20
+
+        auto ints = std::list{ 1, 2, 3, 4, 5, 6 };
+
+        auto strings = ints | std::views::transform([](auto i) {
+            return std::string{"\""} + std::to_string(i) + std::string{ "\"" };
             }
         );
-        print(names);
 
-        // find names with length 3
-        auto result = std::find_if(
-            std::begin(names),
-            std::end(names),
-            [](const auto& v) { return v.size() == 3; }
-        );
-        if (result != std::end(names)) {
-            std::cout << *result << std::endl;
+        for (const auto& s : strings) {
+            std::cout << s << ", ";
         }
+        std::cout << std::endl;
 
+        for (const auto& i : ints) {
+            std::cout << i << ", ";
+        }
 #endif
     }
 
-    void r10_17a()
+    // views can be materialized into containers
+#if __cplusplus >= Cpp_20
+    auto to_vector(auto&& r)
     {
-#if __cplusplus <= Cpp_17
-        struct Task {
-            std::string m_desc{};
-            unsigned int m_priority{ 0 };
-        };
+        std::vector<std::ranges::range_value_t<decltype(r)>> v;
 
-        std::vector<Task> tasks{
-            { "Clean up my apartment", 10 },
-            { "Finish homework", 5 },
-            { "Go to the supermarket", 12 }
-        };
+        if constexpr (std::ranges::sized_range<decltype(r)>) {
+            v.reserve(std::ranges::size(r));
+        }
 
-        auto print = [](auto&& t) {
-            std::cout << t.m_desc << ": Priority: " << t.m_priority << std::endl;
-        };
+        std::ranges::copy(r, std::back_inserter(v));
 
-        std::cout << "List of tasks:" << std::endl;
-        std::for_each(std::begin(tasks), std::end(tasks), print);
-        std::sort(
-            std::begin(tasks),
-            std::end(tasks),
-            [](const Task& a, const Task& b) {
-                return a.m_priority > b.m_priority;
+        return v;
+    }
+#endif
+
+    void views6_20_materialize()
+    {
+#if __cplusplus >= Cpp_20
+
+        auto ints = std::list{ 1, 2, 3, 4, 5, 6 };
+
+        auto strings = ints | std::views::transform([](auto i) {
+            return std::string{ "\"" } + std::to_string(i) + std::string{ "\"" };
             }
-        ); // <<  “extract” a data member 
-        std::cout << "Next priorities:" << std::endl;
-        std::for_each(std::begin(tasks), std::end(tasks), print);
-#endif
-    }
+        );
 
-    // constrained algorithms use projections
-    void r10_20()
-    {
-#if __cplusplus >= Cpp_20
+        auto vec = std::vector<std::string>{};
 
-        auto names = std::vector<std::string>{
-            "Alexander", "Dennis", "Bjarne", "Ken", "Stephen", "Dave"
-        };
+        std::ranges::copy(strings, std::back_inserter(vec));
 
-        // i) names is passed as the first argument
-        // ii) {} means the default template argument - in this case, it’s std::less<>{} as comparator
-        // iii) the projection is a callable which takes a single argument
-
-        std::ranges::sort(names, {}, &std::string::size);
-        std::ranges::sort(names, std::less<>{}, & std::string::size);
-        print(names);
-
-        // find names with length 3
-        auto result = std::ranges::find(names, 3, &std::string::size);
-        if (result != std::end(names)) {
-            std::cout << *result << std::endl;
+        for (const auto& s : vec) {
+            std::cout << s << ", ";
         }
+        std::cout << std::endl;
+
+        vec.clear();
+
+        vec = to_vector(strings);
+
+        for (const auto& s : vec) {
+            std::cout << s << ", ";
+        }
+        std::cout << std::endl;
 #endif
     }
 
-    // https://www.cppstories.com/2020/10/understanding-invoke.html/
-    void r10_20a()
+    // views are lazy evaluated (sort doesn't work)
+    void views7_20_lazy_evaluation()
     {
-#if __cplusplus >= Cpp_20
+    #if __cplusplus >= Cpp_20
 
-        struct Task {
-            std::string m_desc{};
-            unsigned int m_priority{ 0 };
-        };
+        auto vec = std::vector{ 4, 2, 7, 1, 2, 6, 1, 5 };
+        print(vec);
 
-        std::vector<Task> tasks{
-            { "Clean up my apartment", 10 },
-            { "Finish homework", 5 },
-            { "Go to the supermarket", 12 }
-        };
+        // filter range
+        auto isOdd = [](auto i) { return i % 2 == 1; };
+        auto odd_numbers = vec | std::views::filter(isOdd);
 
-        auto print = [](auto&& t) {
-            std::cout << t.m_desc << ": Priority: " << t.m_priority << std::endl;
-        };
+        // std::ranges::sort(odd_numbers); // doesn't compile !!!
 
-        std::cout << "List of tasks:" << std::endl;
-        std::ranges::for_each(tasks, print);
-        std::ranges::sort(tasks, std::ranges::greater{}, &Task::m_priority); // <<  “extract” a data member 
-        std::cout << "Next priorities:" << std::endl;
-        std::ranges::for_each(tasks, print);
-#endif
+        // materialize the view before sorting
+        auto result = to_vector(odd_numbers);
+        print(result);
+
+        // sort range
+        std::ranges::sort(result);
+        print(result);
+    #endif
+    }
+
+    void views7_20a_lazy_evaluation()
+    {
+    #if __cplusplus >= Cpp_20
+
+        auto vec = std::vector{ 8, 6, 10, 9, 2, 1, 3, 7, 4, 5 };
+        print(vec);
+
+        // filter range
+        auto firstHalf = vec | std::views::take(vec.size());
+        std::ranges::sort(firstHalf);
+        print(firstHalf);
+
+        std::ranges::sort(firstHalf, std::greater<>{});
+        print(firstHalf);
+    #endif
     }
 }
 
@@ -495,7 +430,17 @@ void ranges_ex_01_views()
 {
     using namespace Cpp20Views;
 
-
+    views1_17_motivation();
+    views1_20_motivation();
+    views2_20_introduction();
+    views2_20a_introduction();
+    views2_20b_introduction();
+    views3_20_composable();
+    views4_20_range_adaptors();
+    views5_20_immutable();
+    views6_20_materialize();
+    views7_20_lazy_evaluation();
+    views7_20a_lazy_evaluation();
 }
 
 // ===========================================================================
