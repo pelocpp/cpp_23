@@ -426,7 +426,7 @@ namespace Cpp20Views
     }
 }
 
-void ranges_ex_01_views()
+void ranges_ex_02_views()
 {
     using namespace Cpp20Views;
 

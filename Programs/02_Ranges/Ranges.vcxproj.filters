@@ -27,6 +27,9 @@
     <None Include="ReadmeEx_Ranges_Views.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ReadmeEx_Examples.md">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ranges02.cpp">
@@ -44,8 +47,8 @@
     <ClCompile Include="Ranges_Ex_02_Ranges_View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ReadmeEx_Examples.md">
-      <Filter>Resource Files</Filter>
+    <ClCompile Include="Ranges_Ex_03_Examples.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
