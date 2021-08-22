@@ -442,7 +442,7 @@ namespace Cpp20Ranges
         };
 
         // i) names is passed as the first argument
-        // ii) {} means the default template argument - in this case, it’s std::less<>{} as comparator
+        // ii) {} means the default template argument - in this case, it's std::less<>{} as comparator
         // iii) the projection is a callable which takes a single argument
 
         std::ranges::sort(names, {}, &std::string::size);

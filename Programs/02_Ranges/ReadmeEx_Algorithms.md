@@ -18,10 +18,12 @@ da sie mit dem ebenfalls neuen C++ Sprachmittel `concept` definiert sind.
 
 Über die `<algorithm>` Header-Datei sind folglich
 
-  * alle klassischen iterator-basierte Algorithmen (`std::begin()`, `std::end()`) und
-  * alle neuen, `concept`-basierten Algorithmen (`std::ranges::range`)
+  * alle klassischen iterator-basierten Algorithmen (`std::begin()`, `std::end()`, Namensraum `std`) und
+  * alle neuen, `concept`-basierten Algorithmen (Namensraum `std::ranges`)
 
-verfügbar. Das `range`-Konzept ist so definiert:
+verfügbar.
+
+Das `range`-Konzept ist so definiert:
 
 ```cpp
 template< class T >
@@ -31,23 +33,21 @@ concept range = requires(T& t) {
 };
 ```
 
-Alle C++ &ndash; Programme, die STL-Algorithmen verwenden,
-können nun in zwei Varianten programmiert werden, wie das folgende Beispiel zeigt:
+Alle C++&ndash;Programme, die STL-Algorithmen verwenden,
+können nun in zwei Varianten geschrieben werden, wie das folgende Beispiel zeigt:
 
-###### C++&ndash;17  Variante
+###### C++&ndash;17  Variante:
 
 ```cpp
 auto values = std::vector{ 9, 2, 5, 3, 4 };
 std::sort(std::begin(values), std::end(values));
-print(values);
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 auto values = std::vector{ 9, 2, 5, 3, 4 };
 std::ranges::sort(values);
-print(values);
 ```
 
 Wir geben nun einen Überblick für die häufigsten Anwendungsfälle für STL-Algorithmen &ndash;
@@ -96,7 +96,7 @@ Das Iterieren eines Bereichs betrachten wir am Beispiel einer `print`-Funktion:
 5 4 3 2 1 6 7 8 9
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: void print(auto&& r) {
@@ -122,6 +122,8 @@ Das Iterieren eines Bereichs betrachten wir am Beispiel einer `print`-Funktion:
 Der `std::transform`-Algorithmus ruft für jedes Element in einem Bereich eine Funktion auf
 und speichert das Resultat in einem Ausgabebereich:
 
+###### C++&ndash;17  Variante:
+
 ```cpp
 01: void test()
 02: {
@@ -139,7 +141,7 @@ und speichert das Resultat in einem Ausgabebereich:
 1 4 9 16 25 36 49 64 81 100
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -204,7 +206,7 @@ angegeben werden:
 10 11 12 13 14
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 *Bemerkung*: `std::ranges::iota` wird aktuell von C++ 20 noch nicht unterstützt.
 
@@ -246,7 +248,7 @@ Der einfachste Sortier-Algorithmus verbirgt sich hinter `std::sort`:
 1 2 3 4 5 6 7 8 9
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -261,11 +263,11 @@ Der einfachste Sortier-Algorithmus verbirgt sich hinter `std::sort`:
 
 Eine weitere sehr häufige Aufgabe besteht darin, herauszufinden,
 ob ein bestimmter Wert in einem Bereich enthalten ist oder nicht.
-Oder die Frage lautet, wie viele Instanzen von einem bestimmten Wert in einem Bereich vorhanden sind.
+Oder, wie viele Instanzen von einem bestimmten Wert in einem Bereich vorhanden sind.
 
 Prinzipiell sollten wir bei der Suche nach Elementen die Information mit einbeziehen,
-ob der Bereich sortiert vorliegt oder nicht. Im Falle eines sortieren Bereichs führt eine lineare Suche
-erheblich schneller ans Ziel als die in einem unsortieren Bereich.
+ob der Bereich sortiert vorliegt oder nicht. Im Falle eines sortierten Bereichs führt eine lineare Suche
+erheblich schneller ans Ziel als in einem unsortierten Bereich.
 Wir beginnen mit dem `find()`-Algorithmus &ndash; er erfordert keinen sortierten Bereich:
 
 ```cpp
@@ -292,7 +294,7 @@ Wir beginnen mit dem `find()`-Algorithmus &ndash; er erfordert keinen sortierten
 2
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -310,7 +312,7 @@ Wir beginnen mit dem `find()`-Algorithmus &ndash; er erfordert keinen sortierten
 Wenn wir wissen, dass der Bereich bereits sortiert ist, können wir einen der binären Suchalgorithmen verwenden:
 `binary_search()`, `equal_range()`, `upper_bound()` oder `lower_bound()`.
 Wenn wir diese Funktionen zusammen mit Bereichen verwenden, die wahlfreien Zugriff (*random-access*)
-für ihre Elemente bieten, benötigen diese garantiert einen *O(log n)* Zeitaufwand:
+für ihre Elemente ermöglichen, benötigen diese nur einen *O(log n)* Zeitaufwand:
 
 
 ```cpp
@@ -338,7 +340,7 @@ für ihre Elemente bieten, benötigen diese garantiert einen *O(log n)* Zeitaufwan
 true
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -352,7 +354,7 @@ true
 
 ### Einen Bereich bzgl. einer Bedingung überprüfen
 
-Es gibt drei sehr praktische Algorithmen namens `all_of()`, `any_of()` und `none_of()`.
+Es gibt drei sehr praktische Algorithmen `all_of()`, `any_of()` und `none_of()`.
 Sie besitzen als Parameter einen Bereich und ein unäres Prädikat &ndash; eine Funktion, die ein Argument besitzt
 und `true` oder `false` zurückliefert:
 
@@ -379,7 +381,7 @@ und `true` oder `false` zurückliefert:
 Contains at least one negative number
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -406,7 +408,7 @@ Contains at least one negative number
 Mit `count()` können wir die Anzahl der Elemente in einem Bereich zählen,
 die einem bestimmten Wert entsprechen.
 Der Zeitaufwand des `count()`-Algorithmus steht in linearem Verhältnis zur Größe des Bereichs.
-Ist der Bereich sortiert, wird der Algorithmus mit *O(log n)*-Zeitaufwand ausgeführt:
+Ist der Bereich sortiert, wird der Algorithmus mit Zeitaufwand *O(log n)* ausgeführt:
 
 ```cpp
 01: void test()
@@ -433,7 +435,7 @@ Ist der Bereich sortiert, wird der Algorithmus mit *O(log n)*-Zeitaufwand ausgef
 4
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -483,7 +485,7 @@ Wir betrachten die drei Funktionen `min()`, `max()` und `clamp()` an einem Beisp
 Min: 1, Max: 10
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: // minimum, maximum, and clamping
@@ -522,9 +524,9 @@ Manchmal müssen wir Objekte vergleichen, ohne dabei den Standardvergleich zu ver
 der &ndash; wenn überhaupt &ndash; durch den `==`-Operator zur Verfügung gestellt wird.
 In diesen Fällen akzeptieren viele Algorithmen eine Lambda-Funktion als zusätzliches Argument.
 
-Die &ldquo;*Constrained*&rdquo; Algorithmen, also die Algorithmen im Namensraum `std::ranges`
+Die &ldquo;*Constrained*&rdquo; Algorithmen, also die Algorithmen im Namensraum `std::ranges`,
 offerieren zu diesem Zweck eine abgekürzte Notation, die
-man als *Projektion* bezeichnet. *Projektionen* arbeiten in der Regel mit Standardprädikat
+man als *Projektion* bezeichnet. *Projektionen* arbeiten in der Regel mit Standardprädikaten
 wie `std::less` oder `std::greater` zusammen.
 
 Vergleichen Sie zu diesem Zweck die beiden nachfolgenden Beispiele:
@@ -602,7 +604,7 @@ Clean up my apartment: Priority: 10
 Finish homework: Priority: 5
 ```
 
-###### C++&ndash;20 &ndash; Variante
+###### C++&ndash;20 &ndash; Variante:
 
 ```cpp
 01: void test()
@@ -612,7 +614,7 @@ Finish homework: Priority: 5
 05:     };
 06: 
 07:     // i) names is passed as the first argument
-08:     // ii) {} means the default template argument - in this case, it’s std::less<>{} as comparator
+08:     // ii) {} means the default template argument - in this case, it's std::less<>{} as comparator
 09:     // iii) the projection is a callable which takes a single argument
 10: 
 11:     std::ranges::sort(names, {}, &std::string::size);
