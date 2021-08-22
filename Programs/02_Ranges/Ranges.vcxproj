@@ -154,7 +154,7 @@
     <ClCompile Include="Ranges01.cpp" />
     <ClCompile Include="Ranges_Ex_01_Algorithms.cpp" />
     <ClCompile Include="Ranges_Ex_02_Ranges_View.cpp" />
-    <ClCompile Include="RangesEx_Examples.md" />
+    <ClCompile Include="ReadmeEx_Examples.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
