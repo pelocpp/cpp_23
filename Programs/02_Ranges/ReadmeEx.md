@@ -4,14 +4,11 @@
 
 ---
 
-[Quellcode: Ranges01.cpp](Ranges01.cpp)<br/>
-[Quellcode: Ranges02.cpp](Ranges02.cpp)
-
----
-
 ## [Redesign der Standard Library Algorithmen](ReadmeEx_Algorithms.md)
 
 ## [Ranges und Views / Bereiche und Sichten](ReadmeEx_Ranges_Views.md)
+
+## [Views in Standard C++&ndash;20](ReadmeEx_Standard_Views.md)
 
 ## [Beispiele](ReadmeEx_Examples.md)
 

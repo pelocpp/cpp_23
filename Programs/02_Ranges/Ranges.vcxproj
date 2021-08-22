@@ -143,10 +143,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="cpp20_views.svg" />
     <None Include="Readme.md" />
     <None Include="ReadmeEx.md" />
     <None Include="ReadmeEx_Algorithms.md" />
     <None Include="ReadmeEx_Ranges_Views.md" />
+    <None Include="ReadmeEx_Standard_Views.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp" />

@@ -279,6 +279,11 @@ da sie als ersten Parameter eine Ansicht erfordert.
 Auf diese Weise kann man eine Kette von komponierbaren Ansichten bilden,
 die beliebig lang sein kann.
 
+<img src="cpp20_views.svg" width="700">
+
+*Abbildung* 1: Der Algorithmus der obersten Ebene, `std::ranges::max_element()`, zieht Werte aus den *Views*,
+die im Sinne der *Lazy*-Vorgehensweise die Elemente aus dem unterlagerten Container (`std::vector`) verarbeiten.
+
 Wir könnten das letzte Beispiel auch kompakter formulieren,
 indem wir die temporären Variablen `v1`, `v2` und `v3` entfernen:
 
@@ -393,7 +398,7 @@ eine *View* ist nur ein *Proxy*-Objekt!
 Prinzipiell stellt sich damit natürlich die Frage, wie Resultate von Transformationen &ndash; also *Views* &ndash; in
 einem Ergebnis-Container abgespeichert werden können.
 
-## *Views* lassen sich in Containers &ldquo;materialisieren&rdquo;
+## *Views* lassen sich in Containern &ldquo;materialisieren&rdquo;
 
 Der Ergebnis der Transformation von *Views*  kann man in einem Container abspeichern.
 Man spricht hier auch von &ldquo;die Ansicht materialisieren&rdquo;.
@@ -456,11 +461,12 @@ Es gibt allerdings einen einfachen Workaround mit der Funktion `std::ranges::cop
 
 *Hinweis*:
 Wir einem Aufruf von `reserve()` lässt sich die Performance der Funktion `to_vector` optimieren.
-Es wird vorab genug Platz für alle Elemente im Ergebnis-Container allokiert, um weitere, überflüssige Allokationen zu vermeiden.
+Es wird vorab genug Platz für alle Elemente im Ergebnis-Container allokiert,
+um weitere, überflüssige Allokationen zu vermeiden.
 Jedoch kann man `reserve()` nur aufrufen, wenn die Methode am Ausgangscontainer vorhanden ist.
 Dies kann man mit `if constexpr`  und dem Test der Methode `sized_range` bewerkstelligen!
 
-## *Views* werden *lazy* evaluiert
+## *Views* werden &ldquo;*lazy*&rdquo; evaluiert
 
 Die gesamte Arbeit, die eine *View* verrichtet, basiert auf der *Lazy*-Vorgehensweise.
 Dies erfolgt somit im Gehensatz zu allen Funktionen aus der `<algorithm>`-Headerdatei,

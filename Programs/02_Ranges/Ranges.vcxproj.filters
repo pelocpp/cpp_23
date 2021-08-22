@@ -30,6 +30,12 @@
     <None Include="ReadmeEx_Examples.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="cpp20_views.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ReadmeEx_Standard_Views.md">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Ranges02.cpp">

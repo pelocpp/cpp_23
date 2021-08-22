@@ -35,7 +35,7 @@ Coroutinen eigen sich zur Implementierung von sequentiellem Code, der asynchron 
 
 <img src="Cpp_20_Coroutine_vs_Subroutine.svg" width="700">
 
-Abbildung 1: Subroutines (links) und Coroutines (rechts) im Vergleich.
+*Abbildung* 1: Subroutines (links) und Coroutines (rechts) im Vergleich.
 
 ## Coroutinen in C++ 20
 
