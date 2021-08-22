@@ -44,5 +44,8 @@
     <ClCompile Include="Ranges_Ex_02_Ranges_View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RangesEx_Examples.md">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
