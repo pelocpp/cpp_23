@@ -185,7 +185,7 @@ namespace Cpp20Views
         auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         auto square = [](auto v) { return v * v; };
         auto squared_view = std::views::transform(numbers, square);
-        for (auto s : squared_view) { // The square lambda is invoked here
+        for (auto s : squared_view) { // square lambda is invoked here
             std::cout << s << ", ";
         }
         std::cout << std::endl;

@@ -21,19 +21,19 @@
     <None Include="ReadmeEx.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_Algorithms.md">
+    <None Include="ReadmeEx_01_Algorithms.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_Ranges_Views.md">
+    <None Include="ReadmeEx_02_Ranges_Views.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_Examples.md">
+    <None Include="ReadmeEx_04_Examples.md">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="cpp20_views.svg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_Standard_Views.md">
+    <None Include="ReadmeEx_03_Standard_Views.md">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -15,7 +15,7 @@ Folgende Beweggründe haben zur Entwicklung der &ldquo;*Ranges*&rdquo;-Bibliothek
   * Die Fähigkeit, Algorithmen miteinander verknüpfen zu können &ndash; und dies ohne unnötige temporäre Container-Kopien.
   * Mit dem Sprachmittel `concept`, das *Requirements* an Iteratoren und Bereiche stellt, kann der Quellcode
     jetzt besser vom Compiler geprüft werden.
-  * *Views* aus der &ldquo;*Ranges*&rdquo;-Bibliothek sind *das* mächtige Hilfsmittel, die es ermöglichen,
+  * *Views* aus der &ldquo;*Ranges*&rdquo;-Bibliothek sind *das* mächtige Hilfsmittel, das es ermöglicht,
     auf einem Ausgangsbereich mehrere Transformationen in einer &ldquo;*lazy*&rdquo; evaluierten Darstellung miteinander zu verknüpfen.
     Dabei kommt es **nicht** zur Erzeugung von überflüssigen Zwischenkopien des Ausgangsbereichs.
 
@@ -136,9 +136,9 @@ Wir wollen die Aussagen aus der Einleitung an einem Beispiel verdeutlichen:
 
 ## Ein erster Blick auf *Views*
 
-*Views* in der &ldquo;*Ranges*&rdquo;-Bibliothek sind *Lazy* ausgewertete Iterationen über einen Bereich.
+*Views* in der &ldquo;*Ranges*&rdquo;-Bibliothek sind *lazy* ausgewertete Iteratoren eines Bereichs.
 
-Technisch betrachtet sind sie sehr ähnlich mit Iteratoren, nur mit integrierter Logik.
+Technisch betrachtet sind sie sehr ähnlich mit den klassischen STL-Iteratoren, nur mit integrierter Logik.
 
 Syntaktisch gesehen bieten sie eine sehr angenehme Syntax für viele gängige Operationen:
 
@@ -152,7 +152,7 @@ Quadrieren aller Elemente eines Containers
 04: 
 05:     auto square = [](auto v) { return v * v; };
 06:     auto squared_view = std::views::transform(numbers, square);
-07:     for (auto s : squared_view) { // The square lambda is invoked here
+07:     for (auto s : squared_view) { // square lambda is invoked here
 08:         std::cout << s << ", ";
 09:     }
 10:     std::cout << std::endl;
@@ -190,8 +190,9 @@ wenn die Ansicht iteriert wird:
 ```
 
 *Beispiel*:
-Ein weiteres Beispiel für die Vielseitigkeit der Ranges-Bibliothek ist die Möglichkeit,
-eine Ansicht zu erstellen, die über mehrere Container iterieren kann, als ob sie eine einzelne Liste wären:
+Ein weiteres Beispiel für die Vielseitigkeit der *Ranges*-Bibliothek ist die Möglichkeit,
+eine Ansicht zu erstellen,
+die über mehrere Container iterieren kann, als ob es sich um eine einzelnen Container handeln würde:
 
 
 ```cpp
@@ -224,9 +225,10 @@ Maximum value: 10
 
 ## Komposition von *Views*: *Views* können miteinander verknüpft werden
 
-Die eigentliche Stärke von *Views* ,liegt darin, dass sie miteinander verknüpft werden können.
-Die sie die zugrunden liegenden Daten *nicht* kopieren, lassen sich mehrere Transformationen
-auf einem Bereich formulieren, was intern nur in Iterationen resultiert.
+Die eigentliche Stärke von *Views* liegt darin, dass sie miteinander verknüpft werden können.
+Da sie die zugrunde liegenden Daten *nicht* kopieren,
+lassen sich mehrere Transformationen
+auf einem Bereich formulieren, was intern nur in Iterator-Aufrufen resultiert.
 
 Das erste Beispiel verwendet die tatsächlichen *Views*-Klassen direkt.
 Dies bedeutet, dass der visuell mächtige Pipe-Operator noch nicht zum Einsatz gelangt:
@@ -307,13 +309,13 @@ indem wir die temporären Variablen `v1`, `v2` und `v3` entfernen:
 
 *Hinweis*: Die `_view`-Klassen wurden dem Namensraum  `std::ranges` zugeordnet.
 
-## Bereichs *Views* besitzen Bereichsadaptoren
+## *Views* besitzen Bereichsadaptoren
 
 Wie Sie bereits gesehen haben, können wir mit der &ldquo;*Ranges*&rdquo;-Bibliothek auch Ansichten erstellen,
 die mit Pipe-Operatoren &ndash; und eben dann mit Bereichsadaptoren &ndash; eine viel elegantere Syntax besitzen.
 
 Die Fähigkeit, eine Anweisung von links nach rechts anstatt sie von innen nach außen zu lesen, macht den
-Code viel leichter zu lesen:
+Code leichter lesbar:
 
 *Hinweis*: Die Bereichsadaptoren wurden dem Namensraum  `std::views` zugeordnet.
 
@@ -404,10 +406,11 @@ Der Ergebnis der Transformation von *Views*  kann man in einem Container abspeic
 Man spricht hier auch von &ldquo;die Ansicht materialisieren&rdquo;.
 
 Alle *Views* können prinzipiell in Containern materialisiert werden, aber:
-Eine Funktions-Template namens `std::ranges::to<T>()`, die diese Funktionalität besitzt,
+Ein Funktions-Template namens `std::ranges::to<T>()`, das diese Funktionalität besitzt,
 wurde für C++&ndash;20 vorgeschlagen, hat es aber dann doch nicht zur Verabschiedung in den Standard geschafft.
 
-Es gibt allerdings einen einfachen Workaround mit der Funktion `std::ranges::copy()`, den wir im Folgenden vorstellen:
+Es gibt allerdings einen einfachen Workaround mit einer selbst geschriebenen
+Funktion `to_vector`, den wir im Folgenden vorstellen:
 
 ```cpp
 01: auto to_vector(auto&& r)
@@ -460,7 +463,7 @@ Es gibt allerdings einen einfachen Workaround mit der Funktion `std::ranges::cop
 ```
 
 *Hinweis*:
-Wir einem Aufruf von `reserve()` lässt sich die Performance der Funktion `to_vector` optimieren.
+Mit einem Aufruf von `reserve()` lässt sich die Performance der Funktion `to_vector` optimieren.
 Es wird vorab genug Platz für alle Elemente im Ergebnis-Container allokiert,
 um weitere, überflüssige Allokationen zu vermeiden.
 Jedoch kann man `reserve()` nur aufrufen, wenn die Methode am Ausgangscontainer vorhanden ist.
@@ -468,12 +471,12 @@ Dies kann man mit `if constexpr`  und dem Test der Methode `sized_range` bewerks
 
 ## *Views* werden &ldquo;*lazy*&rdquo; evaluiert
 
-Die gesamte Arbeit, die eine *View* verrichtet, basiert auf der *Lazy*-Vorgehensweise.
+Die gesamte Arbeit, die eine *View* verrichtet, basiert auf der *lazy*-Vorgehensweise.
 Dies erfolgt somit im Gehensatz zu allen Funktionen aus der `<algorithm>`-Headerdatei,
 die ihre Arbeit *immediately*, also sofort ausführen, wenn sie aufgerufen werden.
 
-Wenn wir *Views* als Bausteine und in Ketten verwenden,
-profitieren wir von der *Lazy*-Auswertungsvorgehensweise, da wir unnötige Kopien vermeiden.
+Wenn wir *Views* als Bausteine in Ketten verwenden,
+profitieren wir von der *lazy*-Auswertungsvorgehensweise, da wir unnötige Kopien vermeiden.
 
 Wie sieht es aber mit *Views* aus, die einen *Eager*-Algorithmus benötigen würden?
 Zum Beispiel `std::sort`? Die Antwort lautet: Dies geht nicht!
@@ -515,7 +518,7 @@ Eines der Probleme in diesem Zusammenhang ist,
 dass sich der Übersetzer über die Iteratortypen beschwert, die von einer bestimmten *View* bereitgestellt werden.
 Der Sortieralgorithmus erfordert *Random-Access*-Iteratoren!
 Dies muss aber nicht der Typ der Iteratoren sein, die eine *View* besitzt,
-obwohl der zugrundeliegende Eingabecontainer beispielsweise ein `std::vector`-Objekt ist!
+obwohl der zugrunde liegende Eingabecontainer beispielsweise ein `std::vector`-Objekt ist!
 
 Manchmal lassen sich auch Workarounds finden, die ein Materialisiern der *View* umgehen, 
 siehe das folgende Beispiel:
