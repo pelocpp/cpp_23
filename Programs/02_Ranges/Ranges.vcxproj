@@ -156,7 +156,7 @@
     <ClCompile Include="Ranges01.cpp" />
     <ClCompile Include="Ranges_Ex_01_Algorithms.cpp" />
     <ClCompile Include="Ranges_Ex_02_Ranges_View.cpp" />
-    <ClCompile Include="Ranges_Ex_03_Examples.cpp" />
+    <ClCompile Include="Ranges_Ex_04_Examples.cpp" />
     <None Include="ReadmeEx_04_Examples.md">
       <FileType>Document</FileType>
     </None>

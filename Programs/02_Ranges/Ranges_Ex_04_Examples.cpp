@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <numeric>
 #include <list>
+#include <vector>
 #include <ranges>
 
 namespace Cpp20RangesExamples
@@ -54,6 +55,32 @@ namespace Cpp20RangesExamples
 
         std::cout << result << std::endl;
     }
+
+    void example_02_binaryToDecimalConversion()
+    {
+        auto digits = std::vector<uint8_t>{ 1, 1, 1, 0 };
+
+        // [0, 1, 2, 3, 4, 5, 6, 7, ...]
+        auto rangeInts = std::views::iota(0, std::ranges::distance(digits));
+
+        // [1, 2, 4, 8, 16, 32, 64, 128, ...]
+        auto r_pow = rangeInts | std::views::transform([] (int x) {
+            return 1 << x; }
+        );
+
+        // reverse range
+        auto rangeReverse = digits | std::views::reverse;
+
+        // only in classical STL-notation possible -  // e.g. 0*1 + 1*2 + 1*4 + 1*8 = 14
+        auto value = std::inner_product(
+            std::begin(rangeReverse), 
+            std::end(rangeReverse),
+            std::begin(r_pow), 
+            0
+        );
+
+        std::cout << value << std::endl;
+    }
 }
 
 void ranges_ex_03_examples()
@@ -61,6 +88,7 @@ void ranges_ex_03_examples()
     using namespace Cpp20RangesExamples;
 
     example_01_filterMapReduce();
+    example_02_binaryToDecimalConversion();
 }
 
 // ===========================================================================

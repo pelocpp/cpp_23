@@ -53,7 +53,7 @@
     <ClCompile Include="Ranges_Ex_02_Ranges_View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ranges_Ex_03_Examples.cpp">
+    <ClCompile Include="Ranges_Ex_04_Examples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
