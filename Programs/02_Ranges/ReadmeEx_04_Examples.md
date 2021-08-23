@@ -81,12 +81,12 @@ wenngleich der Lerneffekt hier im Vordergrund steht.
 Wir legen zu Grunde, dass die Ziffern der Binärdarstellung in einem Bereich vorliegen.
 Um die nachfolgenden Erläuterungen an einem Beispiel festzumachen, wollen wir die binäre Zahl `1110` betrachten:
 
-  * Kehren Sie die anfängliche Binärdarstellung mithilfe von `std::views::reverse` um (im Beispiel erhalten Sie `[0,1,1,1]`).
+  * Kehren Sie die anfängliche Binärdarstellung mithilfe von `std::views::reverse` um (im Beispiel erhalten Sie `[0, 1, 1, 1]`).
     Dadurch können wir mit der Potenz 2<sup>0</sup> beginnen.
-  * Generieren Sie den Bereich `[0, 1, 2, 3, ...]` mithilfe von `std::views::iota`.
-  * Verwenden Sie `std::views::transform` und den Shift-Operator, um `[0, 1, 2, 3, ...]` in
-    <code>[2<sup>0</sup>, 2<sup>1</sup>, 2<sup>2</sup>, 2<sup>3</sup>, ...]</code> umzuwandeln.
-  * Verwenden Sie `std::views::inner_product`, um den umgekehrten Binärbereich `[0, 1, 1, 1]` mit
+  * Generieren Sie den Bereich `[0, 1, 2, 3]` mithilfe von `std::views::iota`.
+  * Verwenden Sie `std::views::transform` und den Shift-Operator, um `[0, 1, 2, 3]` in
+    <code>[2<sup>0</sup>, 2<sup>1</sup>, 2<sup>2</sup>, 2<sup>3</sup>]</code> umzuwandeln.
+  * Verwenden Sie nun `std::views::inner_product`, um den umgekehrten Binärbereich `[0, 1, 1, 1]` mit
     den Zweierpotenzen `[1, 2, 4, 8]` zu multiplizieren und zusammenzufassen.
 
 *Hinweis*: Auch in diesem Beispiel sind nicht alle *Views* im C++&ndash;Standard vorhanden.
