@@ -144,8 +144,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="cpp20_views.svg" />
+    <None Include="Readme_Legacy.md" />
     <None Include="Readme.md" />
-    <None Include="ReadmeEx.md" />
     <None Include="ReadmeEx_01_Algorithms.md" />
     <None Include="ReadmeEx_02_Ranges_Views.md" />
     <None Include="ReadmeEx_03_Standard_Views.md" />

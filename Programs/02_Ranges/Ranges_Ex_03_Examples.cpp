@@ -3,45 +3,64 @@
 // ===========================================================================
 
 #include <iostream>
+#include <sstream>
 #include <string>
-#include <type_traits>
 #include <algorithm>
 #include <numeric>
-#include <vector>
 #include <list>
-#include <version>
-#include <cassert>
 #include <ranges>
-
-// https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
-
-/*****
-
-To set this compiler option in Visual Studio,
-open the project's Property Pages dialog box.
-
-Select: Configuration Properties ==> C / C++ ==> Command Line property page.
-
-Add /Zc:__cplusplus to the Additional options pane
-
-Zc:__cplusplus	/std:c++17	201703L
-Zc:__cplusplus	/std:c++20	202002L
-
-****/
-
-#define Cpp_20 202002L
-#define Cpp_17 201703L
 
 namespace Cpp20RangesExamples
 {
+    void example_01_filterMapReduce()
+    {
+        // testing 'Filter-Map-Reduce' Pattern
+        struct Book {
+            std::string m_title;
+            std::string m_author;
+            int m_year;
+            double m_price;
+        };
 
+        std::list<Book> books {
+                {"C", "Dennis Ritchie", 1972, 11.99 } ,
+                {"Java", "James Gosling", 1995, 19.99 },
+                {"C++", "Bjarne Stroustrup", 1985, 20.00 },
+                {"C#", "Anders Hejlsberg", 2000, 29.99 }
+        };
+
+        // i) filter books which appeared past 1990
+        // ii) extract book title
+        auto titles = books
+            | std::views::filter([](auto&& b) { return b.m_year >= 1990; })
+            | std::views::transform([](auto&& b) { return b.m_title; });
+
+        // iii) reduce to result string, e.g. comma seperated list
+        auto result = std::accumulate(
+            std::begin(titles),
+            std::end(titles),
+            std::string{},
+            [](const std::string& a, auto&& b) {
+                std::ostringstream oss;
+                if (a.empty()) {
+                    oss << b;
+                }
+                else {
+                    oss << a << ", " << b;
+                }
+                return oss.str();
+            }
+        );
+
+        std::cout << result << std::endl;
+    }
 }
 
 void ranges_ex_03_examples()
 {
     using namespace Cpp20RangesExamples;
 
-
+    example_01_filterMapReduce();
 }
 
 // ===========================================================================

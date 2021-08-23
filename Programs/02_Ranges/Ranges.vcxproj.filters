@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Readme.md">
+    <None Include="Readme_Legacy.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx.md">
+    <None Include="Readme.md">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="ReadmeEx_01_Algorithms.md">
