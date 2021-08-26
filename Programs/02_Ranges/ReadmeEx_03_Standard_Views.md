@@ -84,5 +84,23 @@ Yet another Table:
             <td align="right" valign="middle">x</td>
             <td align="right" valign="bottom">x</td>
         </tr>
+        <tr>
+            <td align="left">te<br>st</td>
+            <td align="left" valign="top">x</td>
+            <td align="left" valign="middle">x</td>
+            <td align="left" valign="bottom">x</td>
+            <td align="right" valign="top">x</td>
+            <td align="right" valign="middle">x</td>
+            <td align="right" valign="bottom">x</td>
+        </tr>
+        <tr>
+            <td align="left">te<br>st</td>
+            <td align="left" valign="top">x</td>
+            <td align="left" valign="middle">x</td>
+            <td align="left" valign="bottom">x</td>
+            <td align="right" valign="top">x</td>
+            <td align="right" valign="middle">x</td>
+            <td align="right" valign="bottom">x</td>
+        </tr>
     </tbody>
 </table>
