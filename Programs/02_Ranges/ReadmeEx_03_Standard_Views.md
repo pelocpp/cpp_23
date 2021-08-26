@@ -1,4 +1,4 @@
-# *Views* in Standard C++&ndash;20
+# *Ranges* und *Views* in Standard C++&ndash;20
 
 [Zurück](Readme.md)
 
@@ -8,6 +8,24 @@
 
 Nicht alle *Ranges* und *Views* der &ldquo;range-v3&rdquo;-Bibliothek
 von Eric Niebler haben Einzug in den C++&ndash;20 Standard gefunden.
+
+##  *Ranges* in Standard C++&ndash;20
+
+
+Nachfolgende Tabelle beschreibt &ndash; Stand August 2021 &ndash; den Umfang der *Ranges*,
+die der Visual C++ Compiler unterstützt:
+
+| *Range* | Beschreibung | Unterstützende Container |
+|:-- |:----|:----|
+| `std::ranges::input_range` | Kann &ndash; mindestens einmal &ndash; von Anfang bis zum Ende iterieren | `std::forward_list`<br/>`std::unordered_map`<br/>`std::unordered_multimap`<br/>`std::unordered_set`<br/>`std::unordered_multiset`<br/>`basic_istream_view` |
+| `std::ranges::forward_range` | Kann &ndash; mehr als einmal &ndash; von Anfang bis Ende iterieren | `std::forward_list`<br/>`std::unordered_map`<br/>`std::unordered_multimap`<br/>`std::unordered_set`<br/>`std::unordered_multiset` |
+| `std::ranges::bidirectional_range` | Kann &ndash; mehr als einmal &ndash; vorwärts und rückwärts iterieren  | `std::list`<br/>`std::map`<br/>`std::multimap`<br/>`std::multiset`<br/>`std::set` |
+| `std::ranges::random_access_range` | Zugriff mit dem `[]`-Operator auf ein beliebiges Element möglich  | `std::deque` |
+| `std::ranges::contiguous_range` | Die Elemente sind im Speicher dicht aufeinanderfolgend abgelegt  | `std::array`<br/>`std::string`<br/>`std::vector` |
+
+Tabelle 1. *Ranges* in Standard C++&ndash;20.
+
+##  *Views* in Standard C++&ndash;20
 
 Nachfolgende Tabelle beschreibt &ndash; Stand August 2021 &ndash; den Umfang der *Views*,
 die der Visual C++ Compiler unterstützt:
@@ -33,10 +51,38 @@ die der Visual C++ Compiler unterstützt:
 | `std::views::transform` | Ansicht, die auf jedes Element des Bereichs eine Transformationsfunktion anwendet. |
 | `std::views::values` | Nimmt eine Ansicht, die aus paarartigen Werten besteht, und erzeugt eine Ansicht der zweiten Elemente jedes Paares. |
 
-Tabelle 1. *Views* in Standard C++&ndash;20.
+Tabelle 2. *Views* in Standard C++&ndash;20.
 
 ---
 
 [Zurück](Readme.md)
 
 ---
+
+Yet another Table:
+
+<table id="verticalalign">
+    <caption>vertical-align</caption>
+    <thead>
+        <tr>
+            <th>ewwerwer</th>
+            <th>top</th>
+            <th>middle</th>
+            <th>bottom</th>
+            <th>top-right</th>
+            <th>middle-right</th>
+            <th>bottom-right</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="left">te<br>st</td>
+            <td align="left" valign="top">x</td>
+            <td align="left" valign="middle">x</td>
+            <td align="left" valign="bottom">x</td>
+            <td align="right" valign="top">x</td>
+            <td align="right" valign="middle">x</td>
+            <td align="right" valign="bottom">x</td>
+        </tr>
+    </tbody>
+</table>
