@@ -144,6 +144,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="cpp20_views.svg" />
+    <None Include="ReadmeEx_04_ViewImplementation.md" />
+    <None Include="ReadmeEx_05_MiscExamples.md" />
     <None Include="Readme_Legacy.md" />
     <None Include="Readme.md" />
     <None Include="ReadmeEx_01_Algorithms.md" />
@@ -156,8 +158,10 @@
     <ClCompile Include="Ranges01.cpp" />
     <ClCompile Include="Ranges_Ex_01_Algorithms.cpp" />
     <ClCompile Include="Ranges_Ex_02_Ranges_View.cpp" />
-    <ClCompile Include="Ranges_Ex_04_Examples.cpp" />
-    <None Include="ReadmeEx_04_Examples.md">
+    <ClCompile Include="Ranges_Ex_04_ViewImplementation.cpp" />
+    <ClCompile Include="Ranges_Ex_05_MiscExamples.cpp" />
+    <ClCompile Include="Ranges_Ex_06_RealworldExamples.cpp" />
+    <None Include="ReadmeEx_06_RealWorldExamples.md">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

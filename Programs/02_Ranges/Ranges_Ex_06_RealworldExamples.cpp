@@ -1,5 +1,5 @@
 // ===========================================================================
-// Ranges_Ex_03_Examples.cpp
+// Ranges_Ex_06_RealworldExamples.cpp
 // ===========================================================================
 
 #include <iostream>
@@ -11,7 +11,7 @@
 #include <vector>
 #include <ranges>
 
-namespace Cpp20RangesExamples
+namespace Cpp20RangesRealworldExamples
 {
     void example_01_filterMapReduce()
     {
@@ -83,9 +83,9 @@ namespace Cpp20RangesExamples
     }
 }
 
-void ranges_ex_03_examples()
+void ranges_ex_06_examples()
 {
-    using namespace Cpp20RangesExamples;
+    using namespace Cpp20RangesRealworldExamples;
 
     example_01_filterMapReduce();
     example_02_binaryToDecimalConversion();

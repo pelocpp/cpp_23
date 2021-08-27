@@ -27,13 +27,19 @@
     <None Include="ReadmeEx_02_Ranges_Views.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_04_Examples.md">
+    <None Include="ReadmeEx_06_RealWorldExamples.md">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="cpp20_views.svg">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="ReadmeEx_03_Standard_Views.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ReadmeEx_04_ViewImplementation.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ReadmeEx_05_MiscExamples.md">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -53,7 +59,13 @@
     <ClCompile Include="Ranges_Ex_02_Ranges_View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ranges_Ex_04_Examples.cpp">
+    <ClCompile Include="Ranges_Ex_06_RealworldExamples.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ranges_Ex_04_ViewImplementation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ranges_Ex_05_MiscExamples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

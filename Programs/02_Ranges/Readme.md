@@ -10,7 +10,11 @@
 
 ## [Ranges und Views in Standard C++&ndash;20](ReadmeEx_03_Standard_Views.md)
 
-## [Einige Beispiele](ReadmeEx_04_Examples.md)
+## [Implementierung einer View](ReadmeEx_04_ViewImplementation.md)
+
+## [Einige allgemeine Beispiele](ReadmeEx_05_MiscExamples.md)
+
+## [Einige &ldquo;Real-World&rdquo;-Beispiele](ReadmeEx_06_RealWorldExamples.md)
 
 ---
 
