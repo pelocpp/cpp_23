@@ -14,7 +14,7 @@
 
 ## [Einige allgemeine Beispiele](ReadmeEx_05_MiscExamples.md)
 
-## [Einige &ldquo;Real-World&rdquo;-Beispiele](ReadmeEx_06_RealWorldExamples.md)
+## [Einige &ldquo;Real-World&rdquo;-Aufgaben](ReadmeEx_06_RealWorldExamples.md)
 
 ---
 

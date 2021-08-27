@@ -12,7 +12,7 @@
 
 ##### Beispiel 1: Alle Elemente eines Bereichs iterieren / ausgeben
 
-Alle folgenden Beispiele verwenden folgende Hilfsfunktionen:
+Die folgenden Beispiele verwenden folgende Hilfsfunktionen:
 
 ```cpp
 auto printElem = [](auto n) { std::cout << n << ' '; };
@@ -231,6 +231,162 @@ VII
 ```
 
 ### Beispiele mit Zeichenketten
+
+##### Beispiel 1: Anzahl der Teilzeichenketten (Wörter) in einer Zeichenkette bestimmen
+
+```cpp
+01: std::string text { "The quick brown fox jumps over the lazy dog" };
+02: auto words{ text | std::views::split(' ') };
+03: size_t num{ sizeOfRange(words) };
+04: std::cout << num << " words.";
+
+```
+
+*Ausgabe*:
+
+```
+9 words.
+```
+
+##### Beispiel 2: Eine Zeichenkette in Teilzeichenketten zerlegen
+
+Bei diesem Beispiel sollten die Teilzeichenketten durch ein beliebiges Trennzeichen voneinander getrennt sein.
+Das Resultat im Form eines Bereichs kann man entweder traversieren oder aber die Menge der Teilzeichenketten 
+wird in einem `std::vector<std::string>-Objekt` zusammengefasst.
+
+Es werden gleich drei Lösungsansätze vorgestellt.
+Allen Vorschlägen ist die Beobachtung gemeinsam, dass die View `std::views::split` einen *Subrange*-Typ zurückliefert,
+also keine Teilzeichenkette und damit kein Objekt vom Typ `std::string`.
+
+```cpp
+01: auto toVector(auto&& r)
+02: {
+03:     std::vector<std::ranges::range_value_t<decltype(r)>> vec;
+04: 
+05:     if constexpr (std::ranges::sized_range<decltype(r)>) {
+06:         vec.reserve(std::ranges::size(r));
+07:     }
+08:     else {
+09:         vec.reserve(std::distance(r.begin(), r.end()));
+10:     }
+11: 
+12:     std::ranges::copy(r, std::back_inserter(vec));
+13:     return vec;
+14: }
+15: 
+16: void example_strings_02()
+17: {
+18:     std::string text{ "The-quick-brown-fox-jumps-over-the-lazy-dog" };
+19: 
+20:     auto range = text | std::views::split('-') | std::views::transform([](auto&& s) {
+21:         auto subrange{ s | std::views::common };
+22:         std::string word{ subrange.begin(), subrange.end() };
+23:         return word;
+24:     });
+25: 
+26:     auto words{ toVector(range) };
+27: 
+28:     for (auto&& word : words) {
+29:         std::cout << word << "--";
+30:     }
+31: }
+32: 
+33: void example_strings_02a()
+34: {
+35:     std::string text{ "The-quick-brown-fox-jumps-over-the-lazy-dog" };
+36: 
+37:     auto range = text | std::views::split('-') | std::views::transform([](auto&& s) {
+38:         auto subrange{ s | std::views::common };
+39:         std::string word{ subrange.begin(), subrange.end() };
+40:         return word;
+41:     });
+42: 
+43:     for (auto&& word : range) {
+44:         std::cout << word << "!!";
+45:     }
+46: }
+47: 
+48: auto toString(auto&& r)
+49: {
+50:     std::string result{};
+51:     if constexpr (std::ranges::sized_range<decltype(r)>) {
+52:         result.reserve(std::ranges::size(r));
+53:     }
+54:     else {
+55:         result.reserve(std::distance(r.begin(), r.end()));
+56:     }
+57: 
+58:     std::ranges::copy(r, std::back_inserter(result));
+59:     return result;
+60: }
+61: 
+62: void example_strings_02b()
+63: {
+64:     std::string text { "The-quick-brown-fox-jumps-over-the-lazy-dog" };
+65: 
+66:     auto range = text | std::views::split('-') | std::views::transform([](auto&& s) {
+67:         auto subrange{ s | std::views::common };
+68:         std::string word{ toString (subrange)};
+69:         return word;
+70:     });
+71: 
+72:     for (auto&& word : range) {
+73:         std::cout << word << "??";
+74:     }
+75: }
+```
+
+*Ausgabe*:
+
+```
+The--quick--brown--fox--jumps--over--the--lazy--dog--
+The!!quick!!brown!!fox!!jumps!!over!!the!!lazy!!dog!!
+The??quick??brown??fox??jumps??over??the??lazy??dog??
+```
+
+##### Beispiel 3: Teilzeichenketten zu einer ganzen Zeichenkette zusammenfügen
+
+Natürlich gibt es hierfür mehrere Lösungsmöglichkeiten. Wir stellen eine Lösung
+ohne die &ldquo;*Ranges*&rdquo;-Bibliothek vor (sie basiert auf dem STL-Algorithmus `std::accumulate`)
+und eine zweite mit der *View* `std::views::join`:
+
+```cpp
+01: void example_strings_03()
+02: {
+03:     std::vector<std::string> words{
+04:         "Lorem", ".", "ipsum", ".",
+05:         "dolor", ".", "sit", ".",
+06:         "amet"
+07:     };
+08: 
+09:     // okay, solution without ranges :(
+10:     std::string text{ std::accumulate(std::begin(words), std::end(words), std::string{}) };
+11:     std::cout << text;
+12: }
+13: 
+14: void example_strings_03a()
+15: {
+16:     std::vector<std::string> words{
+17:         "Lorem", "-", "ipsum", "-",
+18:         "dolor", "-", "sit", "-",
+19:         "amet"
+20:     };
+21: 
+22:     // this solution is with ranges :)
+23:     auto range{ words | std::views::join };
+24:     std::string text{ toString(range) };
+25:     std::cout << text;
+26: }
+```
+
+*Ausgabe*:
+
+```
+Lorem.ipsum.dolor.sit.amet
+Lorem-ipsum-dolor-sit-amet
+```
+
+
 
 
 ---

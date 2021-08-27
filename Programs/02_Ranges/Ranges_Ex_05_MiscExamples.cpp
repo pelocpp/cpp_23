@@ -145,6 +145,134 @@ namespace Cpp20RangesMiscellaneousExamples
         std::ranges::for_each(range, printElemNL);
     }
 
+    // =======================================================================
+
+    // count the number of words (delimited by space) in a text
+    auto sizeOfRange(auto&& r)
+    {
+        size_t result{};
+
+        if constexpr (std::ranges::sized_range<decltype(r)>) {
+            result = std::ranges::size(r);
+        }
+        else {
+            result = std::distance(r.begin(), r.end());
+        }
+
+        return result;
+    }
+
+    void example_strings_01()
+    {
+        std::string text { "The quick brown fox jumps over the lazy dog" };
+
+        auto words{ text | std::views::split(' ') };
+        size_t num{ sizeOfRange(words) };
+        std::cout << num << " words.";
+    }
+
+    auto toVector(auto&& r)
+    {
+        std::vector<std::ranges::range_value_t<decltype(r)>> vec;
+
+        if constexpr (std::ranges::sized_range<decltype(r)>) {
+            vec.reserve(std::ranges::size(r));
+        }
+        else {
+            vec.reserve(std::distance(r.begin(), r.end()));
+        }
+
+        std::ranges::copy(r, std::back_inserter(vec));
+        return vec;
+    }
+
+    void example_strings_02()
+    {
+        std::string text{ "The-quick-brown-fox-jumps-over-the-lazy-dog" };
+
+        auto range = text | std::views::split('-') | std::views::transform([](auto&& s) {
+            auto subrange{ s | std::views::common };
+            std::string word{ subrange.begin(), subrange.end() };
+            return word;
+        });
+
+        auto words{ toVector(range) };
+
+        for (auto&& word : words) {
+            std::cout << word << "--";
+        }
+    }
+
+    void example_strings_02a()
+    {
+        std::string text{ "The-quick-brown-fox-jumps-over-the-lazy-dog" };
+
+        auto range = text | std::views::split('-') | std::views::transform([](auto&& s) {
+            auto subrange{ s | std::views::common };
+            std::string word{ subrange.begin(), subrange.end() };
+            return word;
+        });
+
+        for (auto&& word : range) {
+            std::cout << word << "!!";
+        }
+    }
+
+    auto toString(auto&& r)
+    {
+        std::string result{};
+        if constexpr (std::ranges::sized_range<decltype(r)>) {
+            result.reserve(std::ranges::size(r));
+        }
+        else {
+            result.reserve(std::distance(r.begin(), r.end()));
+        }
+
+        std::ranges::copy(r, std::back_inserter(result));
+        return result;
+    }
+
+    void example_strings_02b()
+    {
+        std::string text { "The-quick-brown-fox-jumps-over-the-lazy-dog" };
+
+        auto range = text | std::views::split('-') | std::views::transform([](auto&& s) {
+            auto subrange{ s | std::views::common };
+            std::string word{ toString (subrange)};
+            return word;
+        });
+
+        for (auto&& word : range) {
+            std::cout << word << "??";
+        }
+    }
+
+    void example_strings_03()
+    {
+        std::vector<std::string> words{
+            "Lorem", ".", "ipsum", ".",
+            "dolor", ".", "sit", ".",
+            "amet"
+        };
+
+        // okay, solution without ranges :(
+        std::string text{ std::accumulate(std::begin(words), std::end(words), std::string{}) };
+        std::cout << text;
+    }
+
+    void example_strings_03a()
+    {
+        std::vector<std::string> words{
+            "Lorem", "-", "ipsum", "-",
+            "dolor", "-", "sit", "-",
+            "amet"
+        };
+
+        // this solution is with ranges :)
+        auto range{ words | std::views::join };
+        std::string text{ toString(range) };
+        std::cout << text;
+    }
 
 }
 
@@ -152,21 +280,35 @@ void ranges_ex_05_examples()
 {
     using namespace Cpp20RangesMiscellaneousExamples;
 
-    example_01();
+    //example_01();
+    //std::cout << std::endl;
+    //example_02();
+    //std::cout << std::endl;
+    //example_03();
+    //std::cout << std::endl;
+    //example_04();
+    //std::cout << std::endl;
+    //example_05();
+    //std::cout << std::endl;
+    //example_06();
+    //std::cout << std::endl;
+    //example_07();
+    //std::cout << std::endl;
+    //example_08();
+    //std::cout << std::endl;
+
+    //example_strings_01();
+    //std::cout << std::endl;
+    //example_strings_02();
+    //std::cout << std::endl;
+    //example_strings_02a();
+    //std::cout << std::endl;
+    //example_strings_02b();
+    //std::cout << std::endl;
+
+    example_strings_03();
     std::cout << std::endl;
-    example_02();
-    std::cout << std::endl;
-    example_03();
-    std::cout << std::endl;
-    example_04();
-    std::cout << std::endl;
-    example_05();
-    std::cout << std::endl;
-    example_06();
-    std::cout << std::endl;
-    example_07();
-    std::cout << std::endl;
-    example_08();
+    example_strings_03a();
     std::cout << std::endl;
 }
 
