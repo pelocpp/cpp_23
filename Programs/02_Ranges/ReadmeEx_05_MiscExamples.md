@@ -386,7 +386,33 @@ Lorem.ipsum.dolor.sit.amet
 Lorem-ipsum-dolor-sit-amet
 ```
 
+##### Beispiel 4: Eine Zeichenkettenzerlegung mit Trennzeichenkette
 
+```cpp
+01: std::string words{ "Modern-_-C++-_-is-_-really-_-awesome-_-!" };
+02: std::string delim{ "-_-" };
+03: 
+04: auto range = words | std::views::split(delim) | std::views::transform([](auto&& s) {
+05:     auto subrange{ s | std::views::common };
+06:     std::string word{ subrange.begin(), subrange.end() };
+07:     return word;
+08: });
+09: 
+10: for (std::string word : range) {
+11:     std::cout << std::quoted(word) << std::endl;
+12: }
+```
+
+*Ausgabe*:
+
+```
+"Modern"
+"C++"
+"is"
+"really"
+"awesome"
+"!"
+```
 
 
 ---

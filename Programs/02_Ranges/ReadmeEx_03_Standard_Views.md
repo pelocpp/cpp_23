@@ -33,13 +33,13 @@ die der Visual C++ Compiler unterstützt:
 | *View* | Beschreibung |
 |:-- |:----|
 | `std::views::all` | Ansicht, die alle Elemente eines Bereichs enthält. |
-| `std::views::common` | Umwandlung einer Ansicht in einen `common_range` Objekt. |
+| `std::views::common` | Umwandlung einer Ansicht in ein `common_range`&ndash;Objekt. |
 | `std::views::counted` | Erstellt einen Unterbereich aus einem Iterator und einer vorgegeben Anzahl von Elementen. |
 | `std::views::drop` | Ansicht, die aus Elementen einer anderen Ansicht besteht, wobei die ersten *N* Elemente übersprungen werden. |
 | `std::views::drop_while` | Ansicht, die aus den Elementen einer anderen Ansicht besteht, wobei die anfängliche Unterfolge von Elementen bis zum ersten Element übersprungen wird, bei dem das Prädikat zurückkehrt. |
 | `std::views::elements` | Nimmt eine Ansicht, die aus tupelartigen Werten und einer Zahl *N* besteht, und erzeugt eine Ansicht des *N*.-ten Elements jedes Tupels. |
 | `std::views::empty` | Leere Ansicht ohne Elemente. |
-| `std::views::filter` | Eine Ansicht, die aus den Elementen eines Bereichs besteht, die ein bestimmtes Prädikat erfüllen. |
+| `std::views::filter` | Ansicht, die aus den Elementen eines Bereichs besteht, die ein bestimmtes Prädikat erfüllen. |
 | `std::views::iota` | Erzeugt eine Ansicht, die aus einer Sequenz besteht, die durch wiederholtes Inkrementieren eines Anfangswerts erzeugt wird. |
 | `std::views::join` | Ansicht, die aus der Sequenz besteht, die durch das Verknüpfen der Elemente mehrerer Ansichten von Bereichen entsteht. |
 | `std::views::keys` | Nimmt eine Ansicht, die aus paarartigen Werten besteht, und erzeugt eine Ansicht der ersten Elemente jedes Paares. |

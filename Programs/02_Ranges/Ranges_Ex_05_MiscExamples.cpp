@@ -3,6 +3,8 @@
 // ===========================================================================
 
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <algorithm>
@@ -274,41 +276,57 @@ namespace Cpp20RangesMiscellaneousExamples
         std::cout << text;
     }
 
+    void example_strings_04()
+    {
+        std::string words{ "Modern-_-C++-_-is-_-really-_-awesome-_-!" };
+        std::string delim{ "-_-" };
+
+        auto range = words | std::views::split(delim) | std::views::transform([](auto&& s) {
+            auto subrange{ s | std::views::common };
+            std::string word{ subrange.begin(), subrange.end() };
+            return word;
+        });
+
+        for (std::string word : range) {
+            std::cout << std::quoted(word) << std::endl;
+        }
+    }
 }
 
 void ranges_ex_05_examples()
 {
     using namespace Cpp20RangesMiscellaneousExamples;
 
-    //example_01();
-    //std::cout << std::endl;
-    //example_02();
-    //std::cout << std::endl;
-    //example_03();
-    //std::cout << std::endl;
-    //example_04();
-    //std::cout << std::endl;
-    //example_05();
-    //std::cout << std::endl;
-    //example_06();
-    //std::cout << std::endl;
-    //example_07();
-    //std::cout << std::endl;
-    //example_08();
-    //std::cout << std::endl;
+    example_01();
+    std::cout << std::endl;
+    example_02();
+    std::cout << std::endl;
+    example_03();
+    std::cout << std::endl;
+    example_04();
+    std::cout << std::endl;
+    example_05();
+    std::cout << std::endl;
+    example_06();
+    std::cout << std::endl;
+    example_07();
+    std::cout << std::endl;
+    example_08();
+    std::cout << std::endl;
 
-    //example_strings_01();
-    //std::cout << std::endl;
-    //example_strings_02();
-    //std::cout << std::endl;
-    //example_strings_02a();
-    //std::cout << std::endl;
-    //example_strings_02b();
-    //std::cout << std::endl;
-
+    example_strings_01();
+    std::cout << std::endl;
+    example_strings_02();
+    std::cout << std::endl;
+    example_strings_02a();
+    std::cout << std::endl;
+    example_strings_02b();
+    std::cout << std::endl;
     example_strings_03();
     std::cout << std::endl;
     example_strings_03a();
+    std::cout << std::endl;
+    example_strings_04();
     std::cout << std::endl;
 }
 
