@@ -8,6 +8,16 @@
 
 ---
 
+## Aufgaben
+
+Einige kleinere Aufgaben (samt Musterlösungen) sind diesem Repository ebenfalls beigefügt.
+Sie sind mit Absicht vergleichsweise kurz und meiner Meinung nach auch einfach gehalten,
+um die &ldquo;graue Materie&rdquo; an der einen oder anderen Stelle etwas aufzuhellen:
+
+[Zu den Aufgaben](Readme_Exercises.md).
+
+---
+
 ## Überblick
 
 *Kurz und bündig*:

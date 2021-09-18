@@ -142,9 +142,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Readme.md" />
+    <None Include="Readme_Exercises.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Concepts01.cpp" />
+    <ClCompile Include="ConceptsExercises.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
