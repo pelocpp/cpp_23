@@ -4,10 +4,6 @@
 
 ---
 
-[Quellcode](Concepts01.cpp)
-
----
-
 ## Aufgaben
 
 Einige kleinere Aufgaben (samt Musterlösungen) sind diesem Repository ebenfalls beigefügt.
@@ -19,6 +15,10 @@ um die &ldquo;graue Materie&rdquo; an der einen oder anderen Stelle etwas aufzuh
 ---
 
 ## Überblick
+
+[Quellcode](Concepts01.cpp)
+
+---
 
 *Kurz und bündig*:
 
@@ -243,7 +243,7 @@ Ich schließe diese einführenden Erläuterungen mit folgenden ergänzenden Bemerkun
 
 Die Anregungen zu den Beispielen stammen aus
 
-[C++20: Concepts, an introduction](https://oopscenities.net/2020/09/29/c20-concept/)
+[C++20: Concepts, an Introduction](https://oopscenities.net/2020/09/29/c20-concept/)
 
 ---
 

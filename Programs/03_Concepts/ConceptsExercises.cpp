@@ -28,7 +28,7 @@ namespace Exercises {
             }
 
             std::string result;
-            result.reserve(len);   // preallocate
+            result.reserve(len);  // preallocate memory
 
             // concatenate strings
             for (auto s : { args... }) {
@@ -47,7 +47,7 @@ namespace Exercises {
                 len += s.size();
             }
 
-            std::string result(len, '\0');   // preallocate
+            std::string result(len, '\0');   // preallocate memory
 
             // concatenate strings
             std::string::iterator it = std::begin(result);
@@ -122,7 +122,6 @@ void test_exercises()
     using namespace Exercises;
     Exercise_01::testExercise_01();
 }
-
 
 // ===========================================================================
 // End-of-File

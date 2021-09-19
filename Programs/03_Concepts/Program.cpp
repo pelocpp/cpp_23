@@ -7,7 +7,7 @@ void test_exercises();
 
 int main()
 {
-    // example_concepts();
+    example_concepts();
     test_exercises();
     return 0;
 }
