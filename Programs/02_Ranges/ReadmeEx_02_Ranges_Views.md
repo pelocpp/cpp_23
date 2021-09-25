@@ -472,7 +472,7 @@ Dies kann man mit `if constexpr`  und dem Test der Methode `sized_range` bewerks
 ## *Views* werden &ldquo;*lazy*&rdquo; evaluiert
 
 Die gesamte Arbeit, die eine *View* verrichtet, basiert auf der *lazy*-Vorgehensweise.
-Dies erfolgt somit im Gehensatz zu allen Funktionen aus der `<algorithm>`-Headerdatei,
+Dies erfolgt somit im Gegensatz zu allen Funktionen aus der `<algorithm>`-Headerdatei,
 die ihre Arbeit *immediately*, also sofort ausführen, wenn sie aufgerufen werden.
 
 Wenn wir *Views* als Bausteine in Ketten verwenden,
@@ -520,7 +520,7 @@ Der Sortieralgorithmus erfordert *Random-Access*-Iteratoren!
 Dies muss aber nicht der Typ der Iteratoren sein, die eine *View* besitzt,
 obwohl der zugrunde liegende Eingabecontainer beispielsweise ein `std::vector`-Objekt ist!
 
-Manchmal lassen sich auch Workarounds finden, die ein Materialisiern der *View* umgehen, 
+Manchmal lassen sich auch Workarounds finden, die ein Materialisieren der *View* umgehen, 
 siehe das folgende Beispiel:
 
 
