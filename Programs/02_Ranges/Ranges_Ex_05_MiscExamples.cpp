@@ -13,8 +13,13 @@
 #include <vector>
 #include <ranges>
 
+#define Cpp_20 202002L
+#define Cpp_17 201703L
+
 namespace Cpp20RangesMiscellaneousExamples
 {
+#if __cplusplus >= Cpp_20
+
     auto printElem = [](auto n) { std::cout << n << ' '; };
     
     auto printElemNL = [](auto n) { std::cout << n << std::endl; };
@@ -291,10 +296,13 @@ namespace Cpp20RangesMiscellaneousExamples
             std::cout << std::quoted(word) << std::endl;
         }
     }
+#endif
 }
 
 void ranges_ex_05_examples()
 {
+#if __cplusplus >= Cpp_20
+
     using namespace Cpp20RangesMiscellaneousExamples;
 
     example_01();
@@ -328,6 +336,7 @@ void ranges_ex_05_examples()
     std::cout << std::endl;
     example_strings_04();
     std::cout << std::endl;
+#endif
 }
 
 // ===========================================================================

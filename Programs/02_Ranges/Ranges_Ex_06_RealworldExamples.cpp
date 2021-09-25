@@ -11,8 +11,13 @@
 #include <vector>
 #include <ranges>
 
+#define Cpp_20 202002L
+#define Cpp_17 201703L
+
 namespace Cpp20RangesRealworldExamples
 {
+#if __cplusplus >= Cpp_20
+
     void example_01_filterMapReduce()
     {
         // testing 'Filter-Map-Reduce' Pattern
@@ -81,14 +86,17 @@ namespace Cpp20RangesRealworldExamples
 
         std::cout << value << std::endl;
     }
+#endif
 }
 
 void ranges_ex_06_examples()
 {
+#if __cplusplus >= Cpp_20
     using namespace Cpp20RangesRealworldExamples;
 
     example_01_filterMapReduce();
     example_02_binaryToDecimalConversion();
+#endif
 }
 
 // ===========================================================================
