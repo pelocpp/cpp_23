@@ -50,7 +50,7 @@ ohne vorherige Überprüfung entspricht eher einem *reagierenden* als einem *proak
 Auf diese Weise sind die Fehlermeldungen aufgrund von Substitutionsfehlern ziemlich schwer zu lesen und zu verstehen.
 
 C++-*Concepts* stellen ein Hilfsmittel dar, um Anforderungen an Datentypen zu stellen, die erfüllt sein müssen,
-damit diese zúr Instanziierung von Templates herangezogen werden dürfen.
+damit diese zur Instanziierung von Templates herangezogen werden dürfen.
 Sind derartige Anforderungen verfügbar, so überprüft der Compiler diese, 
 bevor die eigentliche Ersetzung gestartet wird (Generierung der Funktionsschabone / des Klassentemplates).
 
