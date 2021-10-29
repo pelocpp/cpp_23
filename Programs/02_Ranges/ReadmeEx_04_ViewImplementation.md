@@ -23,7 +23,7 @@ Folgende WebSites erläutern, wie man eine *View* selbst implementieren kann:
 
 &ldquo;[An Introduction to the Range-v3 Library](https://www.codeproject.com/Articles/5276756/An-Introduction-to-the-Range-v3-Library/)&rdquo;
 
-&ldquo;[How to write a view](https://docs.seqan.de/seqan/3-master-user/howto_write_a_view.html/)&rdquo;
+&ldquo;[How to write a view](https://docs.seqan.de/seqan/3-master-user/howto_write_a_view.html)&rdquo;
 
 ---
 
