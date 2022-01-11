@@ -76,15 +76,15 @@ Octal:       14 014 04
 Binary:      1111 0b1111 0B101
 ```
 
-Die ersten Zahl wird ausgegeben ohne irgendwelche Formatangaben zu machen.
-Die gleiche Ausgabe wird erzeugt, wenn wir eine Dezimalzahl mit der Formatangabe `:d` verlangen.
+Die erste Zahl wird ohne irgendwelche Formatangaben ausgegeben.
+Die gleiche Ausgabe wird erzeugt, wenn wir eine Dezimalzahl mit der Formatangabe `:d` spezifizieren.
 Die dritte Zahl wird (mindestens) 6 Zeichen breit ausgegeben und mit führenden Nullen aufgefüllt.
 Der Spezifizierer `+` ermöglicht es, die Ausgabe des Vorzeichens für eine Zahl zu erzwingen.
 
 Die zweite Zeile zeigt, dass wir Werte hexadezimal darstellen können &ndash; sowohl mit Klein- als auch mit Großbuchstaben
 für die Ziffern größer als 9. Der Spezifizierer `#` erzeugt das in hexadezimalen Literalen verwendete Präfix `0x`.
 
-Ebenso können wir die Werte oktal und binär ausgeben &ndash; optional mit den entsprechenden Literalpräfixen.
+Ebenso können wir die Werte oktal und binär ausgeben &ndash; optional mit entsprechenden Literalpräfixen.
 
 
 ##### Fließkommazahlen
@@ -108,7 +108,7 @@ Scientific:  1.500000E+00 1.500000e+00
 ```
 
 Mit leeren Klammern oder nur mit einem Doppelpunkt erhalten wir die Standardausgabe.
-Dies entspricht der Formatangabe `:g` und ergibt die gleiche Ausgabe wie bei Streams ohne Manipulatoren.
+Dies entspricht der Formatangabe `:g`.
 Die Anzahl der Nachkommastellen kann zwischen einem Punkt und dem Formatbezeichner `f` angegeben werden.
 Dann wird der Wert auf diese Genauigkeit gerundet.
 Wenn die angeforderte Zahl größer ist als das, was durch den Typ des Wertes darstellbar ist,

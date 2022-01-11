@@ -1,6 +1,6 @@
 # C++ 20 / C++ 23 Spracherweiterungen
 
-In diesem Repository werden einige der groﬂen Neuerungen von C++ 20 n‰her betrachtet:
+In diesem Repository werden einige der groﬂen Neuerungen von C++ 20 / C++ 23 n‰her betrachtet:
 *Concepts*, *Ranges*, *Coroutinen*, eine neue Formatierung mit `std::format` und *Module*.
 
 ---
