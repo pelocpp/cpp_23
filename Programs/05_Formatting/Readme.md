@@ -121,12 +121,11 @@ wobei der Exponentialteil entsprechend mit einem Groﬂ- oder Kleinbuchstaben begi
 
 ---
 
-
 ## Literaturhinweise:
 
 Die Anregungen zu den Beispielen stammen teilweise bzw. in modifizierter Form aus
 
-[ `std::format` in C++ 20](https://www.heise.de/developer/artikel/std-format-in-C-20-4919132.html)
+[`std::format` in C++ 20](https://www.heise.de/developer/artikel/std-format-in-C-20-4919132.html)
 
 von Rainer Grimm und Peter Gottschling.
 

@@ -27,6 +27,8 @@ die bereits fest in den C++ 20 Standard eingeflossen sind.
 
 ## [`std::format`](Programs/05_Formatting/Readme.md)
 
+## [Spaceship Operator `<=>`](Programs/06_SpaceshipOperator/Readme.md)
+
 ## [Modules](Programs/04_Modules/Readme.md)
 
 ---

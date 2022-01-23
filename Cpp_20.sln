@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Formatting", "Programs\05_Formatting\Formatting.vcxproj", "{A155FAAD-9970-432C-BB2B-9E5B2B772A54}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpaceshipOperator", "Programs\06_SpaceshipOperator\SpaceshipOperator.vcxproj", "{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -67,6 +69,14 @@ Global
 		{A155FAAD-9970-432C-BB2B-9E5B2B772A54}.Release|x64.Build.0 = Release|x64
 		{A155FAAD-9970-432C-BB2B-9E5B2B772A54}.Release|x86.ActiveCfg = Release|Win32
 		{A155FAAD-9970-432C-BB2B-9E5B2B772A54}.Release|x86.Build.0 = Release|Win32
+		{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}.Debug|x64.ActiveCfg = Debug|x64
+		{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}.Debug|x64.Build.0 = Debug|x64
+		{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}.Debug|x86.ActiveCfg = Debug|Win32
+		{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}.Debug|x86.Build.0 = Debug|Win32
+		{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}.Release|x64.ActiveCfg = Release|x64
+		{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}.Release|x64.Build.0 = Release|x64
+		{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}.Release|x86.ActiveCfg = Release|Win32
+		{3B01EE45-DB7C-4137-ADF1-FFB851CC1E00}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
