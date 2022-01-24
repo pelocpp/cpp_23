@@ -10,7 +10,7 @@
 
 ## Überblick
 
-Der 3-Weg-Vergleichsoperator `<=>`, auch als *Spaceship*-Operator bezeichnet, bestimmt für zwei Objekte `A` und `B`,
+Der 3-Wege-Vergleichsoperator `<=>`, auch als *Spaceship*-Operator bezeichnet, bestimmt für zwei Objekte `A` und `B`,
 ob `A < B`, `A == B` oder `A > B` gilt. Der Code für den  *Spaceship*-Operator kann vom Übersetzer automatisch generiert werden.
 Historisch gesehen ist der *Spaceship*-Operator keine neue Erfindung, die `strcmp()`-Funktion aus C ist ähnlich definiert:
 Bei zwei C-Zeichenketten wird eine ganze Zahl als Ergebnis zurückgegeben, wobei
@@ -19,14 +19,14 @@ Bei zwei C-Zeichenketten wird eine ganze Zahl als Ergebnis zurückgegeben, wobei
   * == 0 bedeutet, dass beide Zeichenfolgen identisch sind und
   * &gt; 0 bedeutet, dass die erste Zeichenfolge größer ist.
 
-Es können also drei Ergebnisse vorhanden sein, daher die Begrifflichkeit des Drei-Weg-Vergleichs.
+Es können also drei Ergebnisse vorhanden sein, daher die Begrifflichkeit des Drei-Wege-Vergleichs.
 
 
 ## Verschiedene Möglichkeiten einer Beziehung
 
 > &ldquo;Nicht alle Gleichheitsbeziehungen sind gleich&rdquo;!
 
-Mit dem 3-Weg-Vergleichsoperator können nicht nur Ordnungen (Beziehungen) und Gleichheit zwischen Objekten ausgedrückt werden,
+Mit dem 3-Wege-Vergleichsoperator können nicht nur Ordnungen (Beziehungen) und Gleichheit zwischen Objekten ausgedrückt werden,
 sondern auch die Eigenschaften dieser Beziehungen. Dazu gibt es in C++ fünf so genannte *Beziehungsstärken*,
 die wir an Hand einer Reihe von Beispielen betrachten.
 
@@ -43,10 +43,11 @@ Hier gilt: Gleiche Objekte können nicht voneinander unterschieden werden.
 #### `std::weak_ordering`
 
 Objekte, die an Hand der Beziehungsstärke `std::weak_ordering` gleich sind, müssen nicht als solche gleich sein.
+Man spricht in diesem Fall auch weniger von *Gleichheit* als vielmehr von *Äquivalenz*.
 
   * Beispiel: Für Zeichenketten &ndash; egal, ob hier die Klasse `std::string` oder eine andere, benutzerdefinierte Klasse betrachtet wird &ndash;
     kann man einen Vergleich definieren, der Groß- und Kleinschreibung außer Acht lässt.
-    Zwei Zeichenketten `"ABC"` und `"abc"` wären an Hand dieser Definition dann gleich,
+    Zwei Zeichenketten `"ABC"` und `"abc"` wären an Hand dieser Definition dann gleich bzw. *äquivalent*,
     die dazugehörigen Objekte sind es nicht (im Sinne der Beziehungsstärke `std::strong_ordering`).
 
   * Ein zweites Beispiel: Für eine benutzerdefinierte Klasse `Rectangle` &ndash; möglicherweise wieder mit den Instanzvariablen `m_width` und `m_height` &ndash;
