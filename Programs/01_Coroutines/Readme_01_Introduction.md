@@ -4,7 +4,7 @@
 
 ---
 
-[Quellcode](Coroutines01.cpp)
+[Quellcode](Coroutines01_Introduction.cpp)
 
 ---
 
@@ -44,6 +44,10 @@ Per Definition wird in C++ 20 eine Funktion als *Coroutine* bezeichnet, wenn
   * sie das Schlüsselwort `co_yield` verwendet , um die Ausführung anzuhalten und einen Wert zurückzugeben.
   * sie das Schlüsselwort `co_return` verwendet , um die Ausführung abzuschließen.
   * sie den Operator `co_await` verwendet (*suspend*), um die Ausführung bis zur Wiederaufnahme (*resume*) zu unterbrechen.
+
+Ohne auf die drei Schlüsselwörter explizit einzugehen, kann man auch sagen:
+
+> Eine Coroutine ist eine Funktion, die sich selbst suspendieren kann.
 
 
 ## &ldquo;Don't implement coroutines yourself&rdquo;
