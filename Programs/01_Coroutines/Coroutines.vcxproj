@@ -141,11 +141,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="Cpp_20_Coroutine_vs_Subroutine.svg" />
+    <None Include="cpp_20_coroutine_vs_subroutine_01.svg" />
+    <None Include="cpp_20_coroutine_vs_subroutine_02.svg" />
     <None Include="Readme.md" />
+    <None Include="Readme_00_Introduction.md" />
+    <None Include="Readme_01_SomeDetails.md" />
+    <None Include="Readme_02_Futures.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Coroutines01.cpp" />
+    <ClCompile Include="Coroutines02_Future.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

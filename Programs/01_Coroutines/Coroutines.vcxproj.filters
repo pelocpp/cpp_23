@@ -18,7 +18,19 @@
     <None Include="Readme.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Cpp_20_Coroutine_vs_Subroutine.svg">
+    <None Include="Readme_01_SomeDetails.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Readme_02_Futures.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Readme_00_Introduction.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cpp_20_coroutine_vs_subroutine_01.svg">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="cpp_20_coroutine_vs_subroutine_02.svg">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -27,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Coroutines01.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Coroutines02_Future.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

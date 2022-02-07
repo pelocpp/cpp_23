@@ -8,168 +8,173 @@
 #include <coroutine>
 #include <optional>
 
-template<std::movable T>
-class Generator {
-public:
+namespace Coroutines_SimpleExamples
+{
 
-    struct promise_type {
-        Generator<T> get_return_object() {
-            return Generator{ Handle::from_promise(*this) };
-        }
+    template<std::movable T>
+    class Generator {
+    public:
 
-        void return_void() {}
+        struct promise_type {
+            Generator<T> get_return_object() {
+                return Generator{ Handle::from_promise(*this) };
+            }
 
-        static std::suspend_always initial_suspend() noexcept {
-            return {};
-        }
+            void return_void() {}
 
-        static std::suspend_always final_suspend() noexcept {
-            return {};
-        }
+            static std::suspend_always initial_suspend() noexcept {
+                return {};
+            }
 
-        std::suspend_always yield_value(T value) noexcept {
-            current_value = std::move(value);
-            return {};
-        }
+            static std::suspend_always final_suspend() noexcept {
+                return {};
+            }
 
-        // Disallow co_await in generator coroutines.
-        void await_transform() = delete;
+            std::suspend_always yield_value(T value) noexcept {
+                current_value = std::move(value);
+                return {};
+            }
 
-        [[noreturn]]
-        static void unhandled_exception() {
-            throw;
-        }
+            // Disallow co_await in generator coroutines.
+            void await_transform() = delete;
 
-        std::optional<T> current_value;
-    };
+            [[noreturn]]
+            static void unhandled_exception() {
+                throw;
+            }
 
-    using Handle = std::coroutine_handle<promise_type>;
+            std::optional<T> current_value;
+        };
 
-    explicit Generator(const Handle coroutine) :
-        m_coroutine{ coroutine }
-    {}
+        using Handle = std::coroutine_handle<promise_type>;
 
-    Generator() = default;
+        explicit Generator(const Handle coroutine) :
+            m_coroutine{ coroutine }
+        {}
 
-    ~Generator() {
-        if (m_coroutine) {
-            m_coroutine.destroy();
-        }
-    }
+        Generator() = default;
 
-    Generator(const Generator&) = delete;
-
-    Generator& operator=(const Generator&) = delete;
-
-    Generator(Generator&& other) noexcept :
-        m_coroutine{ other.m_coroutine }
-    {
-        other.m_coroutine = {};
-    }
-
-    Generator& operator=(Generator&& other) noexcept {
-        if (this != &other) {
+        ~Generator() {
             if (m_coroutine) {
                 m_coroutine.destroy();
             }
-            m_coroutine = other.m_coroutine;
+        }
+
+        Generator(const Generator&) = delete;
+
+        Generator& operator=(const Generator&) = delete;
+
+        Generator(Generator&& other) noexcept :
+            m_coroutine{ other.m_coroutine }
+        {
             other.m_coroutine = {};
         }
-        return *this;
-    }
 
-    // range-based for loop support
-    class Iter {
-    public:
-        void operator++() {
-            m_coroutine.resume();
-        }
-        const T& operator*() const {
-            return *m_coroutine.promise().current_value;
-        }
-        bool operator==(std::default_sentinel_t) const {
-            return !m_coroutine || m_coroutine.done();
+        Generator& operator=(Generator&& other) noexcept {
+            if (this != &other) {
+                if (m_coroutine) {
+                    m_coroutine.destroy();
+                }
+                m_coroutine = other.m_coroutine;
+                other.m_coroutine = {};
+            }
+            return *this;
         }
 
-        explicit Iter(const Handle coroutine) :
-            m_coroutine{ coroutine }
-        {}
+        // range-based for loop support
+        class Iter {
+        public:
+            void operator++() {
+                m_coroutine.resume();
+            }
+            const T& operator*() const {
+                return *m_coroutine.promise().current_value;
+            }
+            bool operator==(std::default_sentinel_t) const {
+                return !m_coroutine || m_coroutine.done();
+            }
+
+            explicit Iter(const Handle coroutine) :
+                m_coroutine{ coroutine }
+            {}
+
+        private:
+            Handle m_coroutine;
+        };
+
+        Iter begin() {
+            if (m_coroutine) {
+                m_coroutine.resume();
+            }
+            return Iter{ m_coroutine };
+        }
+        std::default_sentinel_t end() {
+            return {};
+        }
 
     private:
         Handle m_coroutine;
     };
 
-    Iter begin() {
-        if (m_coroutine) {
-            m_coroutine.resume();
+    // ===========================================================================
+
+    template<std::integral T>
+    Generator<T> range(T first, const T last) {
+        while (first < last) {
+            co_yield first++;
         }
-        return Iter{ m_coroutine };
-    }
-    std::default_sentinel_t end() {
-        return {};
     }
 
-private:
-    Handle m_coroutine;
-};
+    // ===========================================================================
 
-// ===========================================================================
-
-template<std::integral T>
-Generator<T> range(T first, const T last) {
-    while (first < last) {
-        co_yield first++;
-    }
-}
-
-// ===========================================================================
-
-Generator<char> hello() {
-    co_yield 'h';
-    co_yield 'e';
-    co_yield 'l';
-    co_yield 'l';
-    co_yield 'o';
-}
-
-Generator<long long> fibonacci() {
-    long long a = 0;
-    long long b = 1;
-    while (true) {
-        co_yield b;
-        auto tmp = a;
-        a = b;
-        b += tmp;
-    }
-}
-
-void example_coroutine_01() {
-
-    for (auto ch : hello()) { 
-        std::cout << ch << std::endl;
+    Generator<char> hello() {
+        co_yield 'h';
+        co_yield 'e';
+        co_yield 'l';
+        co_yield 'l';
+        co_yield 'o';
     }
 
-    std::cout << std::endl;
-}
-
-void example_coroutine_02() {
-
-    for (auto i : fibonacci()) {
-        if (i > 1'000'000)
-            break;
-
-        std::cout << i << std::endl;
+    Generator<long long> fibonacci() {
+        long long a = 0;
+        long long b = 1;
+        while (true) {
+            co_yield b;
+            auto tmp = a;
+            a = b;
+            b += tmp;
+        }
     }
 
-    std::cout << std::endl;
+    void simple_coroutine_01() {
+
+        for (auto ch : hello()) {
+            std::cout << ch << std::endl;
+        }
+
+        std::cout << std::endl;
+    }
+
+    void simple_coroutine_02() {
+
+        for (auto i : fibonacci()) {
+            if (i > 1'000'000)
+                break;
+
+            std::cout << i << std::endl;
+        }
+
+        std::cout << std::endl;
+    }
 }
 
 // ===============================================================
 
-void example_coroutines()
+void coroutines_01()
 {
-    example_coroutine_01();
-    example_coroutine_02();
+    using namespace Coroutines_SimpleExamples;
+    simple_coroutine_01();
+    simple_coroutine_02();
 }
 
 // ===========================================================================
