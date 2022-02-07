@@ -1,6 +1,6 @@
 # Coroutines
 
-[Zurück](../../Readme.md)
+[Zurück](Readme.md)
 
 ---
 
@@ -143,6 +143,6 @@ von Rainer Grimm.
 
 ---
 
-[Zurück](../../Readme.md)
+[Zurück](Readme.md)
 
 ---

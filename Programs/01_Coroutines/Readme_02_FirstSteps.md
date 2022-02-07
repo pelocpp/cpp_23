@@ -1,6 +1,6 @@
 # Erste Schritte
 
-[Zurück](../../Readme.md)
+[Zurück](Readme.md)
 
 ---
 
@@ -332,6 +332,6 @@ Die Motivation stammt von [Rainer Grimm](https://www.modernescpp.com/index.php/c
 
 ---
 
-[Zurück](../../Readme.md)
+[Zurück](Readme.md)
 
 ---
