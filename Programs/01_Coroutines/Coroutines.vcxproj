@@ -146,6 +146,7 @@
     <None Include="Readme.md" />
     <None Include="Readme_01_Introduction.md" />
     <None Include="Readme_02_FirstSteps.md" />
+    <None Include="Readme_03_MinimalisticApproach.md" />
     <None Include="Readme_09_Futures.md" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClCompile Include="Coroutines09_Future.cpp" />
     <ClCompile Include="Coroutines02_FirstSteps.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Coroutines03_MinimalisticApproach.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

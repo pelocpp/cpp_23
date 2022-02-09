@@ -4,12 +4,14 @@
 
 void coroutines_01();
 void coroutines_02();
+void coroutines_03();
 void coroutines_09();
 
 int main()
 {
     // coroutines_01();
-    coroutines_02();
+    //coroutines_02();
+    coroutines_03();
     //coroutines_09();
     return 0;
 }
