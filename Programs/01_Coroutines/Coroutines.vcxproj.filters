@@ -53,5 +53,13 @@
     <ClCompile Include="Coroutines03_MinimalisticApproach.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Coroutines04_Awaitable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Coroutines_01_Toth.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-# Erste Schritte
+# Eine minimalistische Betrachtung
 
 [Zurück](Readme.md)
 
@@ -8,12 +8,10 @@
 
 ---
 
-## Eine minimalistische Betrachtung
-
 Im Prinzip werden C++ Coroutinen durch einen so genannten *Coroutinen Framework* gebildet,
-der ergänzend zum Quellcode des Anwenders hinzugefügt wird.
+der ergänzend zum Quellcode des Anwenders durch den Compiler hinzugefügt wird.
 
-Die konkrete Gestaltung des generierten Quellcodes hängt von
+Die konkrete Gestaltung dieses generierten Codes hängt von
 benutzerdefinierten Rückgabetypen und von einem *Promise*-Datentyp ab.
 
 Bis auf Weiteres &ndash; das könnten Spracherweiterungen von C++&ndash;23 sein  &ndash; 
@@ -56,9 +54,11 @@ die sofort zurückkehrt und nichts tut.
 Sie ist aber ein ausgezeichneter Ausgangspunkt,
 um sich den vom Compiler generierten Framework-Code anzusehen:
 
-BILD 
+<img src="Coroutines_01_Toth.png" width="700">
 
-Neben den Erläuterungen von Abbildung 1 sehen wir uns das minimalistische Coroutinenbeispiel
+*Abbildung* 1: Diagramm, das den Umfang des *Coroutinen Framework* Codes zeigt, der vom Compiler um die Coroutine herum generiert wird.
+
+Neben den Erläuterungen von *Abbildung* 1 sehen wir uns das minimalistische Coroutinenbeispiel
 mit instrumentierten Testausgaben an.
 Die Ausgabe sieht so aus:
 
@@ -84,10 +84,10 @@ von der inneren Klasse `struct promise_type` angelegt!
 
 ## `std::suspend_never` versus `std::suspend_always`
 
-Was ist das Problem bei der zuvor demonstrierten Coroutine?
+Was ist das Problem bei der zuletzt demonstrierten Coroutine?
 Wir zeigen dies an zwei Änderungen am Quellcode auf:
 Was würde passieren, wenn wir den Rückgabetyp von `initial_suspend()` in `std::suspend_always`
-(an Stelle von `std::suspend_never`) ändern würden?
+(an Stelle von `std::suspend_never`) umändern?
 
 <pre>
 std::suspend_never initial_suspend() { return {}; }
@@ -130,7 +130,7 @@ das *Promise*-Objekt zur Weiterarbeit zu bewegen (*resume*).
 Es ist möglich, das so genannte *coroutine_handle* dem Anwender zur Verfügung zu stellen,
 wie der nächste Abschnitt zeigt.
 
-## `std::suspend_never` versus `std::suspend_always`
+## `std::coroutine_handle<promise_type>`
 
 Betrachten Sie die in fett gesetzten Änderungen am Beispielquellcode:
 
@@ -172,15 +172,15 @@ Betrachten Sie die in fett gesetzten Änderungen am Beispielquellcode:
 
 Studieren Sie folgende Aussagen genau:
 
-  * Zeilen 7 bis 9 &ndash; Der `get_return_object` kreiert ein `Task`-Objekt (Anwender-Objekt)
-    diesem wird aber durch den Konstruktor (Zeile 17) mit `*this` eine Referenz des *Promise*-Objekt übergeben.
+  * Zeilen 7 bis 9 &ndash; Der `get_return_object` kreiert ein `Task`-Objekt (Anwender-Objekt),
+    diesem wird durch den Konstruktor (Zeile 17) mit `*this` eine Referenz des *Promise*-Objekt übergeben.
   * Zeile 5  &ndash; Für den (indirekten) Zugriff auf ein *Promise*-Objekt gibt es einen vordefinerten Datentyp `std::coroutine_handle<promise_type>`.
   * Zeile 22  &ndash; Für das *Promise*-Objekt besitzt die Anwenderklasse nun eine (private) Instanzvariable: `m_coro` vom Typ `promise_type::Handle`.
-  * Zeilen 18 oder 19 &ndash; Methoden wie xxx oder xxx, die das Anwenderobjekt Task definiert,
+  * Zeilen 18 oder 19 &ndash; Methoden wie `resume` oder `destroy`, die das Anwenderobjekt Task definiert,
     sind nun in der Lage, über die (private) Instanzvariable `m_coro` auf das verborgene *Promise*-Objekt zuzugreifen.
 
 *Hinweis*:
-Das `Task`-Objekt besitzt ein *Promise*-Objekt. Dieses ist am Heap allokiert ( *stackless* Coroutinenkonzept).
+Das `Task`-Objekt besitzt ein *Promise*-Objekt. Dieses ist am Heap allokiert (&ldquo;*stackless*&rdquo; Coroutinenkonzept).
 Damit könnte es zu Problemen beim Kopieren eines Coroutinen-Anwenderobjekts kommen.
 Das Kopieren eines Coroutinen-Objekts ist kein abwegiger Gedanke, da dieses im Regelfall Anwenderdaten besitzt (berechnet, verwaltet ...)
 und damit auch kopiert werden können sollte. Die Frage ist nur, mit welchem Verhalten (*Behaviour*): *Copy-Semantics* oder *Move-Semantics*?
@@ -207,7 +207,7 @@ Betrachten Sie damit die folgenden exemplarische Implementierung:
 </pre>
 
 
-Wir wenden uns nun eine Coroutine zu, die einen minimalistische Funktionalität aufweist,
+Wir wenden uns nun einer Coroutine zu, die eine minimalistische Funktionalität aufweist,
 also gewissermaßen geringfügig mehr als &ldquo;nichts&ldquo; tut.
 Damit sind wir beim Konzept des *Generators* angekommen:
 
@@ -226,9 +226,7 @@ eine Kurzformulierung für
 co_await promise.yield_value(value);
 </pre>
 
-dar.  
-
-Das *Promise*-Objekt steuert jetzt, was es bedeutet, einen Wert zurückzugeben und ob/wie die Coroutine ausgesetzt wird.
+dar. Das *Promise*-Objekt steuert jetzt, was es bedeutet, einen Wert zurückzugeben und ob/wie die Coroutine ausgesetzt wird.
 Hier verwenden wir `std::suspend_always`, da wir die Coroutine bis zum nächsten Aufruf von `get_next()` stoppen wollen.
 Hierzu ein Beispiel:
 
@@ -315,13 +313,12 @@ Done.
 
 ---
 
-
 ## Literaturhinweise:
 
 Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Artikel
 
-&ldquo;[C++20 Coroutines — Complete Guide](https://itnext.io/c-20-coroutines-complete-guide-7c3fc08db89d)&rdquo;
-von Šimon Tóth.
+&ldquo;[C++20 Coroutines &ndash; Complete Guide](https://itnext.io/c-20-coroutines-complete-guide-7c3fc08db89d)&rdquo;
+von Simon Tóth.
 
 ---
 
