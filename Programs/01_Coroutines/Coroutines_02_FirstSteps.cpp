@@ -193,7 +193,7 @@ namespace Coroutines_Exercise
 
     void coroutines_exercise()
     {
-        auto coroutine = generatorForNumbers(1, 10);
+        Generator coroutine = generatorForNumbers(1, 10);
 
         while (true) {
 

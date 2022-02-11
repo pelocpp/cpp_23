@@ -4,7 +4,7 @@
 
 ---
 
-[Quellcode](Coroutines02_FirstSteps.cpp)
+[Quellcode](Coroutines_02_FirstSteps.cpp)
 
 ---
 
@@ -34,9 +34,9 @@ Folgende Beobachtungen sind wichtig:
     möglicherweise an den restlichen Zahlen überhaupt nicht mehr interessiert ist.
     Bei einem Wert `end` gleich 1000 wurden also fast alle angeforderten Werte umsonst berechnet und transportiert.
 
-Man spicht in der Informatik von Berechnungen in der Art &ldquo;greedy&rdquo; oder &ldquo;lazy&rdquo;.
+Man spicht in der Informatik bei derartigen Berechnungen immer in der Vorgehensweise &ldquo;greedy&rdquo; oder &ldquo;lazy&rdquo;.
 Die Funktion `getNumbers` fällt offensichtlich in die erste Kategorie.
-Mit Hilfe von Coroutinen können Sie eine Variation von  `getNumbers ` auf Basis der &ldquo;lazy&rdquo;-Strategie
+Mit Hilfe von Coroutinen könnten Sie eine Variation von  `getNumbers ` auf Basis der &ldquo;lazy&rdquo;-Strategie
 umsetzen.
 
 ```cpp
@@ -51,17 +51,20 @@ Generator generatorForNumbers(int begin, int end)
 Eine Anwendung könnte nun so aussehen:
 
 ```cpp
-Generator generatorForNumbers(int begin, int end)
-{
-    for (int i = begin; i <= end; ++i) {
-        co_yield i;
+Generator coroutine = generatorForNumbers(1, 10);
+
+while (true) {
+
+    int value = coroutine.next();
+    if (value == -1) {
+        break;
     }
 }
 ```
 
 Diese beiden Code-Fragmente sind nicht unmittelbar übersetzungsfähig.
 Wir nehmen sie als Ausgangspunkt unserer Betrachtungen der ersten Schritte im
-Umfeld von C++ Coroutinen.
+Umfeld von C++&ndash;Coroutinen.
 
 ## Coroutinen: *stackless* und *stackful*
 
@@ -80,6 +83,10 @@ zu unterbrechen (*suspend*) und wieder fortzufahren (*resume*).
 (normalerweise auf dem Heap) und verwenden den Stapel des *aktuell* ausgeführten Threads,
 um verschachtelte Aufrufe durchführen zu können.
 
+<img src="C20_Coroutine_Stackless_Stackful.png" width="500">
+
+*Abbildung* 1: Funktionen versus Coroutinen &ndash; *stackless* versus *stackful* Coroutinen.
+
 In C++ 20 finden wir eine Unterstützung für *stackless* Coroutinen vor.
 
 
@@ -92,6 +99,14 @@ drei neuen C++&ndash;Schlüsselwörter verwendet:
   * `co_yield`
   * `co_await`
 
+Diese recht einfache Aussage lässt sich etwas präzisieren:
+
+Eine Funktion ist eine Coroutine, wenn ihre Definition eine der folgenden Aktionen ausführt:
+
+  1. verwendet den `co_await` Operator, um die Ausführung der Funktion zu unterbrechen (*suspend*) ...
+  2. verwendet das Schlüsselwort `co_yield`, um die Ausführung der Funktion zu unterbrechen (*suspend*) und um einen Wert zurückgeben ...
+  3. verwendet das Schlüsselwort `co_return`, um die Ausführung abzuschließen und um einen Wert zurückzugeben ...
+
 
 ## Ein erstes Beispiel
 
@@ -100,7 +115,7 @@ Das folgende Code-Fragment &ndash; noch nicht übersetzungsfähig &ndash; beschrei
 ```cpp
 #include <coroutine>
 
-Generator coroutine()
+Generator coroutine(ìnt n)
 {
     co_yield "Hello";
     co_yield "World";
@@ -110,11 +125,16 @@ Generator coroutine()
 
 Man könnte zu der Formulierung neigen, dass `coroutine` die Definition einer Funktion ist.
 Präziser müssen wir sagen: Wir verwenden die Syntax einer Funktionsdefinition,
-um einen Codeblock zu beschreiben, dem bei der Instanziierung Argumente übergeben werden können.
+um einen Codeblock zu beschreiben, dem bei der Instanziierung Argumente übergeben werden können
+(hier exemplarisch der Parameter `n`)
 
 Zum zweiten erkennen wir, dass ein Rückgabetyp &ndash; hier der exemplarische Typ `Generator` &ndash;
 in Erscheinung tritt, und das, obwohl `coroutine()` keine `return`-Anweisung enthält &ndash; 
 und per Definition auch nicht enthalten kann.
+
+<img src="C20_Coroutine_vs_Function.png" width="700">
+
+*Abbildung* 2: Coroutinen können sich suspendieren.
 
 Der Compiler ordnet diesen Codeblock neu an, um den Coroutinen-Mechanismus mit seinem
 *Save*- und *Restore*-Anweisungen auszurollen. Diese werden unter anderem durch 
@@ -145,9 +165,23 @@ kann exakter so beschrieben werden:
 6. den Zustand des Client-Codes wiederherstellen (Konsument)
 7. den Client-Code fortsetzen, indem diesem der gespeicherte Wert aus der `co_yield`-Anweisung zugeführt wird
 
+## Eine Coroutine ist keine C-Funktion
+
+Wollten wir eines der Coroutinen-Schlüsselwörter im Kontext einer &ldquo;normalen&rdquo; C/C++&ndash;Funktion
+verwenden, erhalten wir ein nicht übersetzungsfähiges C++-Programm:
+
+<pre>
+int foo() { co_return 2; }
+</pre>
+
+Wir erhalten je nach verwendetem Compiler folgende Fehlermeldung:
+
+  * Visual C++: `'promise_type': is not a member of 'std::coroutine_traits<int>'`
+  * gcc: `In function 'int foo()': error: unable to find the promise type for this coroutine`
+
+
 
 ## Der C++ *Coroutine Framework* 
-
 
 ### Ein *Generator*
 

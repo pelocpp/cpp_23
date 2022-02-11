@@ -36,29 +36,44 @@
     <None Include="Readme_03_MinimalisticApproach.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Literature.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Readme_04_Awaiter_Awaitable.md">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines01_Introduction.cpp">
+    <ClCompile Include="Coroutines_01_Introduction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines09_Future.cpp">
+    <ClCompile Include="Coroutines_09_Future.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines02_FirstSteps.cpp">
+    <ClCompile Include="Coroutines_02_FirstSteps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines03_MinimalisticApproach.cpp">
+    <ClCompile Include="Coroutines_03_MinimalisticApproach.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines04_Awaitable.cpp">
+    <ClCompile Include="Coroutines_04_Awaiter_Awaitable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Coroutines_08_Scratch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Coroutines_01_Toth.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C20_Coroutine_Stackless_Stackful.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="C20_Coroutine_vs_Function.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
