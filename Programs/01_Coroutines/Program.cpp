@@ -11,7 +11,7 @@ void coroutines_09();
 
 int main()
 {
-    coroutines_08();
+    coroutines_04();
     return 0;
 }
 

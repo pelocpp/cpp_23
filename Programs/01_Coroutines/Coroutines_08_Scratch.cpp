@@ -49,84 +49,38 @@ namespace Coroutines_Scratch_01_Vishal
         mycoro.m_handle.resume();
         mycoro.m_handle(); // Equal to mycoro.m_handle.resume();
     }
-}
 
-// ===========================================================================
-
-// minimalistic approach
-//  Vishal Chovatiya
-namespace Coroutines_Scratch_02_Gajendra
-{
-    struct Task {
-        struct promise_type {
-            promise_type() = default;
-            Task get_return_object() { return {}; }
-            std::suspend_never initial_suspend() { return {}; }
-            std::suspend_never final_suspend() noexcept { return {}; }
-            void return_void() { }
-            void unhandled_exception() {}
-        };
+    struct dummy { // Awaitable
+        std::suspend_always operator co_await() { return {}; }  // <== DAS IST NEU !!!!!!!!!!!!!!!!!!!
     };
 
-    Task foo() {
-        std::cout << "before coroutine" << std::endl;
-        co_await std::suspend_always{};
-        std::cout << "after coroutine" << std::endl;;
+    HelloWorldCoro print_hello_world_02() {
+        std::cout << "Hello ";
+        co_await dummy{};
+        std::cout << "World!" << std::endl;
     }
 
     void test_scratch_02() {
-        foo();
+        HelloWorldCoro mycoro = print_hello_world_02();
+        mycoro.m_handle.resume();
+        mycoro.m_handle(); // Equal to mycoro.m_handle.resume();
     }
-}
 
-namespace Coroutines_Scratch_03_Gajendra_Instrumented
-{
-    //global counter
-    int num{ 0 };
-
-    struct Task {
-
-        struct promise_type {
-
-            promise_type() { std::cout << num++ << ". promise_type default ctor\n"; }
-
-            Task get_return_object() {
-                std::cout << num++ << ". promise_type::get_return_object\n";
-                return {};
-            }
-
-            std::suspend_never initial_suspend() {
-                std::cout << num++ << ". promise_type::initial_suspend\n";
-                return {};
-            }
-
-            std::suspend_never final_suspend() noexcept {
-                std::cout << num++ << ". promise_type::final_suspend\n";
-                return {};
-            }
-
-            void return_void() {
-                std::cout << num++ << ". promise_type::return_void\n";
-            }
-
-            void unhandled_exception() { std::cout << num++ << ".throw\n"; }
-        };
+    struct my_awaiter {
+        bool await_ready() { return false; }
+        void await_suspend(std::coroutine_handle<>) {}
+        void await_resume() {}
     };
 
-    Task foo() {
-
-        std::cout << num++ << ".   hello from coroutine\n";
-        co_await std::suspend_never{}; //never suspend the coroutine at this point
-        //co_await std::suspend_always{}; //suspend the coroutine at this point
-        std::cout << num++ << ".   hello from coroutine\n";
-    }
-
-
-    void test_scratch_03() {
-        foo();
+    HelloWorldCoro print_hello_world_03() {
+        std::cout << "Hello ";
+        co_await my_awaiter{};
+        std::cout << "World!" << std::endl;
     }
 }
 
+
+// ===========================================================================
 
 // ===========================================================================
 
@@ -138,13 +92,7 @@ void coroutines_08()
     //test_scratch_01();
     //std::cout << "Done." << std::endl;
 
-    //using namespace Coroutines_Scratch_02_Gajendra;
-    //test_scratch_02();
-    //std::cout << "Done." << std::endl;
 
-    using namespace Coroutines_Scratch_03_Gajendra_Instrumented;
-    test_scratch_03();
-    std::cout << "Done." << std::endl;
 }
 
 // ===========================================================================

@@ -163,7 +163,9 @@
   <ItemGroup>
     <Image Include="C20_Coroutine_Stackless_Stackful.png" />
     <Image Include="C20_Coroutine_vs_Function.png" />
+    <Image Include="coroutine.png" />
     <Image Include="Coroutines_01_Toth.png" />
+    <Image Include="coroutine_awaitable_diagram.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

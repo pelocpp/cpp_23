@@ -20,18 +20,18 @@
     Wenn man so möchte, ein klein wenig anspruchsvoller als das Tutorial von Šimon Tóth.
     Nichtsdestotrotz für mich die Empfehlung schlechthin, um die ersten erworbenen Kenntnisse zu vertiefen.
 
-    In den Beispielprogrammen sind einige Übersetzungsfehler vorhanden &ndash; die sich aber sehr einfach beseitigen lassen!
-    Man könnte die fast schon als Übungsaufgabe betrachten, die Beispielprogramme zum Laufen zu bekommen.
+    In den Beispielprogrammen sind einige Übersetzungsfehler vorhanden &ndash; die sich aber sehr einfach beheben lassen!
+    Man könnte das fast schon als Übungsaufgabe betrachten, die Beispielprogramme zum Laufen zu bringen.
     Die Fehler haben ihre Ursache mit großer Wahrscheinlichkeit darin, dass die Programme vor der Verabschiedung des C++&ndash;20
-    Sprachstandards geschrieben wurden, also es sind Abweichungen von den verabschiedeten Schnittstellen.
-    Sie haben keinerlei Einfluss auf die Qualität des Tutorials und den vermittelten Lehrstoff.
- 
+    Sprachstandards geschrieben wurden, also es sind geringfügige Abweichungen vom verabschiedeten Standard vorhanden.
+    Auf die Qualität des Tutorials und den vermittelten Lehrstoff haben diese kleinen Bugs keinen Einfluss!
+
 ---
 
-  * [Painless C++ Coroutines -- Gajendra Gulgulia](https://isocpp.org/blog/2021/06/painless-cpp-coroutines-gajendra-gulgulia)</br>
-    Tutorialsehre von Gajendra Gulgulia.
+  * [Painless C++ Coroutines](https://isocpp.org/blog/2021/06/painless-cpp-coroutines-gajendra-gulgulia)</br>
+    5-teilige Artikelserie von Gajendra Gulgulia.
 
-    Serie von fünf Tutorials, wiederum excellente Materie, um in das Thema einzusteigen.
+    Serie von fünf Tutorials, wiederum exzellente Materie, um in das Thema einzusteigen.
 
 ---
 

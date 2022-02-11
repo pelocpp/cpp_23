@@ -76,5 +76,11 @@
     <Image Include="C20_Coroutine_vs_Function.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="coroutine.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="coroutine_awaitable_diagram.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
