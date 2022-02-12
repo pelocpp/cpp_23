@@ -179,14 +179,13 @@ dessen `await_suspend`-Methode die Hilfe eines unterlagerten Threads in Anspruch
 44: }
 </pre>
 
-
 Die Coroutine suspendiert sich, bevor sie in die `await_suspend`-Methode eintritt.
 Es liegt kein *data race* vor, da wir innerhalb dieser Methode einen neuen Thread erstellen &ndash;
 *nach* dem Zeitpunkt des Zustandswechsels in &ldquo;Coroutine ist suspendiert"&rdquo;,
 siehe dazu auch *Abbildung* 1.
 
 Beachten Sie auch, dass wir (wiederum mit Blick aus das Diagramm in *Abbildung* 1),
-während wir dem Zweig &ldquo;control is returned to the caller&rdquo; folgen,
+während wir dem Zweig &ldquo;*control is returned to the caller*&rdquo; folgen,
 die Coroutine im Kontext des neu erzeugten Threads fortsetzen - nicht im Kontext des Aufrufers.
 
 *Hinweis*: Das Beispiel verwendet eine Instanz der Klasse `std::jthread`:
