@@ -4,10 +4,6 @@
 
 ---
 
-<img src="coroutine.png" width="300">
-
----
-
 ## [Einführung](Readme_01_Introduction.md)
 
 ## [Erste Schritte](Readme_02_FirstSteps.md)
@@ -17,6 +13,9 @@
 ## [Awaiter und Awaitable](Readme_04_Awaiter_Awaitable.md)
 
 ## [Literatur](Literature.md)
+
+
+<img src="coroutine.png" width="250">
 
 ---
 

@@ -313,12 +313,40 @@ Done.
 
 ---
 
+## Terminologie
+
+### *Promise*
+
+  * Ein Typ, der präzise den Namen `promise_type` haben muss.
+  * Das *Promise*-Objekt wird innerhalb der Coroutine verwendet. Die Coroutine übermittelt ihr Ergebnis (oder Exceptions) durch dieses Objekt.
+  * Der *Promise*-Typ wird vom Compiler aus dem Rückgabetyp der Coroutine mit `std::coroutine_traits` ermittelt.
+
+### Coroutine Handle (std::coroutine_handle<promise_type>)
+ 
+  * Das Coroutine-Handle wird verwendet, um die Ausführung der Coroutine fortzusetzen oder
+    um den (dynamisch allokierten) *Coroutine Frame* wieder freizugeben.
+    Über `std::coroutine_handle::done()` erhält man Statusinformationen zur Coroutine.
+
+### Coroutine Zustand
+
+  *  Der Zustand einer Coroutine (manchmal auch als Kontext-Objekt bezeichnet) ist ein vom Compiler generiertes,
+     auf dem Heap allokiertes Objekt, das
+     * das Promise-Objekt,
+     * Parameter (per-value) und
+     * eine Representation des aktuellen &ldquo;Suspendierungspunkts&rdquo; (so genannter &ldquo;Suspension Point&rdquo;) beschreibt,
+       so dass eine Aktivität *resume* weiß, wo sie fortfahren muss.
+
+---
+
 ## Literaturhinweise:
 
 Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Artikel
 
 &ldquo;[C++20 Coroutines &ndash; Complete Guide](https://itnext.io/c-20-coroutines-complete-guide-7c3fc08db89d)&rdquo;
 von Simon Tóth.
+
+Die Beschreibungen zur Terminologie stammen aus
+[C++20 Coroutine: Under The Hood](http://www.vishalchovatiya.com/cpp20-coroutine-under-the-hood/).
 
 ---
 

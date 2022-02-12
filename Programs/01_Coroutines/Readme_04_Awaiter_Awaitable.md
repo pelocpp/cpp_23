@@ -79,7 +79,7 @@ haben Sie in dem letzten Listing drei Möglichkeiten, die Ausführung des Beispiel
 
 ## Definition eines Awaitables
 
-Prinzipiell mit ein *Awaitable*-Datentyp drei Methoden bereitstellen: 
+Ein *Awaitable*-Datentyp muss drei Methoden bereitstellen: 
 
 ```cpp
 struct awaitable {
@@ -94,7 +94,7 @@ struct awaitable {
 };
 ```
 
-Auf der Basis dieser drei Methoden wird vom *Coroutine* Framework Code
+Auf der Basis dieser drei Methoden wird vom *Coroutine Framework* Code
 mit folgender Architektur generiert:
 
 <img src="coroutine_awaitable_diagram.png" width="700">
@@ -103,9 +103,11 @@ mit folgender Architektur generiert:
 
 ---
 
-## Vordefiniere Awaitables
+## Vordefinierte Awaitables
 
-Der Quellcode für ein *Awaitable* ist einfach:
+Der Quellcode für ein *Awaitable* ist in manchen Situationen einfach zu schreiben.
+Am Beispiel der beiden vordefinierten *Awaitables* `suspend_always` und `suspend_never`
+gezeigt:
 
 <pre>
 struct suspend_always
@@ -125,10 +127,10 @@ struct suspend_never
 
 ---
 
-## Ein *Awaitable* und ein Thread
+## Ein *Awaitable* mit asynchroner Ausführung
 
 Wir betrachten nun eine Coroutine und ein *Awaitable*,
-deren `await_suspend`-Methode die Hilfe eines unterlagerten Threads in Anspruch nimmt:
+dessen `await_suspend`-Methode die Hilfe eines unterlagerten Threads in Anspruch nimmt:
 
 <pre>
 01: struct Sleeper {
@@ -177,16 +179,21 @@ deren `await_suspend`-Methode die Hilfe eines unterlagerten Threads in Anspruch 
 44: }
 </pre>
 
-Die Ausgaben schauen (ohne und mit Trace-Ausgaben) so aus:
 
-<pre>
-Going to sleep on thread 8180
-Slept for 216 ms
-Now on thread 10204
-Done.
-</pre>
+Die Coroutine suspendiert sich, bevor sie in die `await_suspend`-Methode eintritt.
+Es liegt kein *data race* vor, da wir innerhalb dieser Methode einen neuen Thread erstellen &ndash;
+*nach* dem Zeitpunkt des Zustandswechsels in &ldquo;Coroutine ist suspendiert"&rdquo;,
+siehe dazu auch *Abbildung* 1.
 
-bzw.
+Beachten Sie auch, dass wir (wiederum mit Blick aus das Diagramm in *Abbildung* 1),
+während wir dem Zweig &ldquo;control is returned to the caller&rdquo; folgen,
+die Coroutine im Kontext des neu erzeugten Threads fortsetzen - nicht im Kontext des Aufrufers.
+
+*Hinweis*: Das Beispiel verwendet eine Instanz der Klasse `std::jthread`:
+Diese Klasse ist ähnlich zur `std::thread`-Klasse mit zwei Unterschieden:
+`std::jthread`-Threads sind in gewissen Situationen unterbrechbar und rufen `join` automatisch auf.
+
+Die Ausgaben des Beispiels schauen (mit und ohne Trace-Ausgaben) so aus:
 
 <pre>
   promise_type::get_return_object
@@ -206,6 +213,69 @@ myCoroutine done: slept for 206 ms
 Done.
 </pre>
 
+bzw.
+
+<pre>
+Going to sleep on thread 8180
+Slept for 216 ms
+Now on thread 10204
+Done.
+</pre>
+
+---
+
+## Terminologie
+
+### *Awaitable*
+
+  * Ein Datentyp, der den `co_await`-Operator unterstützt, wird als *Awaitable*-Typ bezeichnet.
+  * C++&ndash;20 hat einen neuen unären Operator `co_await` eingeführt, der auf einen Ausdruck angewendet werden kann.
+
+*Beispiel*:
+
+<pre>
+struct dummy { // Awaitable
+    std::suspend_never <b>operator co_await()</b> { return {}; }
+};
+
+HelloWorldCoro printHelloWorld() {
+    std::cout << "Hello ";
+    co_await dummy{};
+    std::cout << "World!" << std::endl;
+}
+</pre>
+
+### *Awaiter*
+
+  * Ein *Awaiter* ist ein Datentyp, der drei spezielle Methoden implementiert, die als Teil eines `co_await` Ausdrucks aufgerufen werden:
+    `await_ready()`, `await_suspend()` und `await_resume()`.
+  * Durch die include-Datei `<coroutine>` sind zwei triviale *Awaiter* vordefiniert: `std::suspend_always` und `std::suspend_never`.
+  * *Bemerkung*: Ein Typ sowohl ein *Awaitable*-Typ als auch ein *Awaiter*-Typ sein.
+
+*Beispiel*:
+
+<pre>
+struct my_awaiter {
+    bool await_ready() { return true; }
+    void await_suspend(std::coroutine_handle<>) {}
+    void await_resume() {}
+};
+
+HelloWorldCoro printHelloWorldEx() {
+    std::cout << "Hello ";
+    co_await my_awaiter{};
+    std::cout << "World!" << std::endl;
+}
+</pre>
+
+### `co_await`
+
+  * `co_await` ist ein unärer Operator, der eine Coroutine suspendiert und die Kontrolle an den Aufrufer zurückgibt.
+    Sein Operand ist ein Ausdruck, dessen Typ entweder den Operator `co_await` oder *Awaitable* definieren muss.
+
+
+
+
 ---
 
 
@@ -216,6 +286,9 @@ Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Artikel
 &ldquo;[C++20 Coroutines &ndash; Complete Guide](https://itnext.io/c-20-coroutines-complete-guide-7c3fc08db89d)&rdquo;
 von Simon Tóth und [Painless C++ Coroutines](https://isocpp.org/blog/2021/06/painless-cpp-coroutines-gajendra-gulgulia)
 von Gajendra Gulgulia.
+
+Die Beschreibungen zur Terminologie stammen aus
+[C++20 Coroutine: Under The Hood](http://www.vishalchovatiya.com/cpp20-coroutine-under-the-hood/).
 
 ---
 

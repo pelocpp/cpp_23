@@ -47,6 +47,7 @@ namespace Coroutines_Awaiter_Awaitable_01_Simplest_Variant
     }
 }
 
+// Gajendra Gulgulia
 namespace Coroutines_Awaiter_Awaitable_02_Simplest_Variant_Instrumented
 {
     struct Task {
@@ -149,6 +150,7 @@ namespace Coroutines_Awaiter_Awaitable_03_Awaitable
     }
 }
 
+// Simon Toth
 namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
 {
     struct Sleeper {
@@ -224,6 +226,77 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
     }
 }
 
+// Vishal Chovatiya
+namespace Coroutines_Awaiter_Awaitable_05_Terminology
+{
+    struct HelloWorldCoro {
+        struct promise_type {
+            HelloWorldCoro get_return_object() { return {}; }
+            std::suspend_never initial_suspend() { return {}; }
+            std::suspend_never final_suspend() noexcept { return {}; }
+            void return_void() { }
+            void unhandled_exception() { }
+        };
+    };
+
+    // Awaitable
+
+    struct dummy { // Awaitable
+        std::suspend_never operator co_await() { return {}; }
+    };
+
+    HelloWorldCoro printHelloWorld() {
+        std::cout << "Hello ";
+        co_await dummy{};
+        std::cout << "World!" << std::endl;
+    }
+
+    void test_05() {
+        printHelloWorld();
+    }
+
+    // Awaiter
+
+    struct my_awaiter {
+        bool await_ready() { return true; }  // or false
+        void await_suspend(std::coroutine_handle<>) {}
+        void await_resume() {}
+    };
+
+    HelloWorldCoro printHelloWorldEx() {
+        std::cout << "Hello (2) ";
+        co_await my_awaiter{};
+        std::cout << "World (2) !" << std::endl;
+    }
+
+    void test_06() {
+        printHelloWorldEx();
+    }
+
+    // co_await
+
+    struct HelloWorldCoroExEx {
+        struct promise_type {
+            HelloWorldCoroExEx get_return_object() { return {}; }
+            std::suspend_never initial_suspend() { return {}; }
+            std::suspend_never final_suspend() noexcept { return {}; }
+            void return_void() { }
+            void unhandled_exception() { }
+            auto await_transform(const dummy&) { return std::suspend_never{}; }
+        };
+    };
+
+    HelloWorldCoroExEx printHelloWorldExEx() {
+        std::cout << "Hello (3) ";
+        co_await dummy{};
+        std::cout << "World (3) !" << std::endl;
+    }
+
+    void test_07() {
+        printHelloWorldExEx();
+    }
+}
+
 // ===========================================================================
 
 void coroutines_04()
@@ -245,6 +318,12 @@ void coroutines_04()
 
     using namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented;
     test_04();
+    std::cout << "Done." << std::endl;
+
+    using namespace Coroutines_Awaiter_Awaitable_05_Terminology;
+    test_05();
+    test_06();
+    test_07();
     std::cout << "Done." << std::endl;
 }
 
