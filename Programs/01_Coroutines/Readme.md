@@ -8,9 +8,9 @@
 
 ## [Erste Schritte](Readme_02_FirstSteps.md)
 
-## [Eine minimalistische Betrachtung](Readme_03_MinimalisticApproach.md)
+## [ `co_return` und `co_yield`](Readme_03_Yield_Return.md)
 
-## [Awaiter und Awaitable](Readme_04_Awaiter_Awaitable.md)
+## [`co_await`](Readme_04_Awaiter_Awaitable.md)
 
 ## [Literatur](Literature.md)
 
@@ -22,3 +22,5 @@
 [Zurück](../../Readme.md)
 
 ---
+
+

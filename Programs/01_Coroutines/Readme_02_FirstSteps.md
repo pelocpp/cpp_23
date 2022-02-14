@@ -8,88 +8,6 @@
 
 ---
 
-## Motivation
-
-Zur Motivation von Coroutinen betrachten wir eine Funktion `getNumbers`:
-
-```cpp
-std::vector<int> getNumbers(int begin, int end)
-{
-    std::vector<int> numbers;
-    
-    for (int i = begin; i <= end; ++i) {
-        numbers.push_back(i);
-    }
-
-    return numbers;
-}
-```
-
-Folgende Beobachtungen sind wichtig:
-
-  * Ein Aufrufer von `getNumbers` bekommt immer alle Werte, die er durch die beiden Parameter 
-    `begin` und `end` anfordert. Dies wirkt sich negativ bei vielen Zahlen auf den benötigten Speicherplatz aus.
-
-  * Darüberhinaus kann es sein, dass ein Aufrufer nach dem Auswerten der ersten 5 Zahlen
-    möglicherweise an den restlichen Zahlen überhaupt nicht mehr interessiert ist.
-    Bei einem Wert `end` gleich 1000 wurden also fast alle angeforderten Werte umsonst berechnet und transportiert.
-
-Man spicht in der Informatik bei derartigen Berechnungen immer in der Vorgehensweise &ldquo;greedy&rdquo; oder &ldquo;lazy&rdquo;.
-Die Funktion `getNumbers` fällt offensichtlich in die erste Kategorie.
-Mit Hilfe von Coroutinen könnten Sie eine Variation von  `getNumbers ` auf Basis der &ldquo;lazy&rdquo;-Strategie
-umsetzen.
-
-```cpp
-Generator generatorForNumbers(int begin, int end)
-{
-    for (int i = begin; i <= end; ++i) {
-        co_yield i;
-    }
-}
-```
-
-Eine Anwendung könnte nun so aussehen:
-
-```cpp
-Generator coroutine = generatorForNumbers(1, 10);
-
-while (true) {
-
-    int value = coroutine.next();
-    if (value == -1) {
-        break;
-    }
-}
-```
-
-Diese beiden Code-Fragmente sind nicht unmittelbar übersetzungsfähig.
-Wir nehmen sie als Ausgangspunkt unserer Betrachtungen der ersten Schritte im
-Umfeld von C++&ndash;Coroutinen.
-
-## Coroutinen: *stackless* und *stackful*
-
-Coroutinen existieren in den verschiedenene Programmierumgebungen prinzipiell
-in zwei Ausprägungen:
-
-  * *stackless*
-  * *stackful*
-
-*Stackful* Coroutinen haben einen separaten Stack (ähnlich einem Thread), der den
-so genannten *Coroutine-Frame* und die verschachtelten Aufruf-Frames enthält.
-Dadurch ist es möglich, an einer beliebigen Stelle im verschachtelten Aufruf-Frame
-zu unterbrechen (*suspend*) und wieder fortzufahren (*resume*).
-
-*Stackless* Coroutinen müssen den Coroutine-Frame an einer anderen Stelle speichern
-(normalerweise auf dem Heap) und verwenden den Stapel des *aktuell* ausgeführten Threads,
-um verschachtelte Aufrufe durchführen zu können.
-
-<img src="C20_Coroutine_Stackless_Stackful.png" width="500">
-
-*Abbildung* 1: Funktionen versus Coroutinen &ndash; *stackless* versus *stackful* Coroutinen.
-
-In C++ 20 finden wir eine Unterstützung für *stackless* Coroutinen vor.
-
-
 ## Drei neue Schlüsselwörter
 
 Eine C++&ndash;Funktion erlangt den Status einer Coroutine, wenn sie eines der
@@ -115,7 +33,7 @@ Das folgende Code-Fragment &ndash; noch nicht übersetzungsfähig &ndash; beschrei
 ```cpp
 #include <coroutine>
 
-Generator coroutine(ìnt n)
+Generator coroutine(int n)
 {
     co_yield "Hello";
     co_yield "World";
@@ -139,6 +57,29 @@ und per Definition auch nicht enthalten kann.
 Der Compiler ordnet diesen Codeblock neu an, um den Coroutinen-Mechanismus mit seinem
 *Save*- und *Restore*-Anweisungen auszurollen. Diese werden unter anderem durch 
 die beiden Schlüsselwörter `co_yield` und `co_return` beeinflusst.
+Grob könnte man dieses Umordnen vom Übersetzer so skizzieren:
+
+<pre>
+Generator coroutine() {
+
+    __Generator_ctx* <b>__context</b> = new __Generator_ctx{};
+
+    auto __return = <b>__context</b> -> <b>_promise</b>.get_return_object();
+
+    co_await <b>__context</b> -> <b>_promise</b>.initial_suspend();
+
+    co_yield "Hello";
+    co_yield "World";
+
+__final_suspend_label:
+
+    co_await <b>__context</b> -> <b>_promise</b>.final_suspend();
+
+    delete <b>__context</b>;
+
+    return __return;
+}
+</pre>
 
 Ein Anwendungsprogramm (ebenfalls noch nicht übersetzungsfähig),
 dass diese Coroutine verwenden will, könnte so aussehen:
@@ -178,7 +119,6 @@ Wir erhalten je nach verwendetem Compiler folgende Fehlermeldung:
 
   * Visual C++: `'promise_type': is not a member of 'std::coroutine_traits<int>'`
   * gcc: `In function 'int foo()': error: unable to find the promise type for this coroutine`
-
 
 
 ## Der C++ *Coroutine Framework* 
@@ -358,11 +298,8 @@ aufsteigende, ganze Zahlen zu implementieren?
 ## Literaturhinweise:
 
 Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Artikel
-
 &ldquo;[C++20 Coroutines](https://blog.feabhas.com/2021/09/c20-coroutines/#Promise_data_holder)&rdquo;
 von Martin Bond.
-
-Die Motivation stammt von [Rainer Grimm](https://www.modernescpp.com/index.php/c-20-coroutines-the-first-overview).
 
 ---
 

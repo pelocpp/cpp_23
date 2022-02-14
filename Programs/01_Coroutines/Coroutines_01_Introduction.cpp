@@ -8,9 +8,32 @@
 #include <coroutine>
 #include <optional>
 
+namespace Coroutines_Motivation
+{
+    std::vector<int> getNumbers(int begin, int end)
+    {
+        std::vector<int> numbers;
+
+        for (int i = begin; i <= end; ++i) {
+            numbers.push_back(i);
+        }
+
+        return numbers;
+    }
+
+    void motivation_01()
+    {
+        std::vector<int> numbers = getNumbers(1, 10);
+
+        for (auto n : numbers) {
+            std::cout << n << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 namespace Coroutines_SimpleExamples
 {
-
     template<std::movable T>
     class Generator {
     public:
@@ -172,6 +195,9 @@ namespace Coroutines_SimpleExamples
 
 void coroutines_01()
 {
+    using namespace Coroutines_Motivation;
+    motivation_01();
+
     using namespace Coroutines_SimpleExamples;
     simple_coroutine_01();
     simple_coroutine_02();

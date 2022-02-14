@@ -1,10 +1,10 @@
-# Eine minimalistische Betrachtung
+# `co_return` und `co_yield`
 
 [Zurück](Readme.md)
 
 ---
 
-[Quellcode](Coroutines_03_MinimalisticApproach.cpp)
+[Quellcode](Coroutines_03_Yield_Return.cpp)
 
 ---
 

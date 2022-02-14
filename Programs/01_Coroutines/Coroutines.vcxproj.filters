@@ -33,7 +33,7 @@
     <None Include="cpp_20_coroutine_vs_subroutine_02.svg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Readme_03_MinimalisticApproach.md">
+    <None Include="Readme_03_Yield_Return.md">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Literature.md">
@@ -56,7 +56,7 @@
     <ClCompile Include="Coroutines_02_FirstSteps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines_03_MinimalisticApproach.cpp">
+    <ClCompile Include="Coroutines_03_Yield_Return.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Coroutines_04_Awaiter_Awaitable.cpp">
@@ -80,6 +80,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="coroutine_awaitable_diagram.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="consumer_producer_coroutine.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

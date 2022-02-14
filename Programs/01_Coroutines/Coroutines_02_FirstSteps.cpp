@@ -8,30 +8,6 @@
 #include <coroutine>
 #include <memory>
 
-namespace Coroutines_Motivation
-{
-    std::vector<int> getNumbers(int begin, int end)
-    {
-        std::vector<int> numbers;
-    
-        for (int i = begin; i <= end; ++i) {
-            numbers.push_back(i);
-        }
-
-        return numbers;
-    }
-
-    void motivation_01()
-    {
-        std::vector<int> numbers = getNumbers(1, 10);
-
-        for (auto n : numbers) {
-            std::cout << n << " ";
-        }
-        std::cout << std::endl;
-    }
-}
-
 namespace Coroutines_HelloWorld
 {
     class Generator;
@@ -209,9 +185,6 @@ namespace Coroutines_Exercise
 
 void coroutines_02()
 {
-    using namespace Coroutines_Motivation;
-    motivation_01();
-
     using namespace Coroutines_HelloWorld;
     coroutines_hello_world_01();
     coroutines_hello_world_02();

@@ -1,4 +1,4 @@
-# Coroutines
+# Einführung
 
 [Zurück](Readme.md)
 
@@ -8,7 +8,73 @@
 
 ---
 
-## Überblick
+Ganz kurz und prägant:
+
+> Eine Coroutine ist eine Funktion, die sich selbst suspendieren kann.
+
+---
+
+## Motivation
+
+Zur Motivation von Coroutinen betrachten wir eine Funktion `getNumbers`:
+
+```cpp
+std::vector<int> getNumbers(int begin, int end)
+{
+    std::vector<int> numbers;
+    
+    for (int i = begin; i <= end; ++i) {
+        numbers.push_back(i);
+    }
+
+    return numbers;
+}
+```
+
+Folgende Beobachtungen sind wichtig:
+
+  * Ein Aufrufer von `getNumbers` bekommt immer alle Werte, die er durch die beiden Parameter 
+    `begin` und `end` anfordert. Dies wirkt sich negativ bei vielen Zahlen auf den benötigten Speicherplatz aus.
+
+  * Darüberhinaus kann es sein, dass ein Aufrufer nach dem Auswerten der ersten 5 Zahlen
+    möglicherweise an den restlichen Zahlen überhaupt nicht mehr interessiert ist.
+    Bei einem Wert `end` gleich 1000 wurden also fast alle angeforderten Werte umsonst berechnet und transportiert.
+
+Man spicht in der Informatik bei derartigen Berechnungen immer in der Vorgehensweise &ldquo;greedy&rdquo; oder &ldquo;lazy&rdquo;.
+Die Funktion `getNumbers` fällt offensichtlich in die erste Kategorie.
+Mit Hilfe von Coroutinen könnten Sie eine Variation von  `getNumbers ` auf Basis der &ldquo;lazy&rdquo;-Strategie
+umsetzen.
+
+```cpp
+Generator generatorForNumbers(int begin, int end)
+{
+    for (int i = begin; i <= end; ++i) {
+        co_yield i;
+    }
+}
+```
+
+Eine Anwendung könnte nun so aussehen:
+
+```cpp
+Generator coroutine = generatorForNumbers(1, 10);
+
+while (true) {
+
+    int value = coroutine.next();
+    if (value == -1) {
+        break;
+    }
+}
+```
+
+Diese beiden Code-Fragmente sind nicht unmittelbar übersetzungsfähig.
+Wir nehmen sie als Ausgangspunkt unserer Betrachtungen der ersten Schritte im
+Umfeld von C++&ndash;Coroutinen.
+
+---
+
+## Etwas Theorie
 
 *Erforderliche Begriffe*:
 
@@ -37,18 +103,41 @@ Coroutinen eigen sich zur Implementierung von sequentiellem Code, der asynchron 
 
 *Abbildung* 1: Subroutines (links) und Coroutines (rechts) im Vergleich.
 
-## Coroutinen in C++ 20
+*Man beachte*: 
+Nicht zwingend müssen Aufrufer der Coroutine und die Coroutine selbst in verschiedenen Threads ablaufen:
+Coroutinen (und ihr Aufrufer) können sehr wohl auf einem einzigen Thread ausgeführt werden.
+Siehe dazu *Abbildung* 2, die bewusst keine Aussagen über Threadaffinitäten trifft:
 
-Per Definition wird in C++ 20 eine Funktion als *Coroutine* bezeichnet, wenn
+<img src="consumer_producer_coroutine.png" width="700">
 
-  * sie das Schlüsselwort `co_yield` verwendet , um die Ausführung anzuhalten und einen Wert zurückzugeben.
-  * sie das Schlüsselwort `co_return` verwendet , um die Ausführung abzuschließen.
-  * sie den Operator `co_await` verwendet (*suspend*), um die Ausführung bis zur Wiederaufnahme (*resume*) zu unterbrechen.
+*Abbildung* 2: Kontrollfluss zwischen einem Produzenten (Coroutine) und einem Konsumenten (Anwendung).
 
-Ohne auf die drei Schlüsselwörter explizit einzugehen, kann man auch sagen:
+---
 
-> Eine Coroutine ist eine Funktion, die sich selbst suspendieren kann.
+## Coroutinen: *stackless* und *stackful*
 
+Coroutinen existieren in den verschiedenene Programmierumgebungen prinzipiell
+in zwei Ausprägungen:
+
+  * *stackless*
+  * *stackful*
+
+*Stackful* Coroutinen haben einen separaten Stack (ähnlich einem Thread), der den
+so genannten *Coroutine-Frame* und die verschachtelten Aufruf-Frames enthält.
+Dadurch ist es möglich, an einer beliebigen Stelle im verschachtelten Aufruf-Frame
+zu unterbrechen (*suspend*) und wieder fortzufahren (*resume*).
+
+*Stackless* Coroutinen müssen den Coroutine-Frame an einer anderen Stelle speichern
+(normalerweise auf dem Heap) und verwenden den Stapel des *aktuell* ausgeführten Threads,
+um verschachtelte Aufrufe durchführen zu können.
+
+<img src="C20_Coroutine_Stackless_Stackful.png" width="500">
+
+*Abbildung* 1: Funktionen versus Coroutinen &ndash; *stackless* versus *stackful* Coroutinen.
+
+In C++ 20 finden wir eine Unterstützung für *stackless* Coroutinen vor.
+
+---
 
 ## &ldquo;Don't implement coroutines yourself&rdquo;
 
@@ -59,12 +148,25 @@ siehe hierzu das nachfolgende Beispiel einer Generatorklasse.
 *Tipp*: In einer zukünftigen Version (C++ 20, C++ 23) wird es eine umfangreichere Unterstützung / exemplarische Realisierung
 dieses Frameworks geben, so dass eine Entwicklung von Coroutinen für den Anwender einfacher ausfällt.
 
+---
+
+## Coroutinen in C++ 20
+
+Per Definition wird in C++ 20 eine Funktion als *Coroutine* bezeichnet, wenn
+
+  * sie das Schlüsselwort `co_yield` verwendet , um die Ausführung anzuhalten und einen Wert zurückzugeben.
+  * sie das Schlüsselwort `co_return` verwendet , um die Ausführung abzuschließen.
+  * sie den Operator `co_await` verwendet (*suspend*), um die Ausführung bis zur Wiederaufnahme (*resume*) zu unterbrechen.
+
+---
+
 ## Ein Generator Template: `Generator<T>`
 
 *Definition*:
 
 Ein *Generator* stellt einen Datentyp für eine Coroutine dar, die eine Folge von Werten des Typs `T` erzeugt,
 wobei die Werte *on-demand* (*lazy*) und synchron (im Kontext der Coroutine) erzeugt werden.
+
 
 ## Ein Beispiel für Fibonacci-Zahlen
 
@@ -136,9 +238,7 @@ for (auto i : fibonacci()) {
 ## Literaturhinweise:
 
 Die Anregungen zu den Beispielen stammen teilweise bzw. in modifizierter Form aus
-
-https://www.heise.de/developer/artikel/C-20-Coroutinen-mit-cppcoro-4705161.html
-
+[C++20: Coroutinen mit cppcoro](https://www.heise.de/developer/artikel/C-20-Coroutinen-mit-cppcoro-4705161.html)
 von Rainer Grimm.
 
 ---

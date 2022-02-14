@@ -1,4 +1,4 @@
-# Awaiter und Awaitable
+# `co_await`
 
 [Zurück](Readme.md)
 
@@ -10,7 +10,7 @@
 
 ## Eine Coroutine, die auf nichts wartet
 
-Auch der Gebrauch des Schlüsselworts co_await will gelernt sein &ndash; im Syntaxjargon von C++ haben wir es hier mit
+Auch der Gebrauch des Schlüsselworts `co_await` will gelernt sein &ndash; im Syntaxjargon von C++ haben wir es hier mit
 einem C++&ndash;Operator zu tun. Wir beginnen mit einem einfach Beispiel einer Coroutine,
 die auf nichts wartet:
 
