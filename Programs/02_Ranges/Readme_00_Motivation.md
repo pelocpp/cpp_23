@@ -1,10 +1,10 @@
 # Motivation
 
-[Zurück](../../Readme.md)
+[Zurück](Readme.md)
 
 ---
 
-[Quellcode](Ranges_00_Motivation.cpp)<br/>
+[Quellcode](Ranges_00_Motivation.cpp)
 
 ---
 
@@ -39,20 +39,17 @@ vec2 = vec1;
 *Nachteile*:
 
   * Man kann nicht Teilbereiche des ersten Vektors auf diese Weise kopieren.
-  * Man kann beispielsweise nicht von einem `std::list` in ein `std::vector`-Objekt umkopieren.
+  * Man kann beispielsweise nicht von einem `std::list`- in ein `std::vector`-Objekt umkopieren.
 
 
 ###### Variante mit *Ranges*
 
 ```cpp
-std::ranges::copy(
-    vec1,
-    std::back_inserter(vec2)
-);
+std::ranges::copy(vec1, std::back_inserter(vec2));
 ```
 
   * Der erste Vektor `vec1` ist bei den Parametern von `std::copy` nur einmal aufgeführt.
-  * Allerdings muss der gesamten Container kopiert werden, nicht ein Teilbereich.
+  * Allerdings muss der gesamten Container kopiert werden, ein Teilbereich geht nicht.
 
 
 ## Komposition von Funktionen
@@ -61,7 +58,7 @@ In der funktionalen Programmierung gibt es die so genannte &ldquo;Komposition vo
 
   * Unter der &ldquo;Komposition von Funktionen&rdquo; versteht man in der funktionalen Programmierung
     die Möglichkeit, einfache &ndash; oder wie es im Fachjargon heißt: *pure* &ndash; Funktionen zu kombinieren,
-    um kompliziertere Funktionen zu erstellen.
+    um kompliziertere Funktionen zu bilden.
 
   * Wie bei der üblichen Zusammensetzung von Funktionen in der Mathematik wird das Ergebnis einer Funktion als Argument der nächsten übergeben,
     und das Ergebnis der letzten ist das Ergebnis des Ganzen.
@@ -99,8 +96,9 @@ Dies sei an einem Beispiel verdeutlicht:
 23: }
 ```
 
-Was immer diese Folge von Anweisungen tut (Ermittlung einer Reihe von geraden Zahlen mit anschließender Quadrierung),
-mit der Bibliothek `<ranges>` lässt sich die erheblich eleganter formulieren:
+Was immer diese Folge von Anweisungen auch tut
+(Ermittlung einer Reihe von geraden Zahlen mit anschließender Quadrierung),
+mit der Bibliothek `<ranges>` lässt sich das erheblich eleganter formulieren:
 
 ```cpp
 01: std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
@@ -113,6 +111,16 @@ mit der Bibliothek `<ranges>` lässt sich die erheblich eleganter formulieren:
 08:     std::cout << n << ' ';
 09: }
 ```
+
+Diesen Ausdruck muss man von links nach rechts lesen.
+Das Pipe-Symbol `|` steht für die Verknüpfung von Funktionen:
+Zuerst werden alle Elemente akzeptiert, die gerade sind (`std::views::filter([](int n) { return n % 2 == 0; })`).
+Danach wird jedes verbleibende Element quadriert
+(`std::views::transform([](int n) { return n * n; })`).
+Dieses kleine Beispiel demonstriert zum einen die Funktionskomposition,
+zum anderen agiert diese Funktionskomposition direkt auf dem Container.
+Es sind also nicht, wie im klassischen Beispiel zuvor, temporäre Zwischencontainer notwendig.
+
 
 ## Projektionen
 
@@ -193,16 +201,15 @@ Mit dem neuen Sprachfeature *Projektionen* lässt sich das Sortieren wie folgt lö
 26:     std::cout << title << std::endl;
 ```
 
-Dieses Mal wird der Quellcode nicht kürzer, dafür aber prägnanter.
-
+Dieses Mal wird der Quellcode nicht unbedingt kürzer, dafür aber prägnanter.
 Wir können mit *Projektionen* viel klarer zu verstehenden Code schreiben,
 der weniger anfällig für unbeabsichtigte Fehler ist!
 
-Wir geben einfach `std::ranges::less` (oder eine anderes Funktionsobjekt) und einen Pointer auf ein Data Member als Argument mit.
+Wir geben einfach `std::ranges::less` (oder ein anderes Funktionsobjekt) und einen Pointer auf ein Data Member als Argument mit.
 Unter der Haube kommt hier `std::invoke` zum Einsatz, dies nur der Vollständigkeit halber erwähnt.
 
 ---
 
-[Zurück](../../Readme.md)
+[Zurück](Readme.md)
 
 ---
