@@ -15,31 +15,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Readme_Legacy.md">
+    <None Include="_Readme_Legacy.md">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Readme.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_01_Algorithms.md">
+    <None Include="Readme_01_Algorithms.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_02_Ranges_Views.md">
+    <None Include="Readme_02_Ranges_Views.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_06_RealWorldExamples.md">
+    <None Include="Readme_06_RealWorldExamples.md">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="cpp20_views.svg">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_03_Standard_Views.md">
+    <None Include="Readme_03_Standard_Views.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_04_ViewImplementation.md">
+    <None Include="Readme_04_ViewImplementation.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ReadmeEx_05_MiscExamples.md">
+    <None Include="Readme_05_MiscExamples.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Readme_00_Motivation.md">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -53,19 +56,28 @@
     <ClCompile Include="Ranges01.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ranges_Ex_01_Algorithms.cpp">
+    <ClCompile Include="Ranges_01_Algorithms.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ranges_Ex_02_Ranges_View.cpp">
+    <ClCompile Include="Ranges_02_Ranges_View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ranges_Ex_06_RealworldExamples.cpp">
+    <ClCompile Include="Ranges_06_RealworldExamples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ranges_Ex_04_ViewImplementation.cpp">
+    <ClCompile Include="Ranges_04_ViewImplementation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ranges_Ex_05_MiscExamples.cpp">
+    <ClCompile Include="Ranges_05_MiscExamples.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ranges03.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ranges04.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ranges_00_Motivation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
