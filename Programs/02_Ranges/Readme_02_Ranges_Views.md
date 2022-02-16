@@ -134,6 +134,21 @@ Wir wollen die Aussagen aus der Einleitung an einem Beispiel verdeutlichen:
 </pre>
 
 
+Es folgen einige weiterführende Betrachungen zu *Views*:
+
+
+  * ### [Ein erster Blick auf *Views*](#Ein-erster-Blick-auf-Views)
+
+  * ### [*Views* besitzen Bereichsadaptoren](#Views-besitzen-Bereichsadaptoren)
+
+  * ### [*Views* verändern den zugrunde liegenden Container nicht](#Views-verändern-den-zugrunde-liegenden-Container-nicht)
+
+  * ### [*Views* lassen sich in Containern &ldquo;materialisieren&rdquo;](#Views-lassen-sich-in-Containern-materialisieren)
+
+  * ### [*Views* werden &ldquo;*lazy*&rdquo; evaluiert](#Views-werden-lazy-evaluiert)
+
+
+
 ## Ein erster Blick auf *Views*
 
 *Views* in der &ldquo;*Ranges*&rdquo;-Bibliothek sind *lazy* ausgewertete Iteratoren eines Bereichs.
@@ -149,9 +164,9 @@ Quadrieren aller Elemente eines Containers
 01: void test()
 02: {
 03:     auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-04: 
-05:     auto square = [](auto v) { return v * v; };
-06:     auto squared_view = std::views::transform(numbers, square);
+04:     auto square = [](auto v) { return v * v; };
+05:     auto squared_view = std::views::transform(numbers, square);
+06: 
 07:     for (auto s : squared_view) { // square lambda is invoked here
 08:         std::cout << s << ", ";
 09:     }
@@ -223,12 +238,12 @@ die über mehrere Container iterieren kann, als ob es sich um eine einzelnen Cont
 Maximum value: 10
 ```
 
-## Komposition von *Views*: *Views* können miteinander verknüpft werden
+## Komposition von *Views*
 
 Die eigentliche Stärke von *Views* liegt darin, dass sie miteinander verknüpft werden können.
 Da sie die zugrunde liegenden Daten *nicht* kopieren,
 lassen sich mehrere Transformationen
-auf einem Bereich formulieren, was intern nur in Iterator-Aufrufen resultiert.
+auf einem Bereich formulieren, was intern nur in Iteratoren-Aufrufen resultiert.
 
 Das erste Beispiel verwendet die tatsächlichen *Views*-Klassen direkt.
 Dies bedeutet, dass der visuell mächtige Pipe-Operator noch nicht zum Einsatz gelangt:
@@ -363,7 +378,7 @@ Bei Verwendung der Bereichsadapterobjekte können wir auch das
 zusätzliche `std::ranges::ref_view`-Objekt weglassen!
 
 
-## *Views* verändern den zugrunde liegenden Container nicht!
+## *Views* verändern den zugrunde liegenden Container nicht
 
 Auf den ersten Blick könnte eine Ansicht wie eine veränderte Version des Eingabecontainers aussehen.
 Dies ist nicht der Fall: Die gesamte Verarbeitung wird in den Iterator-Objekten durchgeführt,

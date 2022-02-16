@@ -299,7 +299,7 @@ namespace Cpp20RangesMiscellaneousExamples
 #endif
 }
 
-void ranges_ex_05_examples()
+void ranges_05_examples()
 {
 #if __cplusplus >= Cpp_20
 

@@ -89,7 +89,7 @@ namespace Cpp20RangesRealworldExamples
 #endif
 }
 
-void ranges_ex_06_examples()
+void ranges_06_examples()
 {
 #if __cplusplus >= Cpp_20
     using namespace Cpp20RangesRealworldExamples;

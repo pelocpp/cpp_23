@@ -248,6 +248,26 @@ VII
 9 words.
 ```
 
+Dem interessierten Beobachter wird es nicht entgangen sein, dass in Zeile 3 des letzten Beispiels
+eine undefinierte Funktion `sizeOfRange` verwendet wurde:
+
+```cpp
+01: // count the number of words (delimited by space) in a text
+02: auto sizeOfRange(auto&& r)
+03: {
+04:     size_t result{};
+05: 
+06:     if constexpr (std::ranges::sized_range<decltype(r)>) {
+07:         result = std::ranges::size(r);
+08:     }
+09:     else {
+10:         result = std::distance(r.begin(), r.end());
+11:     }
+12: 
+13:     return result;
+14: }
+```
+
 ##### Beispiel 2: Eine Zeichenkette in Teilzeichenketten zerlegen
 
 Bei diesem Beispiel sollten die Teilzeichenketten durch ein beliebiges Trennzeichen voneinander getrennt sein.

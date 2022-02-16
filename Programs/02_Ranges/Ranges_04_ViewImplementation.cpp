@@ -15,7 +15,7 @@ namespace Cpp20RangesViewImplementationExample
 {
 }
 
-void ranges_ex_04_examples()
+void ranges_04_examples()
 {
     using namespace Cpp20RangesViewImplementationExample;
 

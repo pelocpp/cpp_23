@@ -487,7 +487,7 @@ namespace Cpp20Ranges
     }
 }
 
-void ranges_ex_01_algorithms()
+void ranges_01_algorithms()
 {
     using namespace Cpp20Ranges;
 
