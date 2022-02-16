@@ -20,18 +20,15 @@ namespace Cpp20RangesViewImplementationExample_01
 
     // namespace rv = std::ranges::views;
     
-    template<std::ranges::view R>  // #A Using ranges::view  concept
+    template<std::ranges::view R>
     class custom_take_view
         : public std::ranges::view_interface<custom_take_view<R>> {
-        // #B Necessary data members
         R                                  base_{};
         std::ranges::range_difference_t<R> count_{};
 
     public:
-        // #C Default constructible
         custom_take_view() = default;
 
-        // #D Constructor for range and count
         constexpr custom_take_view(
             R                                  base,
             std::ranges::range_difference_t<R> count)
@@ -39,11 +36,9 @@ namespace Cpp20RangesViewImplementationExample_01
             , count_{ count }
         {}
 
-        // #E view_interface members
         constexpr R base() const& { return base_; }
         constexpr R base()&& { return std::move(base_); }
 
-        // #F Actual begin and end
         constexpr auto begin() { return std::ranges::begin(base_); }
         constexpr auto end()
         {
@@ -51,20 +46,19 @@ namespace Cpp20RangesViewImplementationExample_01
         }
     };
 
-    template<std::ranges::range R>  // #G Deduction guide
+    template<std::ranges::range R> 
     custom_take_view(R&& base, std::ranges::range_difference_t<R>)
         ->custom_take_view<std::ranges::views::all_t<R>>;
 
     namespace details {
 
-        template<std::integral T>  // #A Only integrals
+        template<std::integral T>
         struct custom_take_range_adaptor_closure {
-            T count_;  // #B Store the count
+            T count_;
             constexpr custom_take_range_adaptor_closure(T count)
                 : count_{ count }
             {}
 
-            // #C Allow it to be called with a range
             template<std::ranges::viewable_range R>
             constexpr auto operator()(R&& r) const
             {
@@ -85,7 +79,6 @@ namespace Cpp20RangesViewImplementationExample_01
             }
         };
 
-
         template<std::ranges::viewable_range R, typename T>
         constexpr auto
             operator|(R&& r,
@@ -98,11 +91,6 @@ namespace Cpp20RangesViewImplementationExample_01
 
 namespace views {
     inline Cpp20RangesViewImplementationExample_01::details::custom_take_range_adaptor custom_take;
-}
-
-void ranges_04_examples()
-{
-    using namespace Cpp20RangesViewImplementationExample_01;
 }
 
 // ===========================================================================
