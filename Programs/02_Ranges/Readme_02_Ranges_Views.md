@@ -137,15 +137,15 @@ Wir wollen die Aussagen aus der Einleitung an einem Beispiel verdeutlichen:
 Es folgen einige weiterführende Betrachungen zu *Views*:
 
 
-  * ### [Ein erster Blick auf *Views*](#Ein-erster-Blick-auf-Views)
+  * ### [Ein erster Blick](#Ein-erster-Blick-auf-Views)
 
-  * ### [*Views* besitzen Bereichsadaptoren](#Views-besitzen-Bereichsadaptoren)
+  * ### [Bereichsadaptoren](#Views-besitzen-Bereichsadaptoren)
 
-  * ### [*Views* verändern den zugrunde liegenden Container nicht](#Views-verändern-den-zugrunde-liegenden-Container-nicht)
+  * ### [Der zugrunde liegende Container bleibt unverändert](#Views-modifizieren-den-zugrunde-liegenden-Container-nicht)
 
-  * ### [*Views* lassen sich in Containern &ldquo;materialisieren&rdquo;](#Views-lassen-sich-in-Containern-materialisieren)
+  * ### [&ldquo;Materialisierung&rdquo; von *Views*](#Views-lassen-sich-in-Containern-materialisieren)
 
-  * ### [*Views* werden &ldquo;*lazy*&rdquo; evaluiert](#Views-werden-lazy-evaluiert)
+  * ### [&ldquo;*Lazy*&rdquo; Evaluierung](#Views-werden-lazy-evaluiert)
 
 
 
@@ -378,7 +378,7 @@ Bei Verwendung der Bereichsadapterobjekte können wir auch das
 zusätzliche `std::ranges::ref_view`-Objekt weglassen!
 
 
-## *Views* verändern den zugrunde liegenden Container nicht
+## *Views* modifizieren den zugrunde liegenden Container nicht
 
 Auf den ersten Blick könnte eine Ansicht wie eine veränderte Version des Eingabecontainers aussehen.
 Dies ist nicht der Fall: Die gesamte Verarbeitung wird in den Iterator-Objekten durchgeführt,
@@ -565,12 +565,55 @@ siehe das folgende Beispiel:
 
 ---
 
+## Der Zweck von `std::views::common` in C++20 Ranges
+
+Manche der STL-Algorithmen, wie zum Beispiel `std::accumulate`, werden von 
+der &ldquo;*Ranges*&rdquo;-Bibliothek nicht unterstützt.
+Wenn wir nun *Views* und ältere STL-Algorithmen mischen,
+dann kann es zu Übersetzungsfehlern kommen:
+
+```cpp
+01: std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+02: 
+03: auto range = vec | std::views::take_while([](int x) { return x > 5; });
+04: 
+05: auto result = std::accumulate(std::begin(range), std::end(range), 0);  // <== Compile Error
+```
+
+Um das Problem für `std::views::take_while` zu beheben,
+müssen wir daher eine Konvertierung zu `std::views::common` hinzufügen.
+Der Zweck von `common_view` besteht darin, einen C++ 20-Bereich mit einem *Sentinel*-Typ zu nehmen,
+der sich von seinem Iteratortyp unterscheidet,
+und ihn an die Arbeit mit C++17-Algorithmen anzupassen (hier: `std::accumulate`),
+indem derselbe Iterator- und *Sentinel*-Typ erzeugt wird:
+
+```cpp
+01: std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+02: 
+03: auto range = vec
+04:     | std::views::take_while([](int x) { return x > 5; })
+05:     | std::views::common;
+06: 
+07: auto result = std::accumulate(std::begin(range), std::end(range), 0);
+08: 
+09: std::cout << result << std::endl;
+```
+
+*Bemerkung*: Ein *Sentinel*-Typ ist ähnlich einem Ende-Iterator-Objekt,
+nur dass dieses einen anderen Typ hat.
+
+---
+
 ## Literaturhinweise:
 
 Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Buch
 
 &ldquo;[C++ High Performance](https://www.amazon.de/High-Performance-Master-optimizing-functioning/dp/1839216549/)&rdquo;
 von Björn Andrist und Viktor Sehr.
+
+Die Thematik `std::views::common` findet man
+[hier](https://www.walletfox.com/course/ranges_views_common.php)
+gut beschrieben.
 
 ---
 

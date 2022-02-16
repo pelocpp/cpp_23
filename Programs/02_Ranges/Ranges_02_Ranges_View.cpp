@@ -178,7 +178,7 @@ namespace Cpp20Views
     }
 
     // introduction (understanding views from the Ranges library)
-    void views2_20_introduction()
+    void views2_20_introduction_01()
     {
 #if __cplusplus >= Cpp_20
         // simple example
@@ -193,7 +193,7 @@ namespace Cpp20Views
 #endif
     }
 
-    void views2_20a_introduction()
+    void views2_20_introduction_02()
     {
 #if __cplusplus >= Cpp_20
         // create a filtered view where only a part of the range is visible
@@ -206,7 +206,7 @@ namespace Cpp20Views
 #endif
     }
 
-    void views2_20b_introduction()
+    void views2_20_introduction_03()
     {
 #if __cplusplus >= Cpp_20
 
@@ -386,7 +386,7 @@ namespace Cpp20Views
     }
 
     // views are lazy evaluated (sort doesn't work)
-    void views7_20_lazy_evaluation()
+    void views7_20_lazy_evaluation_01()
     {
     #if __cplusplus >= Cpp_20
 
@@ -409,7 +409,7 @@ namespace Cpp20Views
     #endif
     }
 
-    void views7_20a_lazy_evaluation()
+    void views7_20_lazy_evaluation_02()
     {
     #if __cplusplus >= Cpp_20
 
@@ -425,6 +425,53 @@ namespace Cpp20Views
         print(firstHalf);
     #endif
     }
+
+    void views8_20_views_common_01()
+    {
+#if __cplusplus >= Cpp_20
+
+        std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+
+        auto range = vec
+            | std::views::take_while([](int x) { return x > 5; });
+
+        
+        // doesn't compile !!!
+        // auto result = std::accumulate(std::begin(range), std::end(range), 0);
+#endif
+    }
+
+    void views8_20_views_common_02()
+    {
+#if __cplusplus >= Cpp_20
+
+        std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+
+        auto range = vec
+            | std::views::take_while([](int x) { return x > 5; })
+            | std::views::common;
+
+        auto result = std::accumulate(std::begin(range), std::end(range), 0);
+
+        std::cout << result << std::endl;
+#endif
+    }
+
+    void views8_20_views_common_03()
+    {
+#if __cplusplus >= Cpp_20
+
+        std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+
+        auto range = vec
+            | std::views::filter([](int x) { return x > 5; });
+
+        // compiles :)
+        auto result = std::accumulate(std::begin(range), std::end(range), 0);
+
+        std::cout << result << std::endl;
+#endif
+    }
 }
 
 void ranges_02_views()
@@ -433,15 +480,18 @@ void ranges_02_views()
 
     views1_17_motivation();
     views1_20_motivation();
-    views2_20_introduction();
-    views2_20a_introduction();
-    views2_20b_introduction();
+    views2_20_introduction_01();
+    views2_20_introduction_02();
+    views2_20_introduction_03();
     views3_20_composable();
     views4_20_range_adaptors();
     views5_20_immutable();
     views6_20_materialize();
-    views7_20_lazy_evaluation();
-    views7_20a_lazy_evaluation();
+    views7_20_lazy_evaluation_01();
+    views7_20_lazy_evaluation_02();
+    views8_20_views_common_01();
+    views8_20_views_common_02();
+    views8_20_views_common_03();
 }
 
 // ===========================================================================

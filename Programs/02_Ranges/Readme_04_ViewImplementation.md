@@ -1,4 +1,4 @@
-# Implementierung einer *View*
+# Implementierung einer benutzerdefinierten *View*
 
 [Zurück](Readme.md)
 
@@ -8,7 +8,10 @@
 
 ---
 
-## To be done
+Im beiliegenden Quellcode finden Sie die Realisierung einer benutzerdefinierten *View* vor.
+Das Beispiel stammt von Marius Bancila (siehe unten die Literaturhinweise),
+gute Erläuterungen des Quellcodes findet man in [Programming with C++20](https://leanpub.com/programming-with-cpp20)
+von Andreas Fertig.
 
 ---
 

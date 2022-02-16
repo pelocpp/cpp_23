@@ -47,13 +47,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Ranges02.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ranges01.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Ranges_01_Algorithms.cpp">
@@ -69,12 +63,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Ranges_05_MiscExamples.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ranges03.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Ranges04.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Ranges_00_Motivation.cpp">

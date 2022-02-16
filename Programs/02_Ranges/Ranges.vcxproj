@@ -155,10 +155,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Ranges02.cpp" />
-    <ClCompile Include="Ranges01.cpp" />
-    <ClCompile Include="Ranges03.cpp" />
-    <ClCompile Include="Ranges04.cpp" />
     <ClCompile Include="Ranges_00_Motivation.cpp" />
     <ClCompile Include="Ranges_01_Algorithms.cpp" />
     <ClCompile Include="Ranges_02_Ranges_View.cpp" />
