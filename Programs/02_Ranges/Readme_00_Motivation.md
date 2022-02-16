@@ -8,6 +8,47 @@
 
 ---
 
+## Qualität von Fehlermeldungen
+
+Mit Einführung der &ldquo;*Ranges*&rdquo;-Bibliothek hat sich die Qualität der Fehlermeldungen
+verbessert, da *Ranges* auf *Concepts* beruhen.
+
+Wir demonstrieren dies an einem &ldquo;Klassiker&rdquo; einer C++&ndash;Fehlermeldungen,
+nämlich dem Versuch, eine Liste (`std::list`) zu sortieren (`std::sort`):
+
+###### Erstes Beispiel &ndash; C++ 17:
+
+```cpp
+std::list<int> numbers = { 1, 4, 2, 3 };
+
+std::sort(
+    std::begin(numbers),
+    std::end(numbers)
+);
+```
+
+Hier nun einige Kostproben der Fehlermeldungen (Visual C++):
+
+  * `Error binary '-': 'const std::_List_unchecked_iterator<std::_List_val<std::_List_simple_types<_Ty>>>' does not define this operator or a conversion to a type acceptable to the predefined operator	Ranges`
+  * `'_Sort_unchecked': no matching overloaded function found`
+
+Das ist alles sehr schwer zu verstehen. Nun zu C++ 20:
+
+###### Zweites Beispiel &ndash; C++ 20:
+
+```cpp
+std::list<int> numbers = { 1, 4, 2, 3 };
+std::ranges::sort(numbers);
+```
+
+Logisch, das Programm ist nach wie vor falsch, aber die folgende Fehlermeldung
+ist doch etwas zielführender:
+
+  * `Error 'std::ranges::_Sort_fn::operator ()': the associated constraints are not satisfied` (Visual C++)
+  * `note: constraints not satisfied` (gcc)
+  * `note: 'std::random_access_iterator_tag' is not a base of 'std::bidirectional_iterator_tag'` (gcc)
+
+
 ## Lesbarkeit des Quellcodes
 
 ###### Betrachten Sie folgendes Beispiel:

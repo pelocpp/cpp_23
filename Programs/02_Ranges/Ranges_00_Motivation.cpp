@@ -12,7 +12,30 @@
 
 namespace Cpp20Ranges_Motivation
 {
-    void motivation_01()
+    void motivation_01_errors()
+    {
+        std::vector<int> numbers = { 1, 4, 2, 3 };
+        // std::list<int> numbers = { 1, 4, 2, 3 };
+
+        std::sort(
+            std::begin(numbers),
+            std::end(numbers)
+        );
+
+        std::ranges::copy(numbers, std::ostream_iterator<int>(std::cout, ", "));
+    }
+
+    void motivation_02_errors()
+    {
+        std::vector<int> numbers = { 1, 4, 2, 3 };
+        // std::list<int> numbers = { 1, 4, 2, 3 };
+
+        std::ranges::sort(numbers);
+
+        std::ranges::copy(numbers, std::ostream_iterator<int>(std::cout, ", "));
+    }
+
+    void motivation_02_readability()
     {
         std::vector<int> vec1{ 1, 2, 3, 4, 5 };
         std::vector<int> vec2;
@@ -49,7 +72,7 @@ namespace Cpp20Ranges_Motivation
         return n % 2 == 0;
     }
 
-    void motivation_02_classic()
+    void motivation_03_classic()
     {
         std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
@@ -77,7 +100,7 @@ namespace Cpp20Ranges_Motivation
         std::cout << std::endl;
     }
 
-    void motivation_02_ranges()
+    void motivation_03_ranges()
     {
         std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
@@ -98,7 +121,7 @@ namespace Cpp20Ranges_Motivation
         double m_price;
     };
 
-    void motivation_03_classic()
+    void motivation_04_classic()
     {
         std::vector<Book> books {
             { "C++", "Bjarne Stroustrup", 1985, 20.55 },
@@ -122,7 +145,7 @@ namespace Cpp20Ranges_Motivation
         std::cout << std::endl;
     }
 
-    void motivation_03_ranges()
+    void motivation_04_ranges()
     {
         std::vector<Book> books{
             { "C++", "Bjarne Stroustrup", 1985, 20.55 },
@@ -152,11 +175,13 @@ void ranges_00_motivation()
 {
     using namespace Cpp20Ranges_Motivation;
 
-    motivation_01();
-    motivation_02_classic();
-    motivation_02_ranges();
+    motivation_01_errors();
+    motivation_01_errors();
+    motivation_02_readability();
     motivation_03_classic();
     motivation_03_ranges();
+    motivation_04_classic();
+    motivation_04_ranges();
 }
 
 // ===========================================================================
