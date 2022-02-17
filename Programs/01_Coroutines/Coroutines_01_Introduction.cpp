@@ -34,33 +34,28 @@ namespace Coroutines_Motivation
 
 namespace Coroutines_SimpleExamples
 {
+    // from https://en.cppreference.com/w/cpp/coroutine/coroutine_handle
     template<std::movable T>
     class Generator {
     public:
-
         struct promise_type {
             Generator<T> get_return_object() {
                 return Generator{ Handle::from_promise(*this) };
             }
-
-            void return_void() {}
-
             static std::suspend_always initial_suspend() noexcept {
                 return {};
             }
-
             static std::suspend_always final_suspend() noexcept {
                 return {};
             }
-
             std::suspend_always yield_value(T value) noexcept {
                 current_value = std::move(value);
                 return {};
             }
+            void return_void() {}
 
             // Disallow co_await in generator coroutines.
             void await_transform() = delete;
-
             [[noreturn]]
             static void unhandled_exception() {
                 throw;
@@ -76,7 +71,6 @@ namespace Coroutines_SimpleExamples
         {}
 
         Generator() = default;
-
         ~Generator() {
             if (m_coroutine) {
                 m_coroutine.destroy();
@@ -84,7 +78,6 @@ namespace Coroutines_SimpleExamples
         }
 
         Generator(const Generator&) = delete;
-
         Generator& operator=(const Generator&) = delete;
 
         Generator(Generator&& other) noexcept :
@@ -92,7 +85,6 @@ namespace Coroutines_SimpleExamples
         {
             other.m_coroutine = {};
         }
-
         Generator& operator=(Generator&& other) noexcept {
             if (this != &other) {
                 if (m_coroutine) {
@@ -104,7 +96,7 @@ namespace Coroutines_SimpleExamples
             return *this;
         }
 
-        // range-based for loop support
+        // Range-based for loop support.
         class Iter {
         public:
             void operator++() {
