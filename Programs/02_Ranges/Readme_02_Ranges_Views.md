@@ -34,7 +34,7 @@ Es folgen einige weiterführende Betrachungen zu *Views*:
 
   * ### [&ldquo;*Lazy*&rdquo; Evaluierung](#Views-werden-lazy-evaluiert)
 
-  * ### [`std::views::common`](#Der-zweck-von-common_view)
+  * ### [`std::views::common` bzw. `std::ranges::common_view`](#Der-zweck-von-common_view)
     
 
 ## Motivation
@@ -567,11 +567,6 @@ siehe das folgende Beispiel:
 ---
 
 ## Der Zweck von `common_view`
-
-
-Der Zweck von `std::views::common`
-
-Der Zweck von `common_view`
 
 Manche der STL-Algorithmen, wie zum Beispiel `std::accumulate`, werden von 
 der &ldquo;*Ranges*&rdquo;-Bibliothek nicht unterstützt.
