@@ -4,6 +4,12 @@
 
 ---
 
+<img src="Toth_Ranges.png" style="padding-left: 100px;" width="500" />
+
+<sup>(Quelle: [Blog von Simon Tóth](https://itnext.io/c-20-ranges-complete-guide-4d26e3511db0))</sup>
+
+---
+
 ## [Motivation](Readme_00_Motivation.md)
 
 ## [Redesign der Standard Library Algorithmen](Readme_01_Algorithms.md)

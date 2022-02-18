@@ -4,6 +4,12 @@
 
 ---
 
+<img src="Toth_Concepts.png" style="padding-left: 100px;" width="500" />
+
+<sup>(Quelle: [Blog von Simon Tóth](https://itnext.io/c-20-concepts-complete-guide-42c9e009c6bf))</sup>
+
+---
+
 ## Aufgaben
 
 Einige kleinere Aufgaben (samt Musterlösungen) sind diesem Repository ebenfalls beigefügt.
