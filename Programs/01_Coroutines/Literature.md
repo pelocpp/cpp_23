@@ -35,6 +35,14 @@
 
 ---
 
+Weitere interessante Artikel:
+
+  * [C++ Coroutines: Understanding operator `co_await`](https://lewissbaker.github.io/2017/11/17/understanding-operator-co-await)</br>
+  * [Your first Coroutine](https://blog.panicsoftware.com/your-first-coroutine/)</br>
+  * [C++20 Coroutines: sketching a minimal async framework](https://www.jeremyong.com/cpp/2021/01/04/cpp20-coroutines-a-minimal-async-framework/)</br>
+
+---
+
 [Zurück](Readme.md)
 
 ---
