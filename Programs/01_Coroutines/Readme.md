@@ -4,6 +4,12 @@
 
 ---
 
+<img src="Toth_Coroutines.png" style="padding-left: 75px;" width="500" />
+
+(Quelle: [Blog von Simon Tóth](https://itnext.io/c-20-coroutines-complete-guide-7c3fc08db89d))
+
+---
+
 ## [Einführung](Readme_01_Introduction.md)
 
 ## [Erste Schritte](Readme_02_FirstSteps.md)
@@ -16,8 +22,6 @@
 
 ## [Literatur](Literature.md)
 
-
-<img src="coroutine.png" width="250">
 
 ---
 
