@@ -14,6 +14,13 @@ die Einstellung *Preview - Features from the Latest C++ Working Draft (/std:c++l
 
 Abbildung 1: Projekteinstellungen unter Visual Studio 2019.
 
+xxxx
+
+<img src="VisualStudioSettings.png"  
+   style="left:100px;" />
+
+xxx
+
 Alle vorgestellten Beispiele stellen nur Neuerungen von C++ vor,
 die bereits fest in den C++ 20 Standard eingeflossen sind.
 

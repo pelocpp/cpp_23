@@ -23,7 +23,7 @@
   * Rainer Grimm, &ldquo;*C++20: Get the Details*&rdquo;.</br> 
     Independently published (20. April 2021), 530 Seiten. Sprache: Englisch. ISBN-13: 979-8732989458.
 
-    Für alle C++ Entwickler, die den Umstieg auf C++ angehen wollen, absolut lesenswert.
+    Für alle C++ Entwickler, die den Umstieg auf C++ 20 angehen wollen, absolut lesenswert.
     Alle Neuerungen von C++20 sind übersichtlich dargestellt.
 
 ---
