@@ -6,8 +6,7 @@ void coroutines_01();
 void coroutines_02();
 void coroutines_03();
 void coroutines_04();
-void coroutines_08();
-void coroutines_09();
+void coroutines_05();
 
 int main()
 {
@@ -15,9 +14,7 @@ int main()
     coroutines_02();
     coroutines_03();
     coroutines_04();
-
-    // coroutines_08();
-
+    coroutines_05();
     return 0;
 }
 

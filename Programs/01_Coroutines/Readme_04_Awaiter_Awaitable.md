@@ -272,9 +272,6 @@ HelloWorldCoro printHelloWorldEx() {
   * `co_await` ist ein unärer Operator, der eine Coroutine suspendiert und die Kontrolle an den Aufrufer zurückgibt.
     Sein Operand ist ein Ausdruck, dessen Typ entweder den Operator `co_await` oder *Awaitable* definieren muss.
 
-
-
-
 ---
 
 

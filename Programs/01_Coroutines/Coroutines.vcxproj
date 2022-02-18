@@ -149,11 +149,13 @@
     <None Include="Readme_02_FirstSteps.md" />
     <None Include="Readme_03_Yield_Return.md" />
     <None Include="Readme_04_Awaiter_Awaitable.md" />
+    <None Include="Readme_05_Iterators.md" />
     <None Include="Readme_09_Futures.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Coroutines_01_Introduction.cpp" />
     <ClCompile Include="Coroutines_04_Awaiter_Awaitable.cpp" />
+    <ClCompile Include="Coroutines_05_Iterators.cpp" />
     <ClCompile Include="Coroutines_09_Future.cpp" />
     <ClCompile Include="Coroutines_02_FirstSteps.cpp" />
     <ClCompile Include="Coroutines_08_Scratch.cpp" />
