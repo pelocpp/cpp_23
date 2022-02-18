@@ -20,6 +20,23 @@ Folgende Beweggründe haben zur Entwicklung der &ldquo;*Ranges*&rdquo;-Bibliothek
     Dabei kommt es **nicht** zur Erzeugung von überflüssigen Zwischenkopien des Ausgangsbereichs.
 
 
+Es folgen einige weiterführende Betrachungen zu *Views*:
+
+  * ### [Motivation](#Motivation)
+
+  * ### [Ein erster Blick](#Ein-erster-Blick-auf-Views)
+
+  * ### [Bereichsadaptoren](#Views-besitzen-Bereichsadaptoren)
+
+  * ### [Der zugrunde liegende Container bleibt unverändert](#Views-modifizieren-den-zugrunde-liegenden-Container-nicht)
+
+  * ### [&ldquo;Materialisierung&rdquo; von *Views*](#Views-lassen-sich-in-Containern-materialisieren)
+
+  * ### [&ldquo;*Lazy*&rdquo; Evaluierung](#Views-werden-lazy-evaluiert)
+
+  * ### [`std::views::common`](#Der-zweck-von-common_view)
+    
+
 ## Motivation
 
 Wir wollen die Aussagen aus der Einleitung an einem Beispiel verdeutlichen:
@@ -132,22 +149,6 @@ Wir wollen die Aussagen aus der Einleitung an einem Beispiel verdeutlichen:
 33:     std::cout << score << std::endl;
 34: }
 </pre>
-
-
-Es folgen einige weiterführende Betrachungen zu *Views*:
-
-
-  * ### [Ein erster Blick](#Ein-erster-Blick-auf-Views)
-
-  * ### [Bereichsadaptoren](#Views-besitzen-Bereichsadaptoren)
-
-  * ### [Der zugrunde liegende Container bleibt unverändert](#Views-modifizieren-den-zugrunde-liegenden-Container-nicht)
-
-  * ### [&ldquo;Materialisierung&rdquo; von *Views*](#Views-lassen-sich-in-Containern-materialisieren)
-
-  * ### [&ldquo;*Lazy*&rdquo; Evaluierung](#Views-werden-lazy-evaluiert)
-
-
 
 ## Ein erster Blick auf *Views*
 
@@ -565,7 +566,12 @@ siehe das folgende Beispiel:
 
 ---
 
-## Der Zweck von `std::views::common` in C++20 Ranges
+## Der Zweck von `common_view`
+
+
+Der Zweck von `std::views::common`
+
+Der Zweck von `common_view`
 
 Manche der STL-Algorithmen, wie zum Beispiel `std::accumulate`, werden von 
 der &ldquo;*Ranges*&rdquo;-Bibliothek nicht unterstützt.
@@ -582,7 +588,8 @@ dann kann es zu Übersetzungsfehlern kommen:
 
 Um das Problem für `std::views::take_while` zu beheben,
 müssen wir daher eine Konvertierung zu `std::views::common` hinzufügen.
-Der Zweck von `common_view` besteht darin, einen C++ 20-Bereich mit einem *Sentinel*-Typ zu nehmen,
+Der Zweck von `common_view` (`std::ranges::common_view`) besteht darin,
+einen C++ 20-Bereich mit einem *Sentinel*-Typ zu nehmen,
 der sich von seinem Iteratortyp unterscheidet,
 und ihn an die Arbeit mit C++17-Algorithmen anzupassen (hier: `std::accumulate`),
 indem derselbe Iterator- und *Sentinel*-Typ erzeugt wird:
