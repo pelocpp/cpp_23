@@ -12,30 +12,31 @@
 
 ## Einstellungen in Visual Studio
 
-Die Anwendung des Modul-Konzepts in Visual Studio erfoderte einige Änderungen an den
-Standard-Einstellungen. Ein Eintrag in
-[stackoverflow](https://stackoverflow.com/questions/69006729/visual-studio-2019-cannot-import-c-standard-library-declaration-in-cpp-file)
+Die Einbindung des Modul-Konzepts in Visual Studio erfordert einige Änderungen an den
+Standard-Einstellungen eines Projekts.
+Eine Frage bzw. deren Beantwortung in
+[Stackoverflow](https://stackoverflow.com/questions/69006729/visual-studio-2019-cannot-import-c-standard-library-declaration-in-cpp-file)
 beschreibt dies sehr gut (*Abbildung* 1):
 
-<img src="Modules_01.png"  width="600" />
+<img src="Modules_01.png"  width="650" />
 
-*Abbildung* 1: Einstellungen in Visual Studio 
+*Abbildung* 1: Einstellungen in Visual Studio.
 
 Neben der offensichtlichen Auswahl des C++ Sprachstandards 
-(&ldquo;*Preview - Features from the Latest C++ Working Draft (`/std:c++latest`)*&rdquo;)
-sind die nächsten zwei Einstellungen in der Menge aller Einstellungen nicht ganz einfach aufzuspüren:
-Die Einstellung &ldquo;*Enable Experimental C++ Standard Library Mode*&rdquo;
+(hier: &ldquo;*Preview - Features from the Latest C++ Working Draft (`/std:c++latest`)*&rdquo;)
+sind die nächsten zwei Einstellungen in der Menge aller Einstellungen nicht so ganz einfach aufzuspüren:
+Die Einstellung &ldquo;*Enable Experimental C++ Standard Library Modules*&rdquo;
 ist auf den Wert &ldquo;`Yes (/experimental:module)`&rdquo; zu setzen:
 
 <img src="Modules_02.png"  width="600" />
 
-*Abbildung* 2: Einstellung &ldquo;*Enable Experimental C++ Standard Library Mode*&rdquo;
+*Abbildung* 2: Einstellung &ldquo;*Enable Experimental C++ Standard Library Modules*&rdquo;.
 
 Fehlt noch die Einstellung &ldquo;*Scan Sources for Module Dependencies*&rdquo; (*Abbildung* 3):
 
 <img src="Modules_03.png"  width="600" />
 
-*Abbildung* 3: Einstellung &ldquo;*Scan Sources for Module Dependencies*&rdquo;
+*Abbildung* 3: Einstellung &ldquo;*Scan Sources for Module Dependencies*&rdquo;.
 
 Hier ist der Wert &ldquo;`Yes`&rdquo; einzutragen.
 
@@ -65,7 +66,7 @@ Hello Modules :)
 
 #### Erstellen eines separaten &ldquo;C++ Module Interface Unit&rdquo; Files
 
-Module werden (unter Visual C++) in Dateien mit der Endung  &ldquo;.ixx&rdquo; abgelegt,
+Module werden (unter Visual C++) in Dateien mit der Endung  &ldquo;*.ixx*&rdquo; abgelegt,
 so genannten &ldquo;C++ Module Interface Unit&rdquo; Dateien:
 
 ```cpp
@@ -100,12 +101,12 @@ Hello Modules again:)
 
 ---
 
-#### Einige weitere Konzepte von C++ 20 Modules
+#### Einige weitere Konzepte von C++ 20 Modulen
 
 Neben Funktionen lassen sich auch
 
   * Strukturen
-  * Klassen
+  * Klassen und
   * Namensräume
 
 in Modulen definieren und &ndash; bei Bedarf &ndash; exportieren.
