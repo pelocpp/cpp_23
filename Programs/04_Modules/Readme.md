@@ -210,6 +210,14 @@ doDisconnect
 
 ---
 
+## Literaturhinweise:
+
+Die Anregungen zu den Beispielen stammen aus dem Youtube-Tutorial
+[C++ Modules Tutorial in Visual Studio](https://www.youtube.com/watch?v=qeW9sUu3adA)
+von *Ozzadar*.
+
+---
+
 [Zurück](../../Readme.md)
 
 ---
