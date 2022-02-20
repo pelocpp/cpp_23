@@ -21,7 +21,8 @@
 #include <iomanip>
 #include <iterator>
 #include <algorithm>
-#include <cstddef>    // TODO ???????????????????????
+//#include <cstddef>
+#include <conio.h>  // _getch
 
 // ===========================================================================
 
@@ -30,85 +31,198 @@
 
 namespace Coroutines_StickyBits_Feabhats
 {
-    template <typename T>
-    class Future
-    {
-        class Promise
-        {
-        public:
-            using value_type = std::optional<T>;
+    //template <typename T>
+    //class Future
+    //{
+    //    class Promise
+    //    {
+    //    public:
+    //        using value_type = std::optional<T>;
 
-            Promise() = default;
-            std::suspend_always initial_suspend() { return {}; }
-            std::suspend_always final_suspend() noexcept { return {}; }
+    //        Promise() = default;
+    //        std::suspend_always initial_suspend() { return {}; }
+    //        std::suspend_always final_suspend() noexcept { return {}; }
 
-            void unhandled_exception() {
-                std::cout << "unhandled_exception:" << std::endl;
-                std::rethrow_exception(std::move(std::current_exception()));
+    //        void unhandled_exception() {
+    //            std::cout << "unhandled_exception:" << std::endl;
+    //            std::rethrow_exception(std::move(std::current_exception()));
+    //        }
+
+    //        std::suspend_always yield_value(T value) {
+    //            this->value = std::move(value);
+    //            return {};
+    //        }
+
+    //        // void return_value(T value) {
+    //        //     this->value = std::move(value);
+    //        // }
+
+    //        void return_void() {
+    //            this->value = std::nullopt;
+    //        }
+
+    //        inline Future get_return_object();
+
+    //        value_type get_value() {
+    //            return std::move(value);
+    //        }
+
+    //        bool finished() {
+    //            return !value.has_value();
+    //        }
+
+    //    private:
+    //        value_type value{};
+    //    };
+
+    //public:
+    //    using value_type = T;
+    //    using promise_type = Promise;
+
+    //    explicit Future(std::coroutine_handle<Promise> handle)
+    //        : handle(handle)
+    //    {}
+
+    //    ~Future() {
+    //        if (handle) { handle.destroy(); }
+    //    }
+
+    //    Promise::value_type next() {
+    //        if (handle) {
+    //            handle.resume();
+    //            return handle.promise().get_value();
+    //        }
+    //        else {
+    //            return {};
+    //        }
+    //    }
+
+    //private:
+    //    std::coroutine_handle<Promise> handle;
+    //};
+
+
+    //template <typename T>
+    //inline Future<T> Future<T>::Promise::get_return_object()
+    //{
+    //    return Future{ std::coroutine_handle<Promise>::from_promise(*this) };
+    //}
+
+    // ===================================================================
+
+    // Der stammt aus 05_Iterators .. würde also besser in dieses Repo passen :-)))
+
+    template<std::movable T>
+    class Generator {
+    public:
+        struct promise_type {
+            Generator<T> get_return_object() {
+                return Generator{ Handle::from_promise(*this) };
             }
-
-            std::suspend_always yield_value(T value) {
-                this->value = std::move(value);
+            static std::suspend_always initial_suspend() noexcept {
                 return {};
             }
-
-            // void return_value(T value) {
-            //     this->value = std::move(value);
-            // }
-
-            void return_void() {
-                this->value = std::nullopt;
+            static std::suspend_always final_suspend() noexcept {
+                return {};
+            }
+            std::suspend_always yield_value(T value) noexcept {
+                current_value = std::move(value);
+                return {};
+            }
+            // Disallow co_await in generator coroutines.
+            void await_transform() = delete;
+            void return_void() {}
+            [[noreturn]]
+            static void unhandled_exception() {
+                throw;
             }
 
-            inline Future get_return_object();
-
-            value_type get_value() {
-                return std::move(value);
-            }
-
-            bool finished() {
-                return !value.has_value();
-            }
-
-        private:
-            value_type value{};
+            std::optional<T> current_value;
         };
 
-    public:
-        using value_type = T;
-        using promise_type = Promise;
+        using Handle = std::coroutine_handle<promise_type>;
 
-        explicit Future(std::coroutine_handle<Promise> handle)
-            : handle(handle)
+        explicit Generator(const Handle coroutine) :
+            m_handle{ coroutine }
         {}
 
-        ~Future() {
-            if (handle) { handle.destroy(); }
+        Generator() = default;
+        ~Generator() {
+            if (m_handle) {
+                m_handle.destroy();
+            }
         }
 
-        Promise::value_type next() {
-            if (handle) {
-                handle.resume();
-                return handle.promise().get_value();
+        Generator(const Generator&) = delete;
+        Generator& operator=(const Generator&) = delete;
+
+        Generator(Generator&& other) noexcept :
+            m_handle{ other.m_handle }
+        {
+            other.m_handle = {};
+        }
+        Generator& operator=(Generator&& other) noexcept {
+            if (this != &other) {
+                if (m_handle) {
+                    m_handle.destroy();
+                }
+                m_handle = other.m_handle;
+                other.m_handle = {};
+            }
+            return *this;
+        }
+
+        std::optional<T> next() {
+            if (m_handle) {
+                m_handle.resume();
+               // return m_handle.promise().current_value.value();
+                return m_handle.promise().current_value;
             }
             else {
                 return {};
             }
         }
 
+        // Range-based for loop support.
+        class Iter {
+        public:
+            void operator++() {
+                m_handle.resume();
+            }
+            const T& operator*() const {
+                return *m_handle.promise().current_value; 
+            }
+            bool operator==(std::default_sentinel_t) const {
+                return !m_handle || m_handle.done();
+            }
+
+            explicit Iter(const Handle handle) : m_handle{ handle } {}
+
+        private:
+            Handle m_handle;
+        };
+
+        Iter begin() {
+            if (m_handle) {
+                m_handle.resume();
+            }
+            return Iter{ m_handle };
+        }
+
+        std::default_sentinel_t end() {
+            return {};
+        }
+
     private:
-        std::coroutine_handle<Promise> handle;
+        Handle m_handle;
     };
 
+    // ===================================================================
 
-    template <typename T>
-    inline Future<T> Future<T>::Promise::get_return_object()
-    {
-        return Future{ std::coroutine_handle<Promise>::from_promise(*this) };
-    }
 
     // read float co-routine
-    Future<float> read_stream(std::istream& in)
+    // Original - works
+    Generator<float> read_stream(std::istream& in)
     {
         uint32_t data;
         int count{};
@@ -125,6 +239,24 @@ namespace Coroutines_StickyBits_Feabhats
         }
     }
 
+    //Future<float> read_stream(std::istream& in)
+    //{
+    //    uint32_t data;
+    //    int count{};
+    //    char byte;
+    //    while (byte = _getch()) {
+    //        std::cout << byte;
+    //        data = data << 8 | static_cast<unsigned char>(byte);
+    //        if (++count == 4) {
+    //            float value = *reinterpret_cast<float*>(&data);
+    //            // co_yield *reinterpret_cast<float*>(&data);
+    //            co_yield value;
+    //            data = 0;
+    //            count = 0;
+    //        }
+    //    }
+    //}
+
     struct DataPoint
     {
         float timestamp;
@@ -133,13 +265,14 @@ namespace Coroutines_StickyBits_Feabhats
     };
 
     // read struct coroutine
-    Future<DataPoint> read_data(std::istream& in)
+    Generator<DataPoint> read_data(std::istream& in)
     {
         std::optional<float> first{};
         auto raw_data = read_stream(in);
         while (auto next = raw_data.next()) {
             if (first) {
-                co_yield DataPoint{ *first, *next };
+                // co_yield DataPoint{ *first, *next };
+                co_yield DataPoint{ first.value(), next.value() };
                 first = std::nullopt;
             }
             else {
@@ -154,7 +287,7 @@ namespace Coroutines_StickyBits_Feabhats
     {
          auto raw_data = read_stream(std::cin);
          while (auto next = raw_data.next()) {
-             std::cout << *next << std::endl;
+             std::cout << next.value() << std::endl;
          }
     }
 
@@ -168,72 +301,28 @@ namespace Coroutines_StickyBits_Feabhats
         std::cout << std::fixed << std::setprecision(2);
         std::cout << "Time (ms)   Data" << std::endl;
         auto values = read_data(std::cin);
-        while (auto n = values.next()) {
-            std::cout << std::setw(8) << n->timestamp
-                << std::setw(8) << n->data
-                << (n->data > threshold ? " ***Threshold exceeded***" : "")
+
+       // auto xxx = values.next();
+        //DataPoint dp = values.next();
+
+        //while (dp.data != 0) {
+
+        //}
+
+        //DataPoint dp;
+        //while ((dp = values.next()).data != 0) {
+
+        //}
+
+        std::optional<DataPoint> dp;
+        float f;
+
+        while (   f = values.next().value().data != 0) {
+            std::cout << std::setw(8) << dp->timestamp
+                << std::setw(8) << dp->data
+                << (dp->data > threshold ? " ***Threshold exceeded***" : "")
                 << std::endl;
         }
-    }
-}
-
-// ===========================================================================
-
-// minimalistic approach
-// Vishal Chovatiya
-namespace Coroutines_Scratch_01_Vishal
-{
-    struct HelloWorldCoro {
-        struct promise_type { // compiler looks for `promise_type`
-            HelloWorldCoro get_return_object() { return this; }
-            std::suspend_always initial_suspend() { return {}; }
-            std::suspend_always final_suspend() noexcept{ return {}; }
-            void return_void() { }
-            void unhandled_exception() { }
-        };
-        HelloWorldCoro(promise_type* p) : m_handle(std::coroutine_handle<promise_type>::from_promise(*p)) {}
-        ~HelloWorldCoro() { m_handle.destroy(); }
-        std::coroutine_handle<promise_type>      m_handle;
-    };
-
-    HelloWorldCoro print_hello_world() {
-        std::cout << "Hello ";
-        co_await std::suspend_always{};
-        std::cout << "World!" << std::endl;
-    }
-
-    void test_scratch_01() {
-        HelloWorldCoro mycoro = print_hello_world();
-        mycoro.m_handle.resume();
-        mycoro.m_handle(); // Equal to mycoro.m_handle.resume();
-    }
-
-    struct dummy { // Awaitable
-        std::suspend_always operator co_await() { return {}; } 
-    };
-
-    HelloWorldCoro print_hello_world_02() {
-        std::cout << "Hello ";
-        co_await dummy{};
-        std::cout << "World!" << std::endl;
-    }
-
-    void test_scratch_02() {
-        HelloWorldCoro mycoro = print_hello_world_02();
-        mycoro.m_handle.resume();
-        mycoro.m_handle(); // Equal to mycoro.m_handle.resume();
-    }
-
-    struct my_awaiter {
-        bool await_ready() { return false; }
-        void await_suspend(std::coroutine_handle<>) {}
-        void await_resume() {}
-    };
-
-    HelloWorldCoro print_hello_world_03() {
-        std::cout << "Hello ";
-        co_await my_awaiter{};
-        std::cout << "World!" << std::endl;
     }
 }
 
@@ -242,10 +331,6 @@ namespace Coroutines_Scratch_01_Vishal
 void coroutines_08()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-    //using namespace Coroutines_Scratch_01_Vishal;
-    //test_scratch_01();
-    //std::cout << "Done." << std::endl;
 
     using namespace Coroutines_StickyBits_Feabhats;
     test_scratch_sticky_bits_01_just_testing_first_coroutine();

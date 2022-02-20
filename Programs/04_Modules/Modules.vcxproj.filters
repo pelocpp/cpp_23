@@ -20,12 +20,27 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Program.cpp">
+    <ClCompile Include="Program.cppm">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Module.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Module2.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Toth_Modules.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Modules_01.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Modules_02.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Modules_03.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
