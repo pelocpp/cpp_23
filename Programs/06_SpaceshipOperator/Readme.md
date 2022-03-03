@@ -67,11 +67,12 @@ dass es manche Werte gibt, die sich überhaupt nicht miteinander vergleichen lass
  
 #### `std::strong_equality`
 
-Es gibt &ndash; nicht wenige &ndash; Datentypen, für die eine Aussage &ldquo;Wert_1 ist kleiner als Wert_2&rdquo; überhaupt keinen Sinn ergibt.
+Es gibt &ndash; nicht wenige &ndash; Datentypen,
+für die eine Aussage *Wert_1* &ldquo;ist kleiner als&rdquo; *Wert_2* überhaupt keinen Sinn ergibt.
 
   * Beispiel: Um auf eine Datenbank zuzugreifen, gibt es zum Zwecke des Verbindungsaufbaus in den meisten Bibliotheken
     eine Klasse `SqlConnection`. Für zwei `SqlConnection`-Objekte `conn1` und `conn2` ergeben die Operatoren
-    `<`, `<=`, `>` und `>=` keinen Sinn.
+    `<`, `<=`, `>` und `>=` keinerlei Sinn.
 
 #### `std::weak_equality`
 
@@ -95,7 +96,7 @@ Nicht alle Vergleichsoperatoren sind für alle Beziehungsstärken vorhanden. Es gi
 | `std::strong_equality`  | `==`  `!=` | 
 | `std::weak_equality`    | `==`  `!=` | 
 
-Tabelle 1.  C++&ndash;Beziehungsstärken und Operatoren.
+Tabelle 1.  C++&ndash;Beziehungsstärken und verfügbare Operatoren.
 
 ---
 

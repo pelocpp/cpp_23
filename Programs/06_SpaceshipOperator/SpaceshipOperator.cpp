@@ -106,6 +106,20 @@ namespace Spaceship_03_Operator_Point
         auto operator<=>(const Point&) const = default;
     };
 
+    void test_30()
+    {
+        Point p1{ 1, 4 };
+        Point p2{ 1, 5 };
+
+        std::cout << std::boolalpha;
+        std::cout << (p1 == p2) << std::endl;
+        std::cout << (p1 != p2) << std::endl;
+        std::cout << (p1 < p2) << std::endl;
+        std::cout << (p1 <= p2) << std::endl;
+        std::cout << (p1 > p2) << std::endl;
+        std::cout << (p1 >= p2) << std::endl;
+    }
+
     class PointEx {
     private:
         int m_x;
@@ -138,20 +152,6 @@ namespace Spaceship_03_Operator_Point
 
         bool operator==(const PointEx& other) const = default;
     };
-
-    void test_30()
-    {
-        PointEx p1{ 1, 1 };
-        PointEx p2{ 1, 2 };
-
-        std::cout << std::boolalpha;
-        std::cout << (p1 == p2) << std::endl;
-        std::cout << (p1 != p2) << std::endl;
-        std::cout << (p1 < p2) << std::endl;
-        std::cout << (p1 <= p2) << std::endl;
-        std::cout << (p1 > p2) << std::endl;
-        std::cout << (p1 >= p2) << std::endl;
-    }
 
     void test_31()
     {
@@ -186,11 +186,11 @@ namespace Spaceship_04_Operator_Fraction
 
         std::strong_ordering operator<=>(const Fraction& other) const {
 
-            if (this->m_num == other.m_num && this->m_denom == other.m_denom) {
+            if (m_num == other.m_num && m_denom == other.m_denom) {
                 return std::strong_ordering::equal;
             }
 
-            if (this->m_num * other.m_denom < this->m_denom * other.m_num)
+            if (m_num * other.m_denom < m_denom * other.m_num)
             {
                 return std::strong_ordering::less;
             }
