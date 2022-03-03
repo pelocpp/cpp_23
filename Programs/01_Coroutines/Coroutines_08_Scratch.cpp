@@ -219,7 +219,6 @@ namespace Coroutines_StickyBits_Feabhats
 
     // ===================================================================
 
-
     // read float co-routine
     // Original - works
     Generator<float> read_stream(std::istream& in)
