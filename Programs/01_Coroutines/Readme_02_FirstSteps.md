@@ -26,6 +26,21 @@ Eine Funktion ist eine Coroutine, wenn ihre Definition eine der folgenden Aktion
   3. verwendet das Schlüsselwort `co_return`, um die Ausführung abzuschließen und um einen Wert zurückzugeben ...
 
 
+## Vorab: Eine Coroutine ist keine C-Funktion
+
+Wollten wir eines der Coroutinen-Schlüsselwörter im Kontext einer &ldquo;normalen&rdquo; C/C++&ndash;Funktion
+verwenden, erhalten wir ein nicht übersetzungsfähiges C++-Programm:
+
+<pre>
+int foo() { co_return 2; }
+</pre>
+
+Wir erhalten je nach verwendetem Compiler folgende Fehlermeldung:
+
+  * Visual C++: `'promise_type': is not a member of 'std::coroutine_traits<int>'`
+  * gcc: `In function 'int foo()': error: unable to find the promise type for this coroutine`
+
+
 ## Ein erstes Beispiel
 
 Das folgende Code-Fragment &ndash; noch nicht übersetzungsfähig &ndash; beschreibt eine Coroutine:
@@ -106,20 +121,6 @@ kann exakter so beschrieben werden:
 6. den Zustand des Client-Codes wiederherstellen (Konsument)
 7. den Client-Code fortsetzen, indem diesem der gespeicherte Wert aus der `co_yield`-Anweisung zugeführt wird
 
-## Eine Coroutine ist keine C-Funktion
-
-Wollten wir eines der Coroutinen-Schlüsselwörter im Kontext einer &ldquo;normalen&rdquo; C/C++&ndash;Funktion
-verwenden, erhalten wir ein nicht übersetzungsfähiges C++-Programm:
-
-<pre>
-int foo() { co_return 2; }
-</pre>
-
-Wir erhalten je nach verwendetem Compiler folgende Fehlermeldung:
-
-  * Visual C++: `'promise_type': is not a member of 'std::coroutine_traits<int>'`
-  * gcc: `In function 'int foo()': error: unable to find the promise type for this coroutine`
-
 
 ## Der C++ *Coroutine Framework* 
 
@@ -155,7 +156,7 @@ dass wir zwei miteinander verbundene, unterstützende Klassen bereitstellen:
     Diese Klasse wird in der Regel als *Promise* bezeichnet, daher auch der Typbezeichner `promise_type`.
   * eine Klasse zur Verwaltung des Coroutinen-(Promise-)Objekts &ndash; das ist die *Generator*-Klasse.
 
-Im *Promise*-Objekt sind die Lebenszyklusmethoden einer Coroutine bereitstellen.
+Im *Promise*-Objekt sind die Lebenszyklusmethoden einer Coroutine bereitzustellen.
 
 
 ### Das *Promise*-Objekt

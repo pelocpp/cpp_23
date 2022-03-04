@@ -381,25 +381,25 @@ void coroutines_03()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    using namespace Coroutines_MinimalisticApproach_01_Simplest_Variant;
-    test_01();
-    std::cout << "Done." << std::endl;
+    //using namespace Coroutines_MinimalisticApproach_01_Simplest_Variant;
+    //test_01();
+    //std::cout << "Done." << std::endl;
 
     using namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented;
     test_02();
     std::cout << "Done." << std::endl;
 
-    using namespace Coroutines_MinimalisticApproach_03_CoroutineHandle;
-    test_03();
-    std::cout << "Done." << std::endl;
+    //using namespace Coroutines_MinimalisticApproach_03_CoroutineHandle;
+    //test_03();
+    //std::cout << "Done." << std::endl;
 
-    using namespace Coroutines_MinimalisticApproach_04_Generator;
-    test_04();
-    std::cout << "Done." << std::endl;
+    //using namespace Coroutines_MinimalisticApproach_04_Generator;
+    //test_04();
+    //std::cout << "Done." << std::endl;
 
-    using namespace Coroutines_MinimalisticApproach_05_Generator_Instrumented;
-    test_05();
-    std::cout << "Done." << std::endl;
+    //using namespace Coroutines_MinimalisticApproach_05_Generator_Instrumented;
+    //test_05();
+    //std::cout << "Done." << std::endl;
 }
 
 // ===========================================================================

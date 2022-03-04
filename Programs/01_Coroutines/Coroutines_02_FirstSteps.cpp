@@ -8,7 +8,7 @@
 #include <coroutine>
 #include <memory>
 
-namespace Coroutines_HelloWorld
+namespace Coroutines_FirstSteps
 {
     class Generator;
 
@@ -185,12 +185,12 @@ namespace Coroutines_Exercise
 
 void coroutines_02()
 {
-    using namespace Coroutines_HelloWorld;
-    coroutines_hello_world_01();
+    using namespace Coroutines_FirstSteps;
+    //coroutines_hello_world_01();
     coroutines_hello_world_02();
 
     using namespace Coroutines_Exercise;
-    coroutines_exercise();
+    //coroutines_exercise();
 }
 
 // ===========================================================================
