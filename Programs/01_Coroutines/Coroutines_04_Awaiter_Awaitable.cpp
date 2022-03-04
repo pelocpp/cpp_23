@@ -25,10 +25,10 @@
 // Gajendra Gulgulia
 namespace Coroutines_Awaiter_Awaitable_01_Simplest_Variant
 {
-    struct Task {
+    struct Generator {
         struct promise_type {
             promise_type() = default;
-            Task get_return_object() { return {}; }
+            Generator get_return_object() { return {}; }
             std::suspend_never initial_suspend() { return {}; }
             std::suspend_never final_suspend() noexcept { return {}; }
             void return_void() { }
@@ -36,7 +36,7 @@ namespace Coroutines_Awaiter_Awaitable_01_Simplest_Variant
         };
     };
 
-    Task myCoroutine() {
+    Generator myCoroutine() {
         std::cout << "before coroutine" << std::endl;
         co_await std::suspend_never{};
         std::cout << "after coroutine" << std::endl;;
@@ -50,7 +50,7 @@ namespace Coroutines_Awaiter_Awaitable_01_Simplest_Variant
 // Gajendra Gulgulia
 namespace Coroutines_Awaiter_Awaitable_02_Simplest_Variant_Instrumented
 {
-    struct Task {
+    struct Generator {
 
         struct promise_type {
 
@@ -62,7 +62,7 @@ namespace Coroutines_Awaiter_Awaitable_02_Simplest_Variant_Instrumented
                 std::cout << "    ~promise_type" << std::endl;
             }
 
-            Task get_return_object() {
+            Generator get_return_object() {
                 std::cout << "    get_return_object" << std::endl;
                 return {};
             }
@@ -85,7 +85,7 @@ namespace Coroutines_Awaiter_Awaitable_02_Simplest_Variant_Instrumented
         };
     };
 
-    Task myCoroutine() {
+    Generator myCoroutine() {
 
         std::cout << "First Hello from coroutine\n";
         co_await std::suspend_never{};     // never suspend the coroutine at this point
@@ -121,9 +121,9 @@ namespace Coroutines_Awaiter_Awaitable_03_Awaitable
         const std::chrono::duration<int, std::milli> m_duration;
     };
 
-    struct Task {
+    struct Generator {
         struct promise_type {
-            Task get_return_object() { return {}; }
+            Generator get_return_object() { return {}; }
             std::suspend_never initial_suspend() { return {}; }
             std::suspend_never final_suspend() noexcept { return {}; }
             void return_void() { }
@@ -131,7 +131,7 @@ namespace Coroutines_Awaiter_Awaitable_03_Awaitable
         };
     };
 
-    Task myCoroutine() {
+    Generator myCoroutine() {
         using namespace std::chrono_literals;
         auto before = std::chrono::steady_clock::now();
         std::cout << "Going to sleep on thread " <<
@@ -179,10 +179,10 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
         const std::chrono::duration<int, std::milli> length;
     };
 
-    struct Task {
+    struct Generator {
 
         struct promise_type {
-            Task get_return_object() {
+            Generator get_return_object() {
                 std::cout << "  promise_type::get_return_object" << std::endl;
                 return {};
             }
@@ -202,17 +202,17 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
             }
         };
 
-        Task() {
-            std::cout << "c'tor Task" << std::endl;
+        Generator() {
+            std::cout << "c'tor Generator" << std::endl;
         }
 
-        ~Task() {
-            std::cout << "~Task" << std::endl;
+        ~Generator() {
+            std::cout << "~Generator" << std::endl;
         }
     };
 
 
-    Task myCoroutine() {
+    Generator myCoroutine() {
         std::cout << "myCoroutine starts" << std::endl;
         using namespace std::chrono_literals;
         auto before = std::chrono::steady_clock::now();

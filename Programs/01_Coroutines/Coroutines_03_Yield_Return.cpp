@@ -23,10 +23,10 @@
 // Simon Toth
 namespace Coroutines_MinimalisticApproach_01_Simplest_Variant
 {
-    struct Task {
+    struct Generator {
 
         struct promise_type {
-            Task get_return_object() { return {}; }
+            Generator get_return_object() { return {}; }
             std::suspend_never initial_suspend() { return {}; }
             std::suspend_never final_suspend() noexcept { return {}; }
             void return_void() { }
@@ -34,13 +34,13 @@ namespace Coroutines_MinimalisticApproach_01_Simplest_Variant
         };
     };
 
-    Task myCoroutine() {
+    Generator myCoroutine() {
         co_return; // make it a coroutine
     }
 
     void test_01()
     {
-        Task t = myCoroutine();
+        Generator t = myCoroutine();
     }
 }
 
@@ -51,7 +51,7 @@ namespace Coroutines_MinimalisticApproach_01_Simplest_Variant
 
 namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented
 {
-    struct Task {
+    struct Generator {
 
         struct promise_type {
 
@@ -63,7 +63,7 @@ namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented
                 std::cout << "  ~promise" << std::endl;
             }
 
-            Task get_return_object() {
+            Generator get_return_object() {
                 std::cout << "  get_return_object" << std::endl;
                 return {};
             }
@@ -87,16 +87,16 @@ namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented
             }
         };
 
-        Task() {
-            std::cout << "c'tor Task" << std::endl;
+        Generator() {
+            std::cout << "c'tor Generator" << std::endl;
         }
 
-        ~Task() {
-            std::cout << "~Task" << std::endl;
+        ~Generator() {
+            std::cout << "~Generator" << std::endl;
         }
     };
 
-    Task myCoroutine() {
+    Generator myCoroutine() {
         std::cout << "inside coroutine" << std::endl;
         co_return; // make it a coroutine
     }
@@ -104,7 +104,7 @@ namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented
     void test_02()
     {
         std::cout << "before coroutine call" << std::endl;
-        Task t = myCoroutine();
+        Generator t = myCoroutine();
         std::cout << "after coroutine call" << std::endl;
     }
 }
@@ -116,15 +116,15 @@ namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented
 
 namespace Coroutines_MinimalisticApproach_03_CoroutineHandle
 {
-    struct Task {
+    struct Generator {
 
         struct promise_type {
 
             using Handle = std::coroutine_handle<promise_type>;
 
-            Task get_return_object() {
+            Generator get_return_object() {
                 std::cout << "  get_return_object" << std::endl;
-                return Task{ Handle::from_promise(*this) };
+                return Generator{ Handle::from_promise(*this) };
             }
 
             promise_type() {
@@ -154,7 +154,7 @@ namespace Coroutines_MinimalisticApproach_03_CoroutineHandle
             }
         };
 
-        explicit Task(promise_type::Handle coro) : m_coro{ coro } {}
+        explicit Generator(promise_type::Handle coro) : m_coro{ coro } {}
 
         void destroy() { m_coro.destroy(); }
         void resume() { m_coro.resume(); }
@@ -163,20 +163,20 @@ namespace Coroutines_MinimalisticApproach_03_CoroutineHandle
         promise_type::Handle m_coro;
 
     public:
-        Task() {
-            std::cout << "c'tor Task" << std::endl;
+        Generator() {
+            std::cout << "c'tor Generator" << std::endl;
         }
 
-        ~Task() {
-            std::cout << "~Task" << std::endl;
+        ~Generator() {
+            std::cout << "~Generator" << std::endl;
         }
 
-        // making Task move-only:
-        Task(const Task&) = delete;
-        Task& operator=(const Task&) = delete;
+        // making Generator move-only:
+        Generator(const Generator&) = delete;
+        Generator& operator=(const Generator&) = delete;
 
-        Task(Task&& t) noexcept : m_coro(t.m_coro) { t.m_coro = {}; }
-        Task& operator=(Task&& t) noexcept {
+        Generator(Generator&& t) noexcept : m_coro(t.m_coro) { t.m_coro = {}; }
+        Generator& operator=(Generator&& t) noexcept {
             if (this == &t) {
                 return *this;
             }
@@ -189,7 +189,7 @@ namespace Coroutines_MinimalisticApproach_03_CoroutineHandle
         }
     };
 
-    Task myCoroutine() {
+    Generator myCoroutine() {
         std::cout << "inside coroutine" << std::endl;
         co_return; // make it a coroutine
     }
@@ -197,7 +197,7 @@ namespace Coroutines_MinimalisticApproach_03_CoroutineHandle
     void test_03()
     {
         std::cout << "before coroutine call" << std::endl;
-        Task t = myCoroutine();
+        Generator t = myCoroutine();
         std::cout << "after coroutine call" << std::endl;
         t.resume();
         // t.destroy();

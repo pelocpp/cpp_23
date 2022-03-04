@@ -15,10 +15,10 @@ einem C++&ndash;Operator zu tun. Wir beginnen mit einem einfachen Beispiel einer
 die auf nichts wartet:
 
 <pre>
-01: struct Task {
+01: struct Generator {
 02:     struct promise_type {
 03:         promise_type() = default;
-04:         Task get_return_object() { return {}; }
+04:         Generator get_return_object() { return {}; }
 05:         std::suspend_never initial_suspend() { return {}; }
 06:         std::suspend_never final_suspend() noexcept { return {}; }
 07:         void return_void() { }
@@ -26,7 +26,7 @@ die auf nichts wartet:
 09:     };
 10: };
 11: 
-12: Task myCoroutine() {
+12: Generator myCoroutine() {
 13:     std::cout << "before coroutine" << std::endl;
 14:     co_await std::suspend_never{};
 15:     std::cout << "after coroutine" << std::endl;;
@@ -150,9 +150,9 @@ dessen `await_suspend`-Methode die Hilfe eines unterlagerten Threads in Anspruch
 15:     const std::chrono::duration<int, std::milli> m_duration;
 16: };
 17: 
-18: struct Task {
+18: struct Generator {
 19:     struct promise_type {
-20:         Task get_return_object() { return {}; }
+20:         Generator get_return_object() { return {}; }
 21:         std::suspend_never initial_suspend() { return {}; }
 22:         std::suspend_never final_suspend() noexcept { return {}; }
 23:         void return_void() { }
@@ -160,7 +160,7 @@ dessen `await_suspend`-Methode die Hilfe eines unterlagerten Threads in Anspruch
 25:     };
 26: };
 27: 
-28: Task myCoroutine() {
+28: Generator myCoroutine() {
 29:     using namespace std::chrono_literals;
 30:     auto before = std::chrono::steady_clock::now();
 31:     std::cout << "Going to sleep on thread " <<
@@ -196,7 +196,7 @@ Die Ausgaben des Beispiels schauen (mit und ohne Trace-Ausgaben) so aus:
 
 <pre>
   promise_type::get_return_object
-c'tor Task
+c'tor Generator
   promise_type::initial_suspend
 myCoroutine starts
   Sleeper::await_ready
@@ -208,7 +208,7 @@ myCoroutine done: slept for 206 ms
   promise_type::return_void
   promise_type::final_suspend
   Sleeper::jthread (3)
-~Task
+~Generator
 Done.
 </pre>
 

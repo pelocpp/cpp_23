@@ -27,10 +27,10 @@ die wir zum jetzigen Zeitpunkt (C++ Sprachstandard Version C++&ndash;20 &ndash; 
 schreiben können:
 
 <pre>
-01: struct Task {
+01: struct Generator {
 02: 
 03:     struct promise_type {
-04:         Task get_return_object() { return {}; }
+04:         Generator get_return_object() { return {}; }
 05:         std::suspend_never initial_suspend() { return {}; }
 06:         std::suspend_never final_suspend() noexcept { return {}; }
 07:         void return_void() { }
@@ -38,13 +38,13 @@ schreiben können:
 09:     };
 10: };
 11: 
-12: Task myCoroutine() {
+12: Generator myCoroutine() {
 13:     co_return; // make it a coroutine
 14: }
 15: 
 16: void main()
 17: {
-18:     Task x = myCoroutine();
+18:     Generator x = myCoroutine();
 19: }
 </pre>
 
@@ -66,19 +66,19 @@ Die Ausgabe sieht so aus:
 before coroutine call
   c'tor promise
   get_return_object
-c'tor Task
+c'tor Generator
   initial_suspend
 inside coroutine
   return_void
   final_suspend
   ~promise
 after coroutine call
-~Task
+~Generator
 </pre>
 
 Wir erkennen:
 
-> Bevor der Konstruktor von `Task` zur Ausführung gelangt, wurde bereits eine Instanz
+> Bevor der Konstruktor von `Generator` zur Ausführung gelangt, wurde bereits eine Instanz
 von der inneren Klasse `struct promise_type` angelegt!
 
 
@@ -99,10 +99,10 @@ Wir erkennen das Problem an der abgewandelten Ausgabe des Programms:
 before coroutine call
   c'tor promise
   get_return_object
-c'tor Task
+c'tor Generator
   initial_suspend
 after coroutine call
-~Task
+~Generator
 </pre>
 
 Der Destruktor des *Promise*-Objekts wird nicht ausgeführt! Es enstehen somit Leaks in der Speicherverwaltung,
@@ -135,14 +135,14 @@ wie der nächste Abschnitt zeigt.
 Betrachten Sie die in fett gesetzten Änderungen am Beispielquellcode:
 
 <pre>
-01: struct Task {
+01: struct Generator {
 02: 
 03:     struct promise_type {
 04: 
 <b>05:         using Handle = std::coroutine_handle<promise_type>;
 06: 
-07:         Task get_return_object() {
-08:             return Task{Handle::from_promise(*this)};
+07:         Generator get_return_object() {
+08:             return Generator{Handle::from_promise(*this)};
 09:         }</b>
 10: 
 11:         std::suspend_always initial_suspend() { return {}; }
@@ -151,7 +151,7 @@ Betrachten Sie die in fett gesetzten Änderungen am Beispielquellcode:
 14:         void unhandled_exception() { }
 15:     };
 16: 
-<b>17:     explicit Task(promise_type::Handle coro) : m_coro(coro) {}
+<b>17:     explicit Generator(promise_type::Handle coro) : m_coro(coro) {}
 18:     void destroy() { m_coro.destroy(); }
 19:     void resume() { m_coro.resume(); }
 20: 
@@ -159,7 +159,7 @@ Betrachten Sie die in fett gesetzten Änderungen am Beispielquellcode:
 22:     promise_type::Handle m_coro;</b>
 23: };
 24: 
-25: Task myCoroutine() {
+25: Generator myCoroutine() {
 26:     co_return; // make it a coroutine
 27: }
 28: 
@@ -172,15 +172,15 @@ Betrachten Sie die in fett gesetzten Änderungen am Beispielquellcode:
 
 Studieren Sie folgende Aussagen genau:
 
-  * Zeilen 7 bis 9 &ndash; Der `get_return_object` kreiert ein `Task`-Objekt (Anwender-Objekt),
+  * Zeilen 7 bis 9 &ndash; Der `get_return_object` kreiert ein `Generator`-Objekt (Anwender-Objekt),
     diesem wird durch den Konstruktor (Zeile 17) mit `*this` eine Referenz des *Promise*-Objekts übergeben.
   * Zeile 5  &ndash; Für den (indirekten) Zugriff auf ein *Promise*-Objekt gibt es einen vordefinerten Datentyp `std::coroutine_handle<promise_type>`.
   * Zeile 22  &ndash; Für das *Promise*-Objekt besitzt die Anwenderklasse nun eine (private) Instanzvariable: `m_coro` vom Typ `promise_type::Handle`.
-  * Zeilen 18 oder 19 &ndash; Methoden wie `resume` oder `destroy`, die das Anwenderobjekt `Task` definiert,
+  * Zeilen 18 oder 19 &ndash; Methoden wie `resume` oder `destroy`, die das Anwenderobjekt `Generator` definiert,
     sind nun in der Lage, über die (private) Instanzvariable `m_coro` auf das verborgene *Promise*-Objekt zuzugreifen.
 
 *Hinweis*:
-Das `Task`-Objekt besitzt ein *Promise*-Objekt. Dieses ist am Heap allokiert (&ldquo;*stackless*&rdquo; Coroutinenkonzept).
+Das `Generator`-Objekt besitzt ein *Promise*-Objekt. Dieses ist am Heap allokiert (&ldquo;*stackless*&rdquo; Coroutinenkonzept).
 Damit könnte es zu Problemen beim Kopieren eines Coroutinen-Anwenderobjekts kommen.
 Das Kopieren eines Coroutinen-Objekts ist kein abwegiger Gedanke, da dieses im Regelfall Anwenderdaten besitzt (berechnet, verwaltet ...)
 und damit auch kopiert werden können sollte. Die Frage ist nur, mit welchem Verhalten (*Behaviour*): *Copy-Semantics* oder *Move-Semantics*?
@@ -188,12 +188,12 @@ Sie sind auf der sicheren Seite, wenn Sie sich für das Verhalten *move-only* ent
 Betrachten Sie damit die folgenden exemplarische Implementierung:
 
 <pre>
-01: Task(const Task&) = delete;
-02: Task& operator=(const Task&) = delete;
+01: Generator(const Generator&) = delete;
+02: Generator& operator=(const Generator&) = delete;
 03: 
-04: Task(Task&& t) noexcept : m_coro(t.m_coro) { t.m_coro = {}; }
+04: Generator(Generator&& t) noexcept : m_coro(t.m_coro) { t.m_coro = {}; }
 05:         
-06: Task& operator=(Task&& t) noexcept {
+06: Generator& operator=(Generator&& t) noexcept {
 07:     if (this == &t) {
 08:         return *this;
 09:     }
