@@ -385,13 +385,13 @@ void coroutines_03()
     //test_01();
     //std::cout << "Done." << std::endl;
 
-    using namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented;
-    test_02();
-    std::cout << "Done." << std::endl;
-
-    //using namespace Coroutines_MinimalisticApproach_03_CoroutineHandle;
-    //test_03();
+    //using namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented;
+    //test_02();
     //std::cout << "Done." << std::endl;
+
+    using namespace Coroutines_MinimalisticApproach_03_CoroutineHandle;
+    test_03();
+    std::cout << "Done." << std::endl;
 
     //using namespace Coroutines_MinimalisticApproach_04_Generator;
     //test_04();

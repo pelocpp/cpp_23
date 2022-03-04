@@ -137,7 +137,7 @@ namespace Coroutines_Awaiter_Awaitable_03_Awaitable
         std::cout << "Going to sleep on thread " <<
             std::this_thread::get_id() << std::endl;
 
-        co_await Sleeper{ 200ms };
+        co_await Sleeper{ 5000ms };
 
         auto after = std::chrono::steady_clock::now();
         std::cout << "Slept for " << (after - before) / 1ms << " ms" << std::endl;
@@ -216,7 +216,7 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
         std::cout << "myCoroutine starts" << std::endl;
         using namespace std::chrono_literals;
         auto before = std::chrono::steady_clock::now();
-        co_await Sleeper{ 200ms };
+        co_await Sleeper{ 5000ms };
         auto after = std::chrono::steady_clock::now();
         std::cout << "myCoroutine done: slept for " << (after - before) / 1ms << " ms\n";
     }
