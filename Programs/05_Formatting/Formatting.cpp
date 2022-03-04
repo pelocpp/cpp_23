@@ -11,9 +11,7 @@ namespace Formatting_Examples
     // Verwendung einfacher Variablenersetzungen
     void test_01a()
     {
-        std::string result{
-            std::format("Format arguments: {}, {}, {}.", 1, 2, 3)
-        };
+        std::string result{ std::format("Format arguments: {}, {}, {}.", 1, 2, 3) };
         std::cout << result << std::endl;
     }
 

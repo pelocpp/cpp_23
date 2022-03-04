@@ -59,9 +59,9 @@ Generator coroutine(int n)
 Man könnte zu der Formulierung neigen, dass `coroutine` die Definition einer Funktion ist.
 Präziser müssen wir sagen: Wir verwenden die Syntax einer Funktionsdefinition,
 um einen Codeblock zu beschreiben, dem bei der Instanziierung Argumente übergeben werden können
-(hier exemplarisch der Parameter `n`)
+(hier exemplarisch der Parameter `n`).
 
-Zum zweiten erkennen wir, dass ein Rückgabetyp &ndash; hier der exemplarische Typ `Generator` &ndash;
+Zum Zweiten erkennen wir, dass ein Rückgabetyp &ndash; hier der exemplarische Typ `Generator` &ndash;
 in Erscheinung tritt, und das, obwohl `coroutine()` keine `return`-Anweisung enthält &ndash; 
 und per Definition auch nicht enthalten kann.
 

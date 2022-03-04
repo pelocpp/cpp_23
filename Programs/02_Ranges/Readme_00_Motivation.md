@@ -13,7 +13,7 @@
 Mit Einführung der &ldquo;*Ranges*&rdquo;-Bibliothek hat sich die Qualität der Fehlermeldungen
 verbessert, da *Ranges* auf *Concepts* beruhen.
 
-Wir demonstrieren dies an einem &ldquo;Klassiker&rdquo; einer C++&ndash;Fehlermeldungen,
+Wir demonstrieren dies an einem &ldquo;Klassiker&rdquo; einer C++&ndash;Fehlermeldung,
 nämlich dem Versuch, eine Liste (`std::list`) zu sortieren (`std::sort`):
 
 ###### Erstes Beispiel &ndash; C++ 17:
@@ -65,7 +65,7 @@ std::copy(
 ```
 
   * Der erste Vektor `vec1` muss bei den Parametern von `std::copy` *zweimal* aufgeführt werden.
-  * Für das Zielobjekt (`vec1`) darf man nicht vergessen, den `std::back_inserter`-Iterator zu verwenden.
+  * Für das Zielobjekt (`vec2`) darf man nicht vergessen, den `std::back_inserter`-Iterator zu verwenden.
 
 
 ###### Eine erheblich kürzere Variante

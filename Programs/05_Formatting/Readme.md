@@ -45,14 +45,14 @@ std::string_view one{ "One" };
 std::string_view two{ "Two" };
 std::string_view three{ "Three" };
 
-std::string result = std::format(format, one, two, three);
+std::string result = std::format("{2}, {1}, {0}", one, two, three);
 std::cout << result << std::endl;
 ```
 
 *Ausgabe*:
 
 ```
-One, Two, Three
+Three, Two, One
 ```
 
 

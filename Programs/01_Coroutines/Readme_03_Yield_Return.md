@@ -116,7 +116,7 @@ Dumping objects ->
 Object dump complete.
 </pre>
 
-Was ist eigentlich Problem? Der C++ *Coroutinen Framework* generiert für unsere Coroutine ein
+Was ist eigentlich das Problem? Der C++ *Coroutinen Framework* generiert für unsere Coroutine ein
 *Promise*-Objekt, auf das wir zum jetzigen Zeitpunkt keinerlei Zugriffsmöglichkeit haben!
 
 Wenn wir den Rückgabetyp der `initial_suspend`-Methode von `std::suspend_never` in `std::suspend_always` abändern,
@@ -173,7 +173,7 @@ Betrachten Sie die in fett gesetzten Änderungen am Beispielquellcode:
 Studieren Sie folgende Aussagen genau:
 
   * Zeilen 7 bis 9 &ndash; Der `get_return_object` kreiert ein `Task`-Objekt (Anwender-Objekt),
-    diesem wird durch den Konstruktor (Zeile 17) mit `*this` eine Referenz des *Promise*-Objekt übergeben.
+    diesem wird durch den Konstruktor (Zeile 17) mit `*this` eine Referenz des *Promise*-Objekts übergeben.
   * Zeile 5  &ndash; Für den (indirekten) Zugriff auf ein *Promise*-Objekt gibt es einen vordefinerten Datentyp `std::coroutine_handle<promise_type>`.
   * Zeile 22  &ndash; Für das *Promise*-Objekt besitzt die Anwenderklasse nun eine (private) Instanzvariable: `m_coro` vom Typ `promise_type::Handle`.
   * Zeilen 18 oder 19 &ndash; Methoden wie `resume` oder `destroy`, die das Anwenderobjekt `Task` definiert,
