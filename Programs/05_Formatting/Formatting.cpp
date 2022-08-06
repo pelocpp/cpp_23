@@ -39,8 +39,9 @@ namespace Formatting_Examples
         std::string_view two{ "Two" };
         std::string_view three{ "Three" };
 
-        std::string result = std::format(format, one, two, three);
-        std::cout << result << std::endl;
+        // doesn't compile with the lastest C++ compiler version -  needs to be fixed
+        // std::string result = std::format(format, one, two, three);
+        // std::cout << result << std::endl;
     }
 
     void test_02b(std::string_view format)
@@ -49,8 +50,9 @@ namespace Formatting_Examples
         std::string_view two{ "Two" };
         std::string_view three{ "Three" };
 
-        std::string result = std::format(format, one, two, three);
-        std::cout << result << std::endl;
+        // doesn't compile with the lastest C++ compiler version -  needs to be fixed
+        // std::string result = std::format(format, one, two, three);
+        // std::cout << result << std::endl;
     }
 
     void test_02()
@@ -58,8 +60,9 @@ namespace Formatting_Examples
         std::string_view format1{ "{0}, {1}, {2}" };
         test_02a(format1);
 
-        std::string_view format2{ "{2}, {1}, {0}" };
-        test_02b(format2);
+        // doesn't compile with the lastest C++ compiler version -  needs to be fixed
+        // std::string_view format2{ "{2}, {1}, {0}" };
+        // test_02b(format2);
     }
 
     // from https://en.cppreference.com/w/cpp/utility/format/formatter#Standard_format_specification

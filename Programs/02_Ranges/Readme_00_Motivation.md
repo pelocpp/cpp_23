@@ -170,7 +170,7 @@ wenn wir zum Beispiel einen Container nach einer bestimmten Eigenschaft seiner E
 Zum Beispiel ein `std::vector`-Objekt von Büchern nach dem Titel oder dem Preis.
 
 In einer klassischen Schreibweise kommt uns hier der `std::sort`-Algorithmus
-mit einer Lamda-Funktion als dritter Parameter entgegen:
+mit einer Lambda-Funktion als dritter Parameter entgegen:
 
 ```cpp
 01: struct Book {
