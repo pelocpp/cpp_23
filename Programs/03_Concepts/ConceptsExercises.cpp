@@ -117,7 +117,7 @@ namespace Exercises {
     }
 }
 
-void test_exercises()
+void example_exercises()
 {
     using namespace Exercises;
     Exercise_01::testExercise_01();

@@ -142,10 +142,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Readme.md" />
+    <None Include="Readme_01_Overview.md" />
+    <None Include="Readme_02_MoreDetails.md" />
+    <None Include="Readme_03_Exercises.md" />
     <None Include="Readme_Exercises.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Concepts01.cpp" />
+    <ClCompile Include="ConceptsMoreDetails.cpp" />
+    <ClCompile Include="ConceptsOverview.cpp" />
     <ClCompile Include="ConceptsExercises.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
