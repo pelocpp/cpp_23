@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <type_traits>
+#include <string>
 
 // ---------------------------------------------------------------------------
 // Concept Definition
@@ -40,6 +41,27 @@ void concept_detail_02()
     static_assert(SignedIntegral<int> == true);
     static_assert(SignedIntegral<long> == true);
 }
+
+// ---------------------------------------------------------------------------
+// Simple Requirement
+
+template<class T, class U>
+concept Addable = requires (const T & t, const U & u) 
+{
+    t + u;
+    u + t;
+};
+
+class Foo {};
+
+void concept_detail_03()
+{
+    static_assert(Addable<int, int> == true);
+    static_assert(Addable<int, long> == true);
+    static_assert(not Addable<int, Foo> == true);
+    static_assert(not Addable<int, std::string> == true);
+}
+
 
 // ---------------------------------------------------------------------------
 

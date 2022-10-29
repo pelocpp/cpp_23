@@ -10,7 +10,7 @@
 
 ## Concept Definition
 
-Ein Concept bezieht sich auf ein Tempalte für einen benannten Satz
+Ein Concept bezieht sich auf ein Template für einen benannten Satz
 von Constraints, wobei jedes Constraint durch eine oder mehrere Requirements
 für die Template-Parameter definiert wird:
 
@@ -86,6 +86,19 @@ In diesem Fall können Sie einen *Requires Expression* verwenden.
 
 ## Requires Ausdruck (*Requires Expression*)
 
+###### *Syntax*:
+
+<pre>
+<b>requires</b> <b>{</b> <i>requirement-sequence</i> <b>}</b>
+</pre>
+
+oder
+
+<pre>
+<b>requires</b> <b>{</b> <i>parameter-list</i> <b>}</b> <b>{</b> <i>requirement-sequence</i> <b>}</b>
+</pre>
+
+
 Es gibt 4 unterschiedliche Requirements:
 
   * Einfaches Requirement (*Simple Requirement*)
@@ -96,11 +109,49 @@ Es gibt 4 unterschiedliche Requirements:
 
 ##### Einfaches Requirement (*Simple Requirement*)
 
+###### Beispiel:
+
+```cpp
+template<class T, class U>
+concept Addable = requires (const T & t, const U & u) 
+{
+    t + u;
+    u + t;
+};
+```
+
+Eine einfaches Requirement ist nur ein C++-Ausdruck,
+der durch ein Semikolon (;) abgeschlossen wird.
+
+
 ##### Typ Requirement (*Type Requirement*)
+
+
+###### *Syntax*:
+
+<pre>
+<b>requires</b> <b>{</b> <b>typename</b> <i>name</i> <b>;</b> <b>}</b>
+</pre>
+
+oder
+
+<pre>
+<b>requires</b> <b>{</b> <i>parameter-list</i> <b>}</b> <b>{</b> <b>typename</b> <i>name</i> <b>;</b> <b>}</b>
+</pre>
+
+
+
 
 ##### Verbund-Requirement (*Compound Requirement*)
 
+
+
 ##### Geschachteltes Requirement (*Nested Requirement*)
+
+
+
+
+
 
 ---
 
