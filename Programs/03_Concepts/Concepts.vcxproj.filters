@@ -32,16 +32,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConceptsOverview.cpp">
+    <ClCompile Include="Concepts_01_Overview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ConceptsExercises.cpp">
+    <ClCompile Include="Concepts_04_Exercises.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ConceptsMoreDetails.cpp">
+    <ClCompile Include="Concepts_02_MoreDetails.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Concepts_03_MoreExamples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

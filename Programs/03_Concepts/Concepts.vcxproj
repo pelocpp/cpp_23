@@ -148,9 +148,10 @@
     <None Include="Readme_Exercises.md" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConceptsMoreDetails.cpp" />
-    <ClCompile Include="ConceptsOverview.cpp" />
-    <ClCompile Include="ConceptsExercises.cpp" />
+    <ClCompile Include="Concepts_02_MoreDetails.cpp" />
+    <ClCompile Include="Concepts_01_Overview.cpp" />
+    <ClCompile Include="Concepts_04_Exercises.cpp" />
+    <ClCompile Include="Concepts_03_MoreExamples.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
