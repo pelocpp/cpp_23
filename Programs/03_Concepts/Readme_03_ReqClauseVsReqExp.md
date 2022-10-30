@@ -121,8 +121,7 @@ die im Hauptteil eines Funktions-Templates verwendet werden:
 
 Die Anregungen zu den Beispielen stammen aus einem Blog von *Marius Bancila*:
 
-[requires expressions and requires clauses in C++20](https://mariusbancila.ro/blog/2022/06/20/requires-expressions-and-requires-clauses-in-cpp20/)
-
+[Requires Expressions and Requires Clauses in C++ 20](https://mariusbancila.ro/blog/2022/06/20/requires-expressions-and-requires-clauses-in-cpp20/)
 
 ---
 
