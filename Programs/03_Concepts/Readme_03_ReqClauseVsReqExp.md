@@ -8,318 +8,120 @@
 
 ---
 
-## Konzept Definition (*Concept Definition*)
+## Einleitung
 
-Ein &ldquo;Konzept&rdquo; bezieht sich auf ein Template, das wiederum eine Menge
-benannter *Constraints* definiert, wobei jedes *Constraint* durch eine oder mehrere Requirements
-für die Template-Parameter definiert wird:
+Wir betrachten in diesem Abschnitt zwei neue Schlüsselwörter `concept` und `requires`.
 
-<pre>
-<b>template</b> <b>&lt;</b> <i>template_parameter_list</i> <b>&gt;</b>
-<b>concept</b> concept_name
-<b>=</b> constraint_expression <b>;</b>
-</pre>
+Ersteres wird verwendet, um ein Konzept (*Concept*) zu deklarieren,
+während letzteres verwendet wird, um einen Requires-Ausdruck oder eine Requires-Klausel einzuführen.
 
+Diese beiden könnten zunächst Verwirrung stiften, also schauen wir uns an, was was ist und was ihr Zweck ist:
 
-###### Beispiel:
+<img src="requires.png" width="700" />
 
-```cpp
-template <typename T>
-concept Small = sizeof(T) <= sizeof(int);
-```
+In diesem Ausschnitt haben wir Folgendes:
 
----
+  * Ein Konzept namens `Composable`, dessen Rumpf aus einem Requires-Ausdruck besteht
+  (wiederum aus einem einzigen *Contraint* bestehend).
+  Der Requires-Ausdruck lautet `requires (T a, T b) { a + b; }`.
 
-## Konzept-Ausdruck (*Concept Expression*)
+  * Ein Funktions-Template namens `add`, das sein Tempalte Argument `T`
+  mit Hilfe des `Composable`-Konzepts innerhalb einer Requires-Klausel einschränkt.
+  Diese lautet `requires Composable<T>`.
 
-
-Ein *Concept Expression* wird verwendet, um zu überprüfen,
-ob ein gegebener Typ ein Konzept modelliert.
-Ein Konzept-Ausdruck besteht aus dem Namen eines zuvor definierten Konzepts,
-gefolgt von einer Reihe von Template Argumenten zwischen spitzen Klammern.
-
-Beispielsweise sind `Small<char>` und `Small<short>` Konzeptausdrücke,
-die als `true` ausgewertet werden, `Small<double>` und `Small<long long>` dürften
-im Regelfall als `false` ausgewertet werden.
-
-###### Beispiel:
-
-```cpp
-static_assert(Small<char> == true);
-static_assert(Small<short> == true);
-static_assert(Small<int> == true);
-
-static_assert(not Small<double> == true);
-static_assert(not Small<long double> == true);
-static_assert(not Small<long long> == true);
-```
+  * Ein Funktions-Template, ebenfalls `add` genannt, das sein Template-Argument `T`
+  durch den Requires-Ausdruck
+  `require(T a, T b) { a + b; }` einschränkt,
+  und zwar direkt in einer Requires-Klausel (`requires require(T a, T b) { a + b; }`).
 
 
-Konzept-Ausdrucke kommen ebenfalls zum Zuge,
-um Konzepte in Bezug auf zuvor definierte benannte Konzepte zu definieren:
-
-
-###### Beispiel:
-
-```cpp
-template <class T>
-concept Integral = std::is_integral_v<T>;
-
-template <class T>
-concept SignedIntegral = Integral<T> && std::is_signed_v<T>;
-
-template <class T>
-concept UnsignedIntegral = Integral<T> && !SignedIntegral<T>;
-```
-
-
-Obwohl Sie mit der Definition von Konzepten mithilfe von Konzept-Ausdrücken
-ziemlich weit kommen können, stellen Sie möglicherweise irgendwann fest,
-dass es keinen Konzeptausdruck gibt, der die Anforderungen des Typs testet,
-den Sie benötigen.
-
-In diesem Fall können Sie einen *Requires Expression* verwenden.
-
-
----
-
-## Requires Ausdruck (*Requires Expression*)
-
-###### *Syntax*:
-
-<pre>
-<b>requires</b> <b>{</b> <i>requirement-sequence</i> <b>}</b>
-</pre>
-
-oder
-
-<pre>
-<b>requires</b> <b>{</b> <i>parameter-list</i> <b>}</b> <b>{</b> <i>requirement-sequence</i> <b>}</b>
-</pre>
-
-
-Es gibt 4 unterschiedliche Requirements:
+Es gibt 4 unterschiedliche Requires Ausdrücke:
 
   * Einfaches Requirement (*Simple Requirement*)
   * Typ Requirement (*Type Requirement*)
-  * Verbund-Requirement (*Compound Requirement*)
+  * Verbund Requirement (*Compound Requirement*)
   * Geschachteltes Requirement (*Nested Requirement*)
 
 
-##### Einfaches Requirement (*Simple Requirement*)
+## Ein Requires-Ausdruck ist ein Compile-Time-Ausdruck vom Typ `bool`
 
-###### Beispiel:
+Ein Requires-Ausdruck ist ein Compile-Time-Ausdruck vom Typ `bool`
+und kann überall dort erscheinen, wo ein boolescher Wert zur Kompilierzeit erscheinen kann
+(z. B. `if constexpr`- oder `static_assert`-Anweisungen).
+Requires-Ausdrücke sind nicht auf den Rumpf von Konzepten oder in Requires-Klauseln beschränkt.
 
-```cpp
-template<class T, class U>
-concept Addable = requires (const T & t, const U & u) 
-{
-    t + u;
-    u + t;
-};
-```
-
-Eine einfaches Requirement ist nur ein C++-Ausdruck,
-der durch ein Semikolon (;) abgeschlossen wird.
-
-
-##### Typ Requirement (*Type Requirement*)
-
-Mit Typ Requirements können wir fordern,
-dass ein bestimmter Typ in einem bestimmten Kontext gültig ist.
-Typ Requirements können verwendet werden, um zu überprüfen, dass
-
-  * ein bestimmter verschachtelter Typ existiert
-  * eine Klassen Template Spezialisierung einen Typ benennt
-  * eine Alias-Template-Spezialisierung einen Typ benennt
-
-
-###### *Syntax*:
-
-<pre>
-<b>requires</b> <b>{</b> <b>typename</b> <i>name</i> <b>;</b> <b>}</b>
-</pre>
-
-oder
-
-<pre>
-<b>requires</b> <b>{</b> <i>parameter-list</i> <b>}</b> <b>{</b> <b>typename</b> <i>name</i> <b>;</b> <b>}</b>
-</pre>
-
-
-Das folgende Beispiel prüft, ob das Template Argument `T` einen
-verschachtelten member Type namens `value_type` hat:
+Hier ein Beispiel mehrerer Requires-Ausdrücke,
+die im Hauptteil eines Funktions-Templates verwendet werden:
 
 
 ###### Beispiel:
 
 ```cpp
-template<class T>
-concept HasValueType = requires {
-    typename T::value_type;
-};
+01: struct point
+02: {
+03:     int x;
+04:     int y;
+05: };
+06: 
+07: std::ostream& operator<<(std::ostream& os, point const& p)
+08: {
+09:     os << '(' << p.x << ',' << p.y << ')';
+10:     return os;
+11: }
+12: 
+13: template <typename T>
+14: constexpr bool always_false = std::false_type::value;
+15: 
+16: template <typename T>
+17: std::string as_string(T a)
+18: {
+19:     constexpr bool has_to_string = requires(T x)
+20:     {
+21:         { std::to_string(x) } -> std::convertible_to<std::string>;
+22:     };
+23: 
+24:     constexpr bool has_stream = requires(T x, std::ostream & os)
+25:     {
+26:         {os << x} -> std::same_as<std::ostream&>;
+27:     };
+28: 
+29:     if constexpr (has_to_string)
+30:     {
+31:         return std::to_string(a);
+32:     }
+33:     else if constexpr (has_stream)
+34:     {
+35:         std::stringstream s;
+36:         s << a;
+37:         return s.str();
+38:     }
+39:     else
+40:         static_assert(always_false<T>, "The type cannot be serialized");
+41: }
 ```
 
-
-##### Verbund-Requirement (*Compound Requirement*)
-
-Ähnlich wie einfache Requirements werden Verbund-Requirements verwendet,
-um die Gültigkeit eines C++-Ausdrucks zu überprüfen.
-Zusätzlich zu einfachen Requirements können Verbund-Requirements auch überprüfen,
-ob das Ergebnis des Ausdrucks ein Typ Requirement erfüllt
-oder ob der Ausdruck keine Ausnahme auslöst.
-
-In einfachen Worten:
-
-Mit einem Verbund-Requirement kann man den Rückgabetyp eines bestimmten Ausdrucks überprüfen.
-
-###### *Syntax*:
+## Zusammenfassung
 
 
-<pre>
-<b>requires</b> <b>{ {</b> <i>compound_requirement</i> <b>}; }</b>                             // Same as a simple requirement
-<b>requires</b> <b>{ {</b> <i>compound_requirement</i> <b>} noexcept; }</b>                    // Compound-Requirement does not throw an exception
-<b>requires</b> <b>{ {</b> <i>compound_requirement</i> <b>}</b> <b>-></b> <i>type-constraint</i><b>; }</b>          // Result of Compound-requirement satisfies type-constraint
-<b>requires</b> <b>{ {</b> <i>compound_requirement</i> <b>}</b> <b>noexcept -></b> <i>type_constraint</i>; <b>}</b> // Result of Compound-requirement satisfies type-constraint and does not throw an exception
-</pre>
+  * Ein **Requires-Ausdruck** ist ein boolescher Ausdruck, der in einer Requires-Klausel verwendet werden kann
+  oder um den Rumpf eines Konzepts zu definieren (das wiederum mit einer Requires-Klausel verwendet wird).
+  Der Zweck des Requires-Ausdrucks besteht darin, festzustellen, ob ein oder mehrere Ausdrücke wohlgeformt sind.
+  Er hat keine Nebenwirkungen und beeinflusst das Verhalten des Programms nicht.
 
-und die Varianten mit einer Parameterliste:
-
-<pre>
-<b>requires</b> <b>(</b> <i>parameter_list</i> <b>)</b> <b>{ {</b> <i>compound_requirement</i> <b>}; }</b>                             // Same as a simple requirement
-<b>requires</b> <b>(</b> <i>parameter_list</i> <b>)</b> <b>{ {</b> <i>compound_requirement</i> <b>} noexcept; }</b>                    // Compound-Requirement does not throw an exception
-<b>requires</b> <b>(</b> <i>parameter_list</i> <b>)</b> <b>{ {</b> <i>compound_requirement</i> <b>}</b> <b>-></b> <i>type-constraint</i><b>; }</b>          // Result of Compound-requirement satisfies type-constraint
-<b>requires</b> <b>(</b> <i>parameter_list</i> <b>)</b> <b>{ {</b> <i>compound_requirement</i> <b>}</b> <b>noexcept -></b> <i>type_constraint</i>; <b>}</b> // Result of Compound-requirement satisfies type-constraint and does not throw an exception
-</pre>
-
-###### Beispiel:
-
-```cpp
-template<class T, class U>
-concept Same = std::is_same<T, U>::value;
-
-template<class T>
-concept EqualityComparable = requires (const T& a, const T& b) {
-    { a == b } -> Same<bool>;
-    { a != b } -> Same<bool>;
-};
-```
-
-###### Beispiel:
-
-```cpp
-template <typename T>
-concept HasSquare = requires (T t) {
-    { t.square() } -> std::convertible_to<int>;
-};
-```
-
-Man beachte:
-
-  * Der Ausdruck, für den Sie ein Return Typ Requirement festlegen möchten,
-  muss von geschweiften Klammern (`{` und `}`) umgeben sein, dann kommt ein Pfeil (`->`),
-  gefolgt vom Constraint des Rückgabetyps.
-
-  * Diese Einschränkung kann nicht einfach ein Typ sein, also zum Beispiel `int`.
-
-Der letzte Punkt hat konzeptionelle Gründe. Also 
-anstatt nur einen Typ zu benennen, muss man sich für ein Konzept entscheiden!
-Möchte man einen Rückgabetyp festlegen, wird eine der beiden folgenden Optionen dieser
-Anforderung gerecht:
-
-```cpp
-  {t.square()} -> std::same_as<int>;
-  {t.square()} -> std::convertible_to<int>;
-```
-
-Im Falle von `std::same_as` muss der Rückgabewert derselbe sein wie im Template-Argument angegeben,
-während bei `std::convertible_to` Konvertierungen erlaubt sind.
-
-
-##### Geschachteltes Requirement (*Nested Requirement*)
-
-Ein geschachteltes Requirement wird verwendet, um ein *Constraint Expression*
-innerhalb eines übergeordneten *Requires Expressions* zu testen.
-Der *Concept Expression* einer verschachtelten Anforderung kann lokale Parameter verwenden,
-die in einem der übergeordneten übergeordneten *Requires Expressions* eingeführt wurden.
-
-
-###### *Syntax*:
-
-<pre>
-<b>requires</b> <b>{</b> <b>requires</b> <i>constraint_expression</i> <b>;</b> <b>}</b>
-<b>requires</b> <b>(</b> <i>parameter_list</i> <b>)</b> <b>{</b> <b>requires</b> <i>constraint_expression</i> <b>;</b> <b>}</b>
-</pre>
-
-###### Beispiel:
-
-
-```cpp
-template<typename TCar>
-concept Car = requires (TCar car) {
-    car.startEngine();
-};
-
-template<typename TCar>
-concept Convertible = Car<TCar> && requires (TCar car) {
-    car.openRoof();
-};
-
-// nexted Concept
-template<typename TCar>
-concept Coupe = Car<TCar> && requires (TCar car) {
-    requires !Convertible<TCar>;
-};
-```
-
----
-
-## Requires Klausel (*Requires Clause*)
-
-
-Die *Requires-Klausel* kann syntaktisch an drei Stellen erscheinen:
-
-A. Als so genannte *Requires-Klausel* im Kopf einer Template Definition:
-
-<pre>
-<b>template</b> <b>&lt;</b> <b>typename</b> <i>T</i> <b>&gt;</b>
-<b>requires</b> <i>Your_Requirement_Or_Concept</i> <b>&lt;</b> <i>T</i> <b>&gt;</b>
-<b>void</b> <i>func();</i>
-</pre>
-
-
-B. Als so genannte *trailing Requires-Klausel*:
-
-<pre>
-<b>template</b> <b>&lt;</b> <b>typename</b> <i>T</i> <b>&gt;</b>
-<b>void</b> <i>func()</i> <b>requires</b> <i>Your_Requirement_Or_Concept</i> <b>&lt;</b> <i>T</i> <b>&gt;</b> <b>;</b>
-</pre>
-
-C. Als so genannter *Constrained Template Parameter*:
-
-<pre>
-<b>template</b> <b>&lt;</b> <i>Your_Requirement_Or_Concept</i> <i>T</i> <b>&gt;</b>
-<b>void</b> <i>func();</i>
-</pre>
-
-
+  * Eine **Requires-Klausel** verwendet einen booleschen Ausdruck zur Kompilierzeit,
+  um Anforderungen (Requirements) an Template-Argumente oder Funktionsdeklarationen zu definieren.
+  Sie wirkt sich auf das Verhalten eines Programms aus und bestimmt,
+  ob eine Funktion an der Überladungsauflösung (*Overload Resolution*) teilnimmt oder nicht
+  oder ob eine Tempalte-Instanziierung gültig ist.
 
 ---
 
 
 ## Literaturhinweise:
 
-Die Anregungen zu den Beispielen stammen aus einem Blog von *Sandor Dargo*:
+Die Anregungen zu den Beispielen stammen aus einem Blog von *Marius Bancila*:
 
-[How to write your own C++ concepts? Part I](https://www.sandordargo.com/blog/2021/03/10/write-your-own-cpp-concepts-part-i)
-
-[How to write your own C++ concepts? Part II](https://www.sandordargo.com/blog/2021/03/17/write-your-own-cpp-concepts-part-ii)
-
-Weitere Beispiele sind aus 
-
-[C++ Template Programming](https://www.3dgep.com/beginning-cpp-template-programming)
-
-entnommen.
+[requires expressions and requires clauses in C++20](https://mariusbancila.ro/blog/2022/06/20/requires-expressions-and-requires-clauses-in-cpp20/)
 
 
 ---

@@ -98,9 +98,9 @@ oder
 </pre>
 
 
-Es gibt 4 unterschiedliche Requirements:
+Es gibt 4 unterschiedliche Requires Ausdrücke:
 
-  * Einfaches Requirement (*Simple Requirement*)
+  * Einfacher Requires Ausdruck (*Simple Requirement*)
   * Typ Requirement (*Type Requirement*)
   * Verbund Requirement (*Compound Requirement*)
   * Geschachteltes Requirement (*Nested Requirement*)
@@ -301,7 +301,6 @@ C. Als so genannter *Constrained Template Parameter*:
 <b>template</b> <b>&lt;</b> <i>Your_Requirement_Or_Concept</i> <i>T</i> <b>&gt;</b>
 <b>void</b> <i>func();</i>
 </pre>
-
 
 
 ---

@@ -153,11 +153,12 @@
     <ClCompile Include="Concepts_02_MoreDetails.cpp" />
     <ClCompile Include="Concepts_01_Overview.cpp" />
     <ClCompile Include="Concepts_03_ReqClauseVsReqExp.cpp" />
-    <ClCompile Include="Concepts_05_Exercises.cpp" />
     <ClCompile Include="Concepts_04_MoreExamples.cpp" />
+    <ClCompile Include="Concepts_05_Exercises.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="requires.png" />
     <Image Include="Toth_Concepts.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

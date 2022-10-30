@@ -1,5 +1,5 @@
 // ===========================================================================
-// Concepts_03_MoreExamples.cpp
+// Concepts_04_MoreExamples.cpp
 // ===========================================================================
 
 #include <iostream>
@@ -80,7 +80,21 @@ namespace MoreExamples {
             std::remove_cvref_t<first_type_t<Args...>>>;
 
 
-        // WEITER ... 
+        template<typename... Args>
+        requires requires(Args... args)
+        {
+            (... + args);                    // Simple requirement
+            requires are_same_v<Args...>;    // Nested requirement with type - trait
+            requires sizeof...(Args) > 1;    // Nested requirement with a boolean expression asserts at least 2 parameters
+            {
+                (... + args)
+            }
+            ->same_as_first_type<Args...>;   // Same compound requirement ensuring same type
+        }
+        auto add(Args&&... args)
+        {
+            return (... + args);
+        }
     }
 }
 

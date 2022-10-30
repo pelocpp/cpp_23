@@ -297,21 +297,6 @@ void concept_detail_08()
     static_assert (not (Clonable_02<Droid_Version_02> == true));
 }
 
-
-// ======
-// 
-// 
-
-
-template<typename T, typename U>
-    requires requires (T a, U b) { { a > b } -> Same<bool>; }
-auto max(T a, U b) -> std::remove_reference_t<decltype(a > b ? a : b)>
-{
-    return a > b ? a : b;
-}
-
-
-
 // ---------------------------------------------------------------------------
 
 void example_more_details()

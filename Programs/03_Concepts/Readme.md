@@ -14,11 +14,11 @@
 
 ## [Mehr Details](Readme_02_MoreDetails.md)
 
-## [Requires Ausdrücke versus Requires Klausel](Readme_02_MoreDetails.md)
+## [Requires Ausdrücke versus Requires Klausel](Readme_03_ReqClauseVsReqExp.md)
 
-## [Mehr Details](Readme_02_MoreDetails.md)
+## [Weitere Beispiele](Readme_04_MoreExamples.md)
 
-## [Aufgaben](Readme_03_Exercises.md)
+## [Aufgaben](Readme_05_Exercises.md)
 
 ---
 

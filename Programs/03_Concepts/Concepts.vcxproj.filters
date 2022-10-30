@@ -50,15 +50,18 @@
     <ClCompile Include="Concepts_02_MoreDetails.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Concepts_04_MoreExamples.cpp">
+    <ClCompile Include="Concepts_03_ReqClauseVsReqExp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Concepts_03_ReqClauseVsReqExp.cpp">
+    <ClCompile Include="Concepts_04_MoreExamples.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Toth_Concepts.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="requires.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
