@@ -36,6 +36,9 @@
     <None Include="Readme_03_ReqClauseVsReqExp.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="cpp_20_concept_syntax.svg">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Concepts_01_Overview.cpp">

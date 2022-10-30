@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="cpp_20_concept_syntax.svg" />
     <None Include="Readme.md" />
     <None Include="Readme_01_Overview.md" />
     <None Include="Readme_02_MoreDetails.md" />

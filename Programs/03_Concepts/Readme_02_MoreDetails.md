@@ -42,6 +42,14 @@ Beispielsweise sind `Small<char>` und `Small<short>` Konzeptausdrücke,
 die als `true` ausgewertet werden, `Small<double>` und `Small<long long>` dürften
 im Regelfall als `false` ausgewertet werden.
 
+
+<img src="cpp_20_concept_syntax.svg" width="700" />
+
+*Bild* 1: Syntax-Diagramm für Konzept
+
+
+
+
 ###### Beispiel:
 
 ```cpp
