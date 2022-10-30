@@ -27,10 +27,13 @@
     <None Include="Readme_02_MoreDetails.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Readme_04_Exercises.md">
+    <None Include="Readme_05_Exercises.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Readme_03_MoreExamples.md">
+    <None Include="Readme_04_MoreExamples.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Readme_03_ReqClauseVsReqExp.md">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -41,13 +44,16 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Concepts_04_Exercises.cpp">
+    <ClCompile Include="Concepts_05_Exercises.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Concepts_02_MoreDetails.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Concepts_03_MoreExamples.cpp">
+    <ClCompile Include="Concepts_04_MoreExamples.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Concepts_03_ReqClauseVsReqExp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

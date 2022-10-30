@@ -1,10 +1,10 @@
-# Mehr Details
+# Requires Ausdrücke versus Requires Klausel
 
 [Zurück](Readme.md)
 
 ---
 
-[Quellcode](Concepts_02_MoreDetails.cpp)
+[Quellcode](Concepts_03_ReqClauseVsReqExp.cpp)
 
 ---
 
@@ -78,7 +78,7 @@ ziemlich weit kommen können, stellen Sie möglicherweise irgendwann fest,
 dass es keinen Konzeptausdruck gibt, der die Anforderungen des Typs testet,
 den Sie benötigen.
 
-In diesem Fall können Sie *Requires Expressions* verwenden.
+In diesem Fall können Sie einen *Requires Expression* verwenden.
 
 
 ---
@@ -102,7 +102,7 @@ Es gibt 4 unterschiedliche Requirements:
 
   * Einfaches Requirement (*Simple Requirement*)
   * Typ Requirement (*Type Requirement*)
-  * Verbund Requirement (*Compound Requirement*)
+  * Verbund-Requirement (*Compound Requirement*)
   * Geschachteltes Requirement (*Nested Requirement*)
 
 
@@ -143,7 +143,7 @@ Typ Requirements können verwendet werden, um zu überprüfen, dass
 oder
 
 <pre>
-<b>requires</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>{</b> <b>typename</b> <i>name</i> <b>;</b> <b>}</b>
+<b>requires</b> <b>{</b> <i>parameter-list</i> <b>}</b> <b>{</b> <b>typename</b> <i>name</i> <b>;</b> <b>}</b>
 </pre>
 
 

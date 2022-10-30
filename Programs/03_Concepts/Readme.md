@@ -14,6 +14,10 @@
 
 ## [Mehr Details](Readme_02_MoreDetails.md)
 
+## [Requires Ausdrücke versus Requires Klausel](Readme_02_MoreDetails.md)
+
+## [Mehr Details](Readme_02_MoreDetails.md)
+
 ## [Aufgaben](Readme_03_Exercises.md)
 
 ---

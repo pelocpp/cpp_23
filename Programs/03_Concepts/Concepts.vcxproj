@@ -144,15 +144,17 @@
     <None Include="Readme.md" />
     <None Include="Readme_01_Overview.md" />
     <None Include="Readme_02_MoreDetails.md" />
-    <None Include="Readme_03_MoreExamples.md" />
-    <None Include="Readme_04_Exercises.md" />
+    <None Include="Readme_04_MoreExamples.md" />
+    <None Include="Readme_03_ReqClauseVsReqExp.md" />
+    <None Include="Readme_05_Exercises.md" />
     <None Include="Readme_Exercises.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Concepts_02_MoreDetails.cpp" />
     <ClCompile Include="Concepts_01_Overview.cpp" />
-    <ClCompile Include="Concepts_04_Exercises.cpp" />
-    <ClCompile Include="Concepts_03_MoreExamples.cpp" />
+    <ClCompile Include="Concepts_03_ReqClauseVsReqExp.cpp" />
+    <ClCompile Include="Concepts_05_Exercises.cpp" />
+    <ClCompile Include="Concepts_04_MoreExamples.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
