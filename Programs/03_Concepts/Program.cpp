@@ -4,6 +4,7 @@
 
 void example_overview();
 void example_more_details();
+void example_more_examples();
 void example_exercises();
 
 int main()

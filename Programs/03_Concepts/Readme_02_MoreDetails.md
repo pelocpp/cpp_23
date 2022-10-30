@@ -4,7 +4,7 @@
 
 ---
 
-[Quellcode](ConceptsMoreDetails.cpp)
+[Quellcode](Concepts_02_MoreDetails.cpp)
 
 ---
 
@@ -125,6 +125,14 @@ der durch ein Semikolon (;) abgeschlossen wird.
 
 ##### Typ Requirement (*Type Requirement*)
 
+Mit Typ Requirements können wir fordern,
+dass ein bestimmter Typ in einem bestimmten Kontext gültig ist.
+Typ Requirements können verwendet werden, um zu überprüfen, dass
+
+  * ein bestimmter verschachtelter Typ existiert
+  * eine Klassen Template Spezialisierung einen Typ benennt
+  * eine Alias-Template-Spezialisierung einen Typ benennt
+
 
 ###### *Syntax*:
 
@@ -227,54 +235,92 @@ Anforderung gerecht:
 Im Falle von `std::same_as` muss der Rückgabewert derselbe sein wie im Template-Argument angegeben,
 während bei `std::convertible_to` Konvertierungen erlaubt sind.
 
-WEITER:  
-
-https://www.sandordargo.com/blog/2021/03/17/write-your-own-cpp-concepts-part-ii
-
-In order to demonstrate this, let’s have a look at the following example:
 
 ##### Geschachteltes Requirement (*Nested Requirement*)
+
+Ein geschachteltes Requirement wird verwendet, um ein *Constraint Expression*
+innerhalb eines übergeordneten *Requires Expressions* zu testen.
+Der *Concept Expression* einer verschachtelten Anforderung kann lokale Parameter verwenden,
+die in einem der übergeordneten übergeordneten *Requires Expressions* eingeführt wurden.
 
 
 ###### *Syntax*:
 
-
 <pre>
 <b>requires</b> <b>{</b> <b>requires</b> <i>constraint_expression</i> <b>;</b> <b>}</b>
-<b>requires</b> <b>(</b> <i>parameter-list</i> <b>)</b> <b>{</b> <b>requires</b> <i>constraint_expression</i> <b>;</b> <b>}</b>
+<b>requires</b> <b>(</b> <i>parameter_list</i> <b>)</b> <b>{</b> <b>requires</b> <i>constraint_expression</i> <b>;</b> <b>}</b>
 </pre>
-
-
----
-
-## Requires Anweisung (*Requires Clause*)
-
-
-
----
-
-## Constrained Class Templates
-
-
----
-
 
 ###### Beispiel:
 
+
 ```cpp
-auto values = std::vector{ 9, 2, 5, 3, 4 };
-std::sort(std::begin(values), std::end(values));
+template<typename TCar>
+concept Car = requires (TCar car) {
+    car.startEngine();
+};
+
+template<typename TCar>
+concept Convertible = Car<TCar> && requires (TCar car) {
+    car.openRoof();
+};
+
+// nexted Concept
+template<typename TCar>
+concept Coupe = Car<TCar> && requires (TCar car) {
+    requires !Convertible<TCar>;
+};
 ```
 
 ---
 
+## Requires Klausel (*Requires Clause*)
+
+
+Die *Requires-Klausel* kann syntaktisch an drei Stellen erscheinen:
+
+A. Als so genannte *Requires-Klausel* im Kopf einer Template Definition:
+
+<pre>
+<b>template</b> <b>&lt;</b> <b>typename</b> <i>T</i> <b>&gt;</b>
+<b>requires</b> <i>Your_Requirement_Or_Concept</i> <b>&lt;</b> <i>T</i> <b>&gt;</b>
+<b>void</b> <i>func();</i>
+</pre>
+
+
+B. Als so genannte *trailing Requires-Klausel*:
+
+<pre>
+<b>template</b> <b>&lt;</b> <b>typename</b> <i>T</i> <b>&gt;</b>
+<b>void</b> <i>func()</i> <b>requires</b> <i>Your_Requirement_Or_Concept</i> <b>&lt;</b> <i>T</i> <b>&gt;</b> <b>;</b>
+</pre>
+
+C. Als so genannter *Constrained Template Parameter*:
+
+<pre>
+<b>template</b> <b>&lt;</b> <i>Your_Requirement_Or_Concept</i> <i>T</i> <b>&gt;</b>
+<b>void</b> <i>func();</i>
+</pre>
+
+
+
+---
 
 
 ## Literaturhinweise:
 
-Die Anregungen zu den Beispielen stammen aus
+Die Anregungen zu den Beispielen stammen aus einem Blog von *Sandor Dargo*:
 
-[C++20: Concepts, an Introduction](https://oopscenities.net/2020/09/29/c20-concept/)
+[How to write your own C++ concepts? Part I](https://www.sandordargo.com/blog/2021/03/10/write-your-own-cpp-concepts-part-i)
+
+[How to write your own C++ concepts? Part II](https://www.sandordargo.com/blog/2021/03/17/write-your-own-cpp-concepts-part-ii)
+
+Weitere Beispiele sind aus 
+
+[C++ Template Programming](https://www.3dgep.com/beginning-cpp-template-programming)
+
+entnommen.
+
 
 ---
 

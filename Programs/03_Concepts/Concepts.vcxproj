@@ -144,7 +144,8 @@
     <None Include="Readme.md" />
     <None Include="Readme_01_Overview.md" />
     <None Include="Readme_02_MoreDetails.md" />
-    <None Include="Readme_03_Exercises.md" />
+    <None Include="Readme_03_MoreExamples.md" />
+    <None Include="Readme_04_Exercises.md" />
     <None Include="Readme_Exercises.md" />
   </ItemGroup>
   <ItemGroup>

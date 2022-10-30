@@ -27,7 +27,10 @@
     <None Include="Readme_02_MoreDetails.md">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Readme_03_Exercises.md">
+    <None Include="Readme_04_Exercises.md">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Readme_03_MoreExamples.md">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
