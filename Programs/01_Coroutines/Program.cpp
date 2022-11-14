@@ -12,12 +12,11 @@ void coroutines_08();
 
 int main()
 {
-    //coroutines_01();
+    coroutines_01();
     //coroutines_02();
     //coroutines_03();
     //coroutines_04();
-    coroutines_05();
-
+    //coroutines_05();
     //coroutines_08();
 
     return 0;
