@@ -90,7 +90,7 @@ std::ranges::copy(vec1, std::back_inserter(vec2));
 ```
 
   * Der erste Vektor `vec1` ist bei den Parametern von `std::copy` nur einmal aufgeführt.
-  * Allerdings muss der gesamten Container kopiert werden, ein Teilbereich geht nicht.
+  * Allerdings muss der gesamte Container kopiert werden, ein Teilbereich geht nicht.
 
 
 ## Komposition von Funktionen
