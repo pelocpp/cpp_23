@@ -12,7 +12,7 @@ die Einstellung *Preview - Features from the Latest C++ Working Draft (/std:c++l
 
 <img src="VisualStudioSettings.png" style="padding-left: 10px;" width="600" />
 
-Abbildung 1: Projekteinstellungen unter Visual Studio 2019.
+Abbildung 1: Projekteinstellungen unter Visual Studio 2022.
 
 Alle vorgestellten Beispiele stellen nur Neuerungen von C++ vor,
 die bereits fest in den C++ 20 Standard eingeflossen sind.
