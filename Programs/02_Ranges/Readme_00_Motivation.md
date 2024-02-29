@@ -65,7 +65,7 @@ std::copy(
 ```
 
   * Der erste Vektor `vec1` muss bei den Parametern von `std::copy` *zweimal* aufgeführt werden.
-  * Für das Zielobjekt (`vec2`) darf man nicht vergessen, den `std::back_inserter`-Iterator zu verwenden.
+  * Für das Zielobjekt (`vec2`) darf man nicht vergessen, den `std::back_inserter`-Iteratoradapter zu verwenden.
 
 
 ###### Eine erheblich kürzere Variante
@@ -112,7 +112,7 @@ spätestens bei der Komposition von Funktionen sind diese Ansätze dann aber zum s
 Dies sei an einem Beispiel verdeutlicht: 
 
 ```cpp
-01: std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+01: std::vector<int> numbers{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 02: 
 03: std::vector<int> evenNumbers{};
 04: 
@@ -133,8 +133,9 @@ Dies sei an einem Beispiel verdeutlicht:
 19: );
 20: 
 21: for (int n : squares) { 
-22:     std::cout << n << ' ';
+22:     std::print("{} ", n);
 23: }
+24: std::println("");
 ```
 
 Was immer diese Folge von Anweisungen auch tut
@@ -142,22 +143,22 @@ Was immer diese Folge von Anweisungen auch tut
 mit der Bibliothek `<ranges>` lässt sich das erheblich eleganter formulieren:
 
 ```cpp
-01: std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
-02: 
-03: auto results = numbers
-04:     | std::views::filter([](int n) -> bool { return n % 2 == 0; })
-05:     | std::views::transform([](int n) { return n * n; });
-06: 
-07: for (int n : results) {
-08:     std::cout << n << ' ';
-09: }
+std::vector<int> numbers{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+auto results = numbers
+    | std::ranges::views::filter([](int n) -> bool { return n % 2 == 0; })
+    | std::ranges::views::transform([](int n) { return n * n; });
+
+for (int n : results) {
+    std::print("{} ", n);
+}
 ```
 
 Diesen Ausdruck muss man von links nach rechts lesen.
 Das Pipe-Symbol `|` steht für die Verknüpfung von Funktionen:
-Zuerst werden alle Elemente akzeptiert, die gerade sind (`std::views::filter([](int n) { return n % 2 == 0; })`).
+Zuerst werden alle Elemente akzeptiert, die gerade sind (`std::ranges::views::filter([](int n) { return n % 2 == 0; })`).
 Danach wird jedes verbleibende Element quadriert
-(`std::views::transform([](int n) { return n * n; })`).
+(`std::ranges::views::transform([](int n) { return n * n; })`).
 Dieses kleine Beispiel demonstriert zum einen die Funktionskomposition,
 zum anderen agiert diese Funktionskomposition direkt auf dem Container.
 Es sind also nicht, wie im klassischen Beispiel zuvor, temporäre Zwischencontainer notwendig.
@@ -167,42 +168,37 @@ Es sind also nicht, wie im klassischen Beispiel zuvor, temporäre Zwischencontain
 
 C++ 20 Projektionen sind ein neues Sprachmittel, die dann ins Spiel kommen,
 wenn wir zum Beispiel einen Container nach einer bestimmten Eigenschaft seiner Elemente sortieren wollen.
-Zum Beispiel ein `std::vector`-Objekt von Büchern nach dem Titel oder dem Preis.
+Zum Beispiel ein `std::vector<Book>`-Objekt von Büchern nach dem Titel oder dem Preis.
 
 In einer klassischen Schreibweise kommt uns hier der `std::sort`-Algorithmus
 mit einer Lambda-Funktion als dritter Parameter entgegen:
 
 ```cpp
-01: struct Book {
-02:     std::string m_title;
-03:     std::string m_author;
-04:     int m_year;
-05:     double m_price;
-06: };
-07: 
-08: std::vector<Book> books {
-09:     { "C++", "Bjarne Stroustrup", 1985, 20.55 },
-10:     { "C", "Dennis Ritchie", 1972, 11.99 } ,
-11:     { "Java", "James Gosling", 1995, 19.99 },
-12:     { "C#", "Anders Hejlsberg", 2000, 29.99 }
-13: };
-14: 
-15: std::sort(
-16:     std::begin(books),
-17:     std::end(books),
-18:     [](const Book& book1, const Book& book2) {
-19:         return book1.m_price < book2.m_price;
-20:     }
-21: );
-22: 
-23: for (int index{ 1 }; const auto & [title, author, year, price] : books) {
-24:     std::cout << index << ": [" << price << "] " << title << std::endl;
-25:     index++;
-26: }
+01: std::vector<Book> books 
+02: {
+03:     { "C++", "Bjarne Stroustrup", 1985, 20.55 },
+04:     { "C", "Dennis Ritchie", 1972, 11.99 } ,
+05:     { "Java", "James Gosling", 1995, 19.99 },
+06:     { "C#", "Anders Hejlsberg", 2000, 29.99 }
+07: };
+08: 
+09: std::sort(
+10:     std::begin(books),
+11:     std::end(books),
+12:     [](const Book& book1, const Book& book2) {
+13:         return book1.m_title < book2.m_author;
+14:     }
+15: );
+16: 
+17: for (int index{ 1 }; const auto& [title, author, year, price] : books) {
+18:     std::println("{}: [{}] ", price, title);
+19:     index++;
+20: }
+21: std::println("");
 ```
 
 In dieser Realisierung könnten folgende kleine Fehler unbeabsichtigt zum Problem werden,
-wenn wir Zeile 19 näher betrachten:
+wenn wir Zeile 13 näher betrachten:
 
 <pre>
 return book1.m_title < book2.m_author;
@@ -214,32 +210,29 @@ ist das syntaktisch absolut korrekter Quellcode, der Compiler winkt hier freundl
 Mit dem neuen Sprachfeature *Projektionen* lässt sich das Sortieren wie folgt lösen:
 
 ```cpp
-01: struct Book {
-02:     std::string m_title;
-03:     std::string m_author;
-04:     int m_year;
-05:     double m_price;
-06: };
-07: 
-08: std::vector<Book> books{
-09:     { "C++", "Bjarne Stroustrup", 1985, 20.55 },
-10:     { "C", "Dennis Ritchie", 1972, 11.99 } ,
-11:     { "Java", "James Gosling", 1995, 19.99 },
-12:     { "C#", "Anders Hejlsberg", 2000, 29.99 }
-13: };
-14: 
-15: // sort books
-16: std::ranges::sort(books, std::less{}, &Book::m_price);
+01: std::vector<Book> books
+02: {
+03:     { "C++", "Bjarne Stroustrup", 1985, 20.55 },
+04:     { "C", "Dennis Ritchie", 1972, 11.99 } ,
+05:     { "Java", "James Gosling", 1995, 19.99 },
+06:     { "C#", "Anders Hejlsberg", 2000, 29.99 }
+07: };
+08: 
+09: // sort books
+10: std::ranges::sort(books, std::less{}, &Book::m_price);
+11: 
+12: for (int index{ 1 }; const auto & [title, author, year, price] : books) {
+13:     std::println("{}: [{}] ", price, title);
+14:     index++;
+15: }
+16: std::println("");
 17: 
-18: for (int index{ 1 }; const auto & [title, author, year, price] : books) {
-19:     std::cout << index << ": [" << price << "] " << title << std::endl;
-20:     index++;
-21: }
-22: std::cout << std::endl;
-23: 
-24: // list all titles
-25: for (const auto& title : books | std::views::transform(&Book::m_title))
-26:     std::cout << title << std::endl;
+18: // list all titles
+19: auto titlesView{ books | std::ranges::views::transform(&Book::m_title) };
+20: 
+21: for (const auto& title : titlesView) {
+22:     std::println("{}", title);
+23: }
 ```
 
 Dieses Mal wird der Quellcode nicht unbedingt kürzer, dafür aber prägnanter.

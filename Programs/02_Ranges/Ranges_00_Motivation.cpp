@@ -41,29 +41,27 @@ namespace Cpp20Ranges_Motivation
             std::back_inserter(vec2)
         );
 
-        for (int n : vec2)
-            std::cout << n << ' ';
+        for (int n : vec2) {
+            std::print("{} ", n);
+        }
+        std::println("");
 
         // b)
         vec2 = vec1;
 
         for (int n : vec2) {
-            std::cout << n << ' ';
+            std::print("{} ", n);
         }
+        std::println("");
 
         // c)
-        std::ranges::copy(
-            vec1,
-            std::back_inserter(vec2)
-        );
+        std::ranges::copy(vec1, std::back_inserter(vec2));
 
         for (int n : vec2) {
-            std::cout << n << ' ';
+            std::print("{} ", n);
         }
-
-        std::cout << std::endl;
+        std::println("");
     }
-
 
     static bool is_even(int n) {
         return n % 2 == 0;
@@ -71,7 +69,7 @@ namespace Cpp20Ranges_Motivation
 
     static void motivation_03_classic()
     {
-        std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+        std::vector<int> numbers{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         std::vector<int> evenNumbers{};
 
@@ -92,23 +90,23 @@ namespace Cpp20Ranges_Motivation
         );
 
         for (int n : squares) { 
-            std::cout << n << ' ';
+            std::print("{} ", n);
         }
-        std::cout << std::endl;
+        std::println("");
     }
 
     static void motivation_03_ranges()
     {
-        std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+        std::vector<int> numbers{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         auto results = numbers
             | std::ranges::views::filter([](int n) -> bool { return n % 2 == 0; })
             | std::ranges::views::transform([](int n) { return n * n; });
 
         for (int n : results) {
-            std::cout << n << ' ';
+            std::print("{} ", n);
         }
-        std::cout << std::endl;
+        std::println("");
     }
 
     struct Book {
@@ -136,11 +134,11 @@ namespace Cpp20Ranges_Motivation
             }
         );
 
-        for (int index{ 1 }; const auto & [title, author, year, price] : books) {
-            std::cout << index << ": [" << price << "] " << title << std::endl;
+        for (int index{ 1 }; const auto& [title, author, year, price] : books) {
+            std::println("{}: [{}] ", price, title);
             index++;
         }
-        std::cout << std::endl;
+        std::println("");
     }
 
     static void motivation_04_ranges()
@@ -157,16 +155,18 @@ namespace Cpp20Ranges_Motivation
         std::ranges::sort(books, std::less{}, &Book::m_price);
 
         for (int index{ 1 }; const auto & [title, author, year, price] : books) {
-            std::cout << index << ": [" << price << "] " << title << std::endl;
+            std::println("{}: [{}] ", price, title);
             index++;
         }
-        std::cout << std::endl;
+        std::println("");
 
         // list all titles
-        for (const auto& title : books | std::ranges::views::transform(&Book::m_title))
-            std::cout << title << std::endl;
+        auto titlesView{ books | std::ranges::views::transform(&Book::m_title) };
 
-        std::cout << std::endl;
+        for (const auto& title : titlesView) {
+            std::println("{}", title);
+        }
+        std::println("");
     }
 }
 
@@ -175,7 +175,7 @@ void ranges_00_motivation()
     using namespace Cpp20Ranges_Motivation;
 
     motivation_01_errors();
-    motivation_01_errors();
+    motivation_02_errors();
     motivation_02_readability();
     motivation_03_classic();
     motivation_03_ranges();
