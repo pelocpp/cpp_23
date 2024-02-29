@@ -11,8 +11,8 @@ void ranges_06_examples();
 
 int main()
 {
-    ranges_00_motivation();
-    //ranges_01_algorithms();
+    //ranges_00_motivation();
+    ranges_01_algorithms();
     //ranges_02_views();
     //ranges_04_view_implementation();
     //ranges_05_examples();

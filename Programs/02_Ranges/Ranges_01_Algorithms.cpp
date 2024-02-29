@@ -1,204 +1,132 @@
 // ===========================================================================
-// Ranges_Ex_01_Algorithms.cpp
+// Ranges_01_Algorithms.cpp
 // ===========================================================================
 
-#include <iostream>
-#include <string>
-#include <type_traits>
-#include <algorithm>
-#include <numeric>
-#include <vector>
-#include <list>
-#include <version>
-#include <cassert>
+import std;
 
-// Note: no #include <ranges> !!!
-
-// https://docs.microsoft.com/en-us/cpp/build/reference/zc-cplusplus?view=msvc-160
-
-/*****
-
-To set this compiler option in Visual Studio,
-open the project's Property Pages dialog box.
-
-Select: Configuration Properties ==> C / C++ ==> Command Line property page.
-
-Add /Zc:__cplusplus to the Additional options pane
-
-Zc:__cplusplus	/std:c++17	201703L
-Zc:__cplusplus	/std:c++20	202002L
-
-****/
-
-#define Cpp_20 202002L
-#define Cpp_17 201703L
-
-namespace Cpp20Ranges
+namespace Cpp17
 {
-    // iterating
-#if __cplusplus <= Cpp_17
     template <typename T>
     using ValueType = typename std::remove_reference<T>::type::value_type;
 
     template <typename T>
-    void print(T&& r) {
+    static void print(T&& range) {
         std::for_each(
-            std::begin(std::forward<T>(r)),
-            std::end(std::forward<T>(r)),
+            std::begin(std::forward<T>(range)),
+            std::end(std::forward<T>(range)),
             [](ValueType<T> i) { std::cout << i << ' '; }
         );
         std::cout << std::endl;
     }
+}
 
-    template <typename T>
-    void print2(T&& r) {
-        std::for_each(
-            std::begin(std::forward<T>(r)),
-            std::end(std::forward<T>(r)),
-            [](auto&& i) { std::cout << i << ' '; }
-        );
-        std::cout << std::endl;
+namespace Cpp23
+{
+    static void print(auto&& range)
+    {
+        // std::print("{:n}", range);  // NOT YET SUPPORTED 
+
+        for (const auto& elem : range) {
+            std::print("{} ", elem);
+        }
+        std::println("");
     }
-#endif
+}
 
-#if __cplusplus >= Cpp_20
-    void print(auto&& r) {
-        std::ranges::for_each(r, [](auto&& i) { std::cout << i << ' '; });
-        std::cout << std::endl;
-    }
-
-    template <typename T>
-    void print2(T&& r) {
-        std::ranges::for_each(std::forward<T>(r), [](auto&& i) { std::cout << i << ' '; });
-        std::cout << std::endl;
-    }
-#endif
-
+namespace Cpp20Ranges
+{
     // iterating
-    void range1_17_iterating()
+    static void range1_17_iterating()
     {
-    #if __cplusplus <= Cpp_17
         auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
-        print(vec);
-        print2(vec);
-    #endif
+        Cpp17::print(vec);
     }
 
-    void range1_20_iterating()
+    static void range1_23_iterating()
     {
-#if __cplusplus >= Cpp_20
         auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
-        print(vec);
-        print2(vec);
-#endif
+        Cpp23::print(vec);
     }
 
     // transforming
-    void range2_17_transforming()
+    static void range2_17_transforming()
     {
-#if __cplusplus <= Cpp_17
         auto vec = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         auto res = std::vector<int>(vec.size());
         auto lambda = [](auto&& i) { return i * i; };
 
         std::transform(std::begin(vec), std::end(vec), std::begin(res), lambda);
-        print(res);
-#endif
+        Cpp17::print(res);
     }
 
-    void range2_20_transforming()
+    static void range2_23_transforming()
     {
-#if __cplusplus >= Cpp_20
         auto vec = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         auto res = std::vector<int>(vec.size());
         auto lambda = [](auto&& i) { return i * i; };
 
         std::ranges::transform(vec, std::begin(res), lambda);
-        print(res);
-#endif
+        Cpp23::print(res);
     }
 
     // generating elements
-    void range3_17_generating()
+    static void range3_17_generating()
     {
-#if __cplusplus <= Cpp_17
         auto vec = std::vector<int>(5);
 
-    std::fill(
-        std::begin(vec),
-        std::end(vec),
-        1
-    );
-    print(vec);
+        std::fill(std::begin(vec), std::end(vec), 1);
+        Cpp17::print(vec);
 
-    std::generate(
-        std::begin(vec),
-        std::end(vec),
-        [count = 1]() mutable { return count++; }
-    );
-    print(vec);
+        std::generate(
+            std::begin(vec),
+            std::end(vec),
+            [count = 1]() mutable { return count++; }
+        );
+        Cpp17::print(vec);
 
-    std::generate(
-        std::begin(vec),
-        std::end(vec),
-        std::rand
-    );
-    print(vec);
-
-    std::iota(
-        std::begin(vec),
-        std::end(vec),
-        10
-    );
-    print(vec);
-#endif
+        std::iota(
+            std::begin(vec),
+            std::end(vec),
+            10
+        );
+        Cpp17::print(vec);
     }
 
-    void range3_20_generating()
+    static void range3_23_generating()
     {
-#if __cplusplus >= Cpp_20
         auto vec = std::vector<int>(5);
         std::ranges::fill(vec, 1);
-        print(vec);
+        Cpp23::print(vec);
+
         std::ranges::generate(vec, [count = 1]() mutable { return count++; });
-        print(vec);
-        std::ranges::generate(vec, std::rand);
-        print(vec);
-        // std::ranges::iota not yet supported
-#endif
+        Cpp23::print(vec);
+
+        auto values{ std::ranges::views::iota(10) | std::ranges::views::take(5) };
+        Cpp23::print(values);
     }
 
     // sorting
-    void range4_17_sorting()
+    static void range4_17_sorting()
     {
-#if __cplusplus <= Cpp_17
         auto values = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
 
         // sort using the classical algorithm
         std::sort(std::begin(values), std::end(values));
-        print(values);
-#endif
+        Cpp17::print(values);
     }
 
-    void range4_20_sorting()
+    static void range4_23_sorting()
     {
-#if __cplusplus >= Cpp_20
         auto values = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9 };
 
         // sort using the constrained algorithm under std::ranges
         std::ranges::sort(values);
-        print(values);
-
-        // works too
-        std::ranges::sort(std::begin(values), std::end(values));
-        print(values);
-#endif
+        Cpp23::print(values);
     }
 
     // finding elements
-    void range5_17_finding()
+    static void range5_17_finding()
     {
-    #if __cplusplus <= Cpp_17
         auto values = std::list{ 4, 3, 2, 3, 1 };
 
         // if the element we are looking for couldn't be found,
@@ -211,96 +139,88 @@ namespace Cpp20Ranges
         if (it != std::end(values)) {
             std::cout << *it << std::endl;
         }
-#endif
     }
 
-    void range5_20_finding()
+    static void range5_23_finding()
     {
-#if __cplusplus >= Cpp_20
         auto values = std::list{ 4, 3, 2, 3, 1 };
 
         auto it = std::ranges::find(values, 2);
         if (it != std::end(values)) {
-            std::cout << *it << std::endl;
+            std::println("{}", *it);
         }
-#endif
     }
 
     // finding elements using binary search
-    void range6_17_finding_binary()
+    static void range6_17_finding_binary()
     {
-#if __cplusplus <= Cpp_17
-        auto vec = std::vector{ 2, 2, 3, 3, 3, 4, 5 };   // sorted!
+        auto vec = std::vector{ 2, 2, 3, 3, 3, 4, 5 };     // sorted!
 
-        assert(std::is_sorted(
+        bool sorted = std::is_sorted(
             std::begin(vec),
-            std::end(vec))
+            std::end(vec)
         );
+        std::cout << "Sorted: " << std::boolalpha << sorted << std::endl;
 
         bool found = std::binary_search(
             std::begin(vec),
             std::end(vec),
             3
         );
-        std::cout << std::boolalpha << found << std::endl;
-#endif
+        std::cout << "Found:  " << std::boolalpha << found << std::endl;
     }
 
-    void range6_20_finding_binary()
+    static void range6_23_finding_binary()
     {
-#if __cplusplus >= Cpp_20
         auto vec = std::vector{ 2, 2, 3, 3, 3, 4, 5 };     // sorted!
-        assert(std::ranges::is_sorted(vec));
+
+        bool sorted = std::ranges::is_sorted(vec);
+        std::println("Sorted: {}", sorted);
+
         bool found = std::ranges::binary_search(vec, 3);
-        std::cout << std::boolalpha << found << std::endl;
-#endif
+        std::println("Found:  {}", found);
     }
 
     // testing for certain conditions (any_of, all_of and none_of) 
-    void range7_17_conditions()
+    static void range7_17_conditions()
     {
-#if __cplusplus <= Cpp_17
-    auto vec = std::vector{ 5, 4, 3, 2, 1, 0, -1, 0, 1, 2 };
-    auto is_negative = [](auto i) { return i < 0; };
+        auto vec = std::vector{ 5, 4, 3, 2, 1, 0, -1, 0, 1, 2 };
+        auto is_negative = [](auto i) { return i < 0; };
 
-    if (std::none_of(std::begin(vec), std::end(vec), is_negative)) {
-        std::cout << "Contains only positive numbers" << std::endl;
+        if (std::none_of(std::begin(vec), std::end(vec), is_negative)) {
+            std::cout << "Contains only positive numbers" << std::endl;
+        }
+
+        if (std::all_of(std::begin(vec), std::end(vec), is_negative)) {
+            std::cout << "Contains only negative numbers" << std::endl;
+        }
+
+        if (std::any_of(std::begin(vec), std::end(vec), is_negative)) {
+            std::cout << "Contains at least one negative number" << std::endl;
+        }
     }
 
-    if (std::all_of(std::begin(vec), std::end(vec), is_negative)) {
-        std::cout << "Contains only negative numbers" << std::endl;
-    }
-
-    if (std::any_of(std::begin(vec), std::end(vec), is_negative)) {
-        std::cout << "Contains at least one negative number" << std::endl;
-    }
-#endif
-    }
-
-    void range7_20_conditions()
+    static void range7_23_conditions()
     {
-#if __cplusplus >= Cpp_20
         auto vec = std::vector{ 5, 4, 3, 2, 1, 0, -1, 0, 1, 2 };
         auto is_negative = [](auto i) { return i < 0; };
 
         if (std::ranges::none_of(vec, is_negative)) {
-            std::cout << "Contains only positive numbers" << std::endl;
+            std::println("Contains only positive numbers");
         }
 
         if (std::ranges::all_of(vec, is_negative)) {
-            std::cout << "Contains only negative numbers" << std::endl;
+            std::println("Contains only negative numbers");
         }
 
         if (std::ranges::any_of(vec, is_negative)) {
-            std::cout << "Contains at least one negative number" << std::endl;
+            std::println("Contains at least one negative number");
         }
-#endif
     }
 
     // counting elements
-    void range8_17_counting()
+    static void range8_17_counting()
     {
-#if __cplusplus <= Cpp_17
         auto numbers = std::vector{ 3, 3, 2, 1, 3, 1, 3 };
 
         // counting in linear time
@@ -313,24 +233,21 @@ namespace Cpp20Ranges
             std::equal_range(std::begin(numbers), std::end(numbers), 3);
         n = std::distance(result.first, result.second);
         std::cout << n << std::endl;
-#endif
     }
 
-    void range8_20_counting()
+    static void range8_23_counting()
     {
-#if __cplusplus >= Cpp_20
         auto numbers = std::vector{ 3, 3, 2, 1, 3, 1, 3 };
 
         // counting in linear time
         auto n = std::ranges::count(numbers, 3);
-        std::cout << n << std::endl;
+        std::println("{}", n);
 
         // counting in O(log n) time
         std::ranges::sort(numbers);
         std::ranges::subrange result = std::ranges::equal_range(numbers, 3);
         n = std::ranges::size(result);
-        std::cout << n << std::endl;
-#endif
+        std::println("{}", n);
     }
 
     // minimum, maximum, and clamping
@@ -339,9 +256,8 @@ namespace Cpp20Ranges
 
     int some_func() { return 50; }
 
-    void range9_17_minmaxclamp()
+    static void range9_17_minmaxclamp()
     {
-#if __cplusplus <= Cpp_17
         auto y{ 0 };
         y = std::min(some_func(), max);
         y = std::max(std::min(some_func(), max), min);
@@ -351,12 +267,10 @@ namespace Cpp20Ranges
         auto min_iter = std::min_element(std::begin(vec), std::end(vec));
         auto max_iter = std::max_element(std::begin(vec), std::end(vec));
         std::cout << "Min: " << *min_iter << ", Max: " << *max_iter << std::endl;
-#endif
     }
 
-    void range9_20_minmaxclamp()
+    static void range9_23_minmaxclamp()
     {
-#if __cplusplus >= Cpp_20
         auto y{ 0 };
         y = std::min(some_func(), max);
         y = std::max(std::min(some_func(), max), min);
@@ -365,17 +279,15 @@ namespace Cpp20Ranges
         const auto vec = std::vector{ 5, 4, 3, 2, 1, 6, 7, 8, 9, 10 };
         auto min_iter = std::ranges::min_element(vec);
         auto max_iter = std::ranges::max_element(vec);
-        std::cout << "Min: " << *min_iter << ", Max: " << *max_iter << std::endl;
+        std::println("Min: {}, Max: {}", *min_iter, *max_iter);
 
         const auto [min, max] = std::ranges::minmax(vec);
-        std::cout << "Min: " << min << ", Max: " << max << std::endl;
-#endif
+        std::println("Min: {}, Max: {}", min, max);
     }
 
     // custom comparator functions
-    void range10_17_custom_comparator()
+    static void range10_17_custom_comparator()
     {
-#if __cplusplus <= Cpp_17
         auto names = std::vector<std::string>{
             "Alexander", "Dennis", "Bjarne", "Ken", "Stephen", "Dave"
         };
@@ -387,7 +299,7 @@ namespace Cpp20Ranges
                 return a.size() < b.size();
             }
         );
-        print(names);
+        Cpp17::print(names);
 
         // find names with length 3
         auto result = std::find_if(
@@ -398,13 +310,11 @@ namespace Cpp20Ranges
         if (result != std::end(names)) {
             std::cout << *result << std::endl;
         }
-
-#endif
+        std::cout << std::endl;
     }
 
-    void range10_17a_custom_comparator()
+    static void range10_17a_custom_comparator()
     {
-#if __cplusplus <= Cpp_17
         struct Task {
             std::string m_desc{};
             unsigned int m_priority{ 0 };
@@ -431,14 +341,12 @@ namespace Cpp20Ranges
         );
         std::cout << "Next priorities:" << std::endl;
         std::for_each(std::begin(tasks), std::end(tasks), print);
-#endif
+        std::cout << std::endl;
     }
 
     // constrained algorithms use projections
-    void range10_20_custom_comparator()
+    static void range10_23_custom_comparator()
     {
-#if __cplusplus >= Cpp_20
-
         auto names = std::vector<std::string>{
             "Alexander", "Dennis", "Bjarne", "Ken", "Stephen", "Dave"
         };
@@ -449,20 +357,18 @@ namespace Cpp20Ranges
 
         std::ranges::sort(names, {}, &std::string::size);
         std::ranges::sort(names, std::less<>{}, & std::string::size);
-        print(names);
+        Cpp23::print(names);
 
         // find names with length 3
         auto result = std::ranges::find(names, 3, &std::string::size);
         if (result != std::end(names)) {
-            std::cout << *result << std::endl;
+            std::println("{}", *result);
         }
-#endif
+        std::println("");
     }
 
-    void range10_20a_custom_comparator()
+    static void range10_20a_custom_comparator()
     {
-#if __cplusplus >= Cpp_20
-
         struct Task {
             std::string m_desc{};
             unsigned int m_priority{ 0 };
@@ -475,15 +381,14 @@ namespace Cpp20Ranges
         };
 
         auto print = [](auto&& t) {
-            std::cout << t.m_desc << ": Priority: " << t.m_priority << std::endl;
+            std::println("{}: Priority: {}", t.m_desc, t.m_priority);
         };
 
-        std::cout << "List of tasks:" << std::endl;
+        std::println("List of tasks:");
         std::ranges::for_each(tasks, print);
         std::ranges::sort(tasks, std::ranges::greater{}, &Task::m_priority); // <<  "extract" a data member 
-        std::cout << "Next priorities:" << std::endl;
+        std::println("Next priorities:");
         std::ranges::for_each(tasks, print);
-#endif
     }
 }
 
@@ -492,26 +397,31 @@ void ranges_01_algorithms()
     using namespace Cpp20Ranges;
 
     range1_17_iterating();
-    range1_20_iterating();
+    range1_23_iterating();
     range2_17_transforming();
-    range2_20_transforming();
+    range2_23_transforming();
     range3_17_generating();
-    range3_20_generating();
+    range3_23_generating();
+
     range4_17_sorting();
-    range4_20_sorting();
+    range4_23_sorting();
+     
     range5_17_finding();
-    range5_20_finding();
+    range5_23_finding();
     range6_17_finding_binary();
-    range6_20_finding_binary();
+    range6_23_finding_binary();
+    
     range7_17_conditions();
-    range7_20_conditions();
+    range7_23_conditions();
+    
     range8_17_counting();
-    range8_20_counting();
+    range8_23_counting();
     range9_17_minmaxclamp();
-    range9_20_minmaxclamp();
+    range9_23_minmaxclamp();
+    
     range10_17_custom_comparator();
     range10_17a_custom_comparator();
-    range10_20_custom_comparator();
+    range10_23_custom_comparator();
     range10_20a_custom_comparator();
 }
 
