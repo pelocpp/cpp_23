@@ -2,17 +2,11 @@
 // Ranges_Ex_00_Motivation.cpp
 // ===========================================================================
 
-#include <iostream>
-#include <algorithm>
-#include <ranges>
-#include <string>
-#include <vector>
-#include <list>
-#include <algorithm>
+import std;
 
 namespace Cpp20Ranges_Motivation
 {
-    void motivation_01_errors()
+    static void motivation_01_errors()
     {
         std::vector<int> numbers = { 1, 4, 2, 3 };
         // std::list<int> numbers = { 1, 4, 2, 3 };
@@ -25,7 +19,7 @@ namespace Cpp20Ranges_Motivation
         std::ranges::copy(numbers, std::ostream_iterator<int>(std::cout, ", "));
     }
 
-    void motivation_02_errors()
+    static void motivation_02_errors()
     {
         std::vector<int> numbers = { 1, 4, 2, 3 };
         // std::list<int> numbers = { 1, 4, 2, 3 };
@@ -35,7 +29,7 @@ namespace Cpp20Ranges_Motivation
         std::ranges::copy(numbers, std::ostream_iterator<int>(std::cout, ", "));
     }
 
-    void motivation_02_readability()
+    static void motivation_02_readability()
     {
         std::vector<int> vec1{ 1, 2, 3, 4, 5 };
         std::vector<int> vec2;
@@ -53,8 +47,9 @@ namespace Cpp20Ranges_Motivation
         // b)
         vec2 = vec1;
 
-        for (int n : vec2)
+        for (int n : vec2) {
             std::cout << n << ' ';
+        }
 
         // c)
         std::ranges::copy(
@@ -62,17 +57,19 @@ namespace Cpp20Ranges_Motivation
             std::back_inserter(vec2)
         );
 
-        for (int n : vec2)
+        for (int n : vec2) {
             std::cout << n << ' ';
+        }
+
         std::cout << std::endl;
     }
 
 
-    bool is_even(int n) {
+    static bool is_even(int n) {
         return n % 2 == 0;
     }
 
-    void motivation_03_classic()
+    static void motivation_03_classic()
     {
         std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
@@ -100,13 +97,13 @@ namespace Cpp20Ranges_Motivation
         std::cout << std::endl;
     }
 
-    void motivation_03_ranges()
+    static void motivation_03_ranges()
     {
         std::vector<int> numbers{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
         auto results = numbers
-            | std::views::filter([](int n) -> bool { return n % 2 == 0; })
-            | std::views::transform([](int n) { return n * n; });
+            | std::ranges::views::filter([](int n) -> bool { return n % 2 == 0; })
+            | std::ranges::views::transform([](int n) { return n * n; });
 
         for (int n : results) {
             std::cout << n << ' ';
@@ -121,9 +118,10 @@ namespace Cpp20Ranges_Motivation
         double m_price;
     };
 
-    void motivation_04_classic()
+    static void motivation_04_classic()
     {
-        std::vector<Book> books {
+        std::vector<Book> books 
+        {
             { "C++", "Bjarne Stroustrup", 1985, 20.55 },
             { "C", "Dennis Ritchie", 1972, 11.99 } ,
             { "Java", "James Gosling", 1995, 19.99 },
@@ -145,9 +143,10 @@ namespace Cpp20Ranges_Motivation
         std::cout << std::endl;
     }
 
-    void motivation_04_ranges()
+    static void motivation_04_ranges()
     {
-        std::vector<Book> books{
+        std::vector<Book> books
+        {
             { "C++", "Bjarne Stroustrup", 1985, 20.55 },
             { "C", "Dennis Ritchie", 1972, 11.99 } ,
             { "Java", "James Gosling", 1995, 19.99 },
@@ -164,7 +163,7 @@ namespace Cpp20Ranges_Motivation
         std::cout << std::endl;
 
         // list all titles
-        for (const auto& title : books | std::views::transform(&Book::m_title))
+        for (const auto& title : books | std::ranges::views::transform(&Book::m_title))
             std::cout << title << std::endl;
 
         std::cout << std::endl;
