@@ -1,4 +1,4 @@
-# Redesign der Standard Library Algorithmen
+# Redesign der STL Algorithmen: Range-basierte Algorithmen
 
 [Zurück](Readme.md)
 
