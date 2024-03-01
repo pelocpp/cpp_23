@@ -12,9 +12,9 @@
 
 ## [Motivation](Readme_00_Motivation.md)
 
-## [Redesign der Standard Library Algorithmen](Readme_01_Algorithms.md)
+## [Redesign der STL Algorithmen: Range-basierte Algorithmen](Readme_01_Algorithms.md)
 
-## [Ranges und Views: Erläuterungen und Beispiele](Readme_02_Ranges_Views.md)
+## [Bereiche und Ansichten: Erläuterungen und Beispiele](Readme_02_Ranges_Views.md)
 
 ## [Ranges und Views in Standard C++&ndash;20](Readme_03_Standard_Views.md)
 

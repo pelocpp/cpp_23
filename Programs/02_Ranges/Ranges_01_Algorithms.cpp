@@ -4,6 +4,14 @@
 
 import std;
 
+void hint()
+{
+    std::vector<bool> vec(10);
+
+    for (auto&& elem : vec)
+        elem = true;
+}
+
 namespace Cpp17
 {
     template <typename T>

@@ -1,4 +1,4 @@
-# Ranges und Views / Bereiche und Sichten
+# Bereiche und Ansichten / *Ranges* und *Views*
 
 [Zurück](Readme.md)
 
@@ -22,26 +22,98 @@ Folgende Beweggründe haben zur Entwicklung der &ldquo;*Ranges*&rdquo;-Bibliothek
 
 Es folgen einige weiterführende Betrachungen zu *Views*:
 
-  * ### [Motivation](#Motivation)
-
-  * ### [Ein erster Blick](#link1)
-
-  * ### [Bereichsadaptoren](#Views-besitzen-Bereichsadaptoren)
-
-  * ### [Der zugrunde liegende Container bleibt unverändert](#Views-modifizieren-den-zugrunde-liegenden-Container-nicht)
-
-  * ### [&ldquo;Materialisierung&rdquo; von *Views*](#Views-lassen-sich-in-Containern-materialisieren)
-
-  * ### [&ldquo;*Lazy*&rdquo; Evaluierung](#Views-werden-lazy-evaluiert)
-
-  * ### [`std::views::common` bzw. `std::ranges::common_view`](#Der-zweck-von-common_view)
-    
-
-## Motivation
+  * #### [Motivation](#link1)
+  * #### [Ein erster Blick auf *Views*](#link2)
+  * #### [Komposition von *Views*](#link3)
+  * #### [*Views* besitzen Bereichsadaptoren](#link4)
+  * #### [*Views* modifizieren den zugrunde liegenden Container nicht](#link5)
+  * #### [&ldquo;Materialisierung&rdquo; von *Views*](#link6)
+  * #### [&ldquo;*Lazy*&rdquo; Evaluierung](#link7)
+  * #### [Der Zweck von `std::common_view`](#link8)
+     
+  
+## Motivation <a name="link1"></a>
 
 Wir wollen die Aussagen aus der Einleitung an einem Beispiel verdeutlichen:
 
 ###### C++&ndash;17  Variante
+
+<pre>
+01: static void test()
+02: {
+03:     struct Student {
+04:         std::string m_name{};
+05:         int m_year{};
+06:         int m_score{};
+07:     };
+08: 
+09:     auto getMaxScore = [](const std::vector<Student>& students, int year)
+10:     {
+11:         // student list needs to be <b>copied</b> in order to be filtered on the year
+12:         auto result = std::vector<Student>{};
+13: 
+14:         std::copy_if(
+15:             std::begin(students),
+16:             std::end(students),
+17:             std::back_inserter(result),
+18:             [=](const auto& student) { return student.m_year == year; }
+19:         );
+20: 
+21:         auto it = std::max_element(
+22:             std::begin(result),
+23:             std::end(result),
+24:             [](const Student& a, const Student& b) {
+25:                 return a.m_score < b.m_score;
+26:             }
+27:         );
+28: 
+29:         return it != result.end() ? it->m_score : -1;
+30:     };
+31: 
+32:     auto students = std::vector<Student>
+33:     {
+34:         {"Georg", 2021, 120 },
+35:         {"Hans",  2021, 140 },
+36:         {"Susan", 2020, 180 },
+37:         {"Mike",  2020, 110 },
+38:         {"Hello", 2021, 190 },
+39:         {"Franz", 2021, 110 },
+40:     };
+41: 
+42:     auto score = getMaxScore(students, 2021);
+43: 
+44:     std::cout << score << std::endl;
+45: }
+</pre>
+
+*Ausgabe*:
+
+```
+190
+```
+
+*Bemerkung*:<br />
+Natürlich ließe sich die Berechnung auch einfacher durchführen,
+zum Beispiel so:
+
+```cpp
+01: auto getMaxScoreAlternate = [](const std::vector<Student>& students, int year) {
+02:     auto max_score = 0;
+03:     for (const auto& student : students) {
+04:         if (student.m_year == year) {
+05:             max_score = std::max(max_score, student.m_score);
+06:         }
+07:     }
+08:     return max_score;
+09: };
+```
+
+Das Ziel in der Programmierung derartiger Funktionalitäten sollte darin bestehen,
+den Algorithmus durch die Zusammenstellung kleiner algorithmischer Bausteine zu implementieren,
+anstatt ihn für jeden Anwendungsfall von Grund auf mit einer einzigen `for`-Schleife zu realisieren.
+
+
+###### C++&ndash;23 &ndash; Variante:
 
 <pre>
 01: void test()
@@ -52,105 +124,38 @@ Wir wollen die Aussagen aus der Einleitung an einem Beispiel verdeutlichen:
 06:         int m_score{};
 07:     };
 08: 
-09:     auto getMaxScore = [](const std::vector<Student>& students, int year)
-10:     {
-11:         auto byYear = [=](const auto& s) { return s.m_year == year; };
-12: 
-13:         // student list needs to be <b>copied</b> in order to be filtered on the year <b>!!!</b>
-14:         auto result = std::vector<Student>{};
+09:     auto getMaxScore = [](const std::vector<Student>& students, int year) {
+10: 
+11:         auto maxValue = [](auto&& range) {
+12:             const auto it = std::ranges::max_element(range);
+13:             return it != range.end() ? *it : -1;
+14:         };
 15: 
-16:         std::copy_if(
-17:             std::begin(students),
-18:             std::end(students),
-19:             std::back_inserter(result),
-20:             byYear
+16:         const auto byYear = [=](auto&& s) { return s.m_year == year; };
+17: 
+18:         return maxValue(students
+19:             | std::ranges::views::filter(byYear)
+20:             | std::ranges::views::transform(&Student::m_score)
 21:         );
-22: 
-23:         auto it = std::max_element(
-24:             std::begin(result),
-25:             std::end(result),
-26:             [](const Student& a, const Student& b) {
-27:                 return a.m_score < b.m_score;
-28:             }
-29:         );
-30: 
-31:         return it != result.end() ? it->m_score : 0;
+22:     };
+23: 
+24:     auto students = std::vector<Student>
+25:     {
+26:         {"Georg", 2021, 120 },
+27:         {"Hans",  2021, 140 },
+28:         {"Susan", 2020, 180 },
+29:         {"Mike",  2020, 110 },
+30:         {"Hello", 2021, 190 },
+31:         {"Franz", 2021, 110 },
 32:     };
 33: 
-34:     // Although it's easily achievable in this small example to find a fitting solution,
-35:     // the goal is to to be able to implement this algorithm by composing small algorithmic building blocks,
-36:     // rather than implementing it for every use case from scratch using a single for-loop
-37:     auto getMaxScoreAlternate = [](const std::vector<Student>& students, int year) {
-38:         auto max_score = 0;
-39:         for (const auto& student : students) {
-40:             if (student.m_year == year) {
-41:                 max_score = std::max(max_score, student.m_score);
-42:             }
-43:         }
-44:         return max_score;
-45:     };
-46: 
-47:     auto students = std::vector<Student>{
-48:         {"Georg", 2021, 120 },
-49:         {"Hans",  2021, 140 },
-50:         {"Susan", 2020, 180 },
-51:         {"Mike",  2020, 110 },
-52:         {"Hello", 2021, 190 },
-53:         {"Franz", 2021, 110 },
-54:     };
-55: 
-56:     auto score = getMaxScore(students, 2021);
-57: 
-58:     std::cout << score << std::endl;
-59: }
+34:     auto score = getMaxScore(students, 2021);
+35: 
+36:     std::println("{}", score);
+37: }
 </pre>
 
-*Ausgabe*:
-
-```
-190
-```
-
-###### C++&ndash;20 &ndash; Variante:
-
-<pre>
-01: void v1_20()
-02: {
-03:     struct Student {
-04:         std::string m_name{};
-05:         int m_year{};
-06:         int m_score{};
-07:     };
-08: 
-09:     auto maxValue = [](auto&& range) {
-10:         const auto it = std::ranges::max_element(range);
-11:         return it != range.end() ? *it : 0;
-12:     };
-13: 
-14:     auto getMaxScore = [&](const std::vector<Student>& students, int year) {
-15:         const auto byYear = [=](auto&& s) { return s.m_year == year; };
-16:         return maxValue(students
-17:             | std::views::filter(byYear)
-18:             | std::views::transform(&Student::m_score)
-19:         );
-20:     };
-21: 
-22:     auto students = std::vector<Student>{
-23:         {"Georg", 2021, 120 },
-24:         {"Hans",  2021, 140 },
-25:         {"Susan", 2020, 180 },
-26:         {"Mike",  2020, 110 },
-27:         {"Hello", 2021, 190 },
-28:         {"Franz", 2021, 110 },
-29:     };
-30: 
-31:     auto score = getMaxScore(students, 2021);
-32: 
-33:     std::cout << score << std::endl;
-34: }
-</pre>
-
-## Ein erster Blick auf *Views* <a name="link1"></a>
+## Ein erster Blick auf *Views* <a name="link2"></a>
 
 *Views* in der &ldquo;*Ranges*&rdquo;-Bibliothek sind *lazy* ausgewertete Iteratoren eines Bereichs.
 
@@ -162,17 +167,19 @@ Syntaktisch gesehen bieten sie eine sehr angenehme Syntax für viele gängige Oper
 Quadrieren aller Elemente eines Containers
 
 ```cpp
-01: void test()
+01: static void test()
 02: {
 03:     auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-04:     auto square = [](auto v) { return v * v; };
-05:     auto squared_view = std::views::transform(numbers, square);
+04: 
+05:     auto square = [](auto v) { return v * v; };
 06: 
-07:     for (auto s : squared_view) { // square lambda is invoked here
-08:         std::cout << s << ", ";
-09:     }
-10:     std::cout << std::endl;
-11: }
+07:     auto squared_view = std::ranges::views::transform(numbers, square);
+08: 
+09:     for (auto&& s : squared_view) {
+10:         std::print("{}, ", s);
+11:     }
+12:     std::println("");
+13: }
 ```
 
 *Ausgabe*:
@@ -181,22 +188,48 @@ Quadrieren aller Elemente eines Containers
 1, 4, 9, 16, 25, 36, 49, 64, 81, 100,
 ```
 
+*Bemerkung*:<br />
+Die Schreibweise in Zeile 7 des letzten Beispiels kann durch den *Pipe*-Operator (`|`)
+verbessert werden:
+
+```cpp
+01: static void test()
+02: {
+03:     auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+04: 
+05:     auto square = [](auto v) { return v * v; };
+06: 
+07:     auto squared_view = numbers | std::ranges::views::transform(square);
+08: 
+09:     for (auto&& s : squared_view) {
+10:         std::print("{}, ", s);
+11:     }
+12:     std::println("");
+13: }
+```
+
+Siehe hierzu mehr im nächsten Abschnitt.
+
+
 *Beispiel*:
 Erstellen einer gefilterte Ansicht, in der nur ein Teil des Bereichs sichtbar ist.
 In diesem Fall treten nur die Elemente in Erscheinung, die die Bedingung erfüllen,
 wenn die Ansicht iteriert wird:
 
 ```cpp
-01: void test()
+01: static void test()
 02: {
-03:     auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-04: 
-05:     auto oddView = std::views::filter(numbers, [](auto i) { return (i % 2) == 1; });
-06:     for (auto odd : oddView) {
-07:         std::cout << odd << ", ";
-08:     }
-09:     std::cout << std::endl;
-10: }
+03:     // create a filtered view where only a part of the range is visible
+04:     auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+05: 
+06:     auto oddView = numbers
+07:         | std::ranges::views::filter([](auto i) { return (i % 2) == 1; });
+08: 
+09:     for (auto&& s : oddView) {
+10:         std::print("{}, ", s);
+11:     }
+12:     std::println("");
+13: }
 ```
 
 *Ausgabe*:
@@ -212,24 +245,26 @@ die über mehrere Container iterieren kann, als ob es sich um eine einzelnen Cont
 
 
 ```cpp
-01: void test()
+01: static void test()
 02: {
-03:     auto list_of_lists = std::vector<std::vector<int>>{
-04:         { 1, 2 },
-05:         { 3, 4, 5 },
-06:         { 6 },
-07:         { 7, 8, 9, 10 }
-08:     };
-09: 
-10:     auto flattenedView = std::views::join(list_of_lists);
-11: 
-12:     for (auto v : flattenedView)
-13:         std::cout << v << ", ";
-14:     std::cout << std::endl;
-15: 
-16:     auto maxValue = *std::ranges::max_element(flattenedView);
-17:     std::cout << "Maximum value: " << maxValue << std::endl;
-18: }
+03:     auto list_of_lists = std::vector<std::vector<int>>
+04:     {
+05:         { 1, 2 },
+06:         { 3, 4, 5 },
+07:         { 6 },
+08:         { 7, 8, 9, 10 }
+09:     };
+10: 
+11:     auto flattenedView = std::ranges::views::join(list_of_lists);
+12: 
+13:     for (auto&& s : flattenedView) {
+14:         std::print("{}, ", s);
+15:     }
+16:     std::println("");
+17: 
+18:     auto maxValue = *std::ranges::max_element(flattenedView);
+19:     std::println("Maximum value: {}", maxValue);
+20: }
 ```
 
 *Ausgabe*:
@@ -239,7 +274,7 @@ die über mehrere Container iterieren kann, als ob es sich um eine einzelnen Cont
 Maximum value: 10
 ```
 
-## Komposition von *Views*
+## Komposition von *Views* <a name="link3"></a>
 
 Die eigentliche Stärke von *Views* liegt darin, dass sie miteinander verknüpft werden können.
 Da sie die zugrunde liegenden Daten *nicht* kopieren,
@@ -250,7 +285,7 @@ Das erste Beispiel verwendet die tatsächlichen *Views*-Klassen direkt.
 Dies bedeutet, dass der visuell mächtige Pipe-Operator noch nicht zum Einsatz gelangt:
 
 ```cpp
-01: void test()
+01: static void test()
 02: {
 03:     struct Student {
 04:         std::string m_name{};
@@ -262,25 +297,33 @@ Dies bedeutet, dass der visuell mächtige Pipe-Operator noch nicht zum Einsatz ge
 10: 
 11:         auto byYear = [=](const auto& s) { return s.m_year == year; };
 12: 
-13:         auto v1 = std::ranges::ref_view{ s }; // wrap container in a view
-14:         auto v2 = std::ranges::filter_view{ v1, byYear }; // apply 'filter' view
-15:         auto v3 = std::ranges::transform_view{ v2, &Student::m_score };  // apply 'transform' view
-16:         auto it = std::ranges::max_element(v3); // apply 'max_element' view
-17:         return it != v3.end() ? *it : 0;
-18:     };
-19: 
-20:     auto students = std::vector<Student>{
-21:         {"Georg", 2021, 120 },
-22:         {"Hans",  2021, 140 },
-23:         {"Susan", 2020, 180 },
-24:         {"Mike",  2020, 110 },
-25:         {"Hello", 2021, 190 },
-26:         {"Franz", 2021, 110 },
-27:     };
-28: 
-29:     auto score = getMaxScore(students, 2021);
-30:     std::cout << score << std::endl;
-31: }
+13:         auto view1 = std::ranges::ref_view{ s };                     // wrap container in a view
+14: 
+15:         auto view2 = std::ranges::filter_view{ view1, byYear };      // apply 'filter' view
+16: 
+17:         auto view3 = std::ranges::transform_view{ view2, &Student::m_score };  // apply 'transform' view
+18: 
+19:         auto it = std::ranges::max_element(view3);                   // apply 'max_element' view
+20: 
+21:         return it != view3.end() ? *it : 0;
+22:     };
+23: 
+24:     auto students = std::vector<Student>
+25:     {
+26:         {"Georg", 2021, 120 },
+27:         {"Hans",  2021, 140 },
+28:         {"Susan", 2020, 180 },
+29:         {"Mike",  2020, 110 },
+30:         {"Hello", 2021, 190 },
+31:         {"Franz", 2021, 110 },
+32:     };
+33: 
+34:     auto score = getMaxScore(students, 2021);
+35:     auto scoreAlternate = getMaxScoreAlternate(students, 2021);
+36: 
+37:     std::println("Score: {}", score);
+38:     std::println("scoreAlternate: {}", scoreAlternate);
+39: }
 ```
 
 *Ausgabe*:
@@ -303,14 +346,14 @@ die beliebig lang sein kann.
 die im Sinne der *Lazy*-Vorgehensweise die Elemente aus dem unterlagerten Container (`std::vector`) verarbeiten.
 
 Wir könnten das letzte Beispiel auch kompakter formulieren,
-indem wir die temporären Variablen `v1`, `v2` und `v3` entfernen:
+indem wir die temporären Variablen `view1`, `view2` und `view3` entfernen:
 
 ```
 01: auto getMaxScoreAlternate = [](const std::vector<Student>& s, int year) {
 02: 
 03:     auto byYear = [=](const auto& s) { return s.m_year == year; };
 04: 
-05:     auto scores = std::ranges::transform_view{
+05:     auto scores = std::ranges::transform_view {
 06:         std::ranges::filter_view {
 07:             std::ranges::ref_view{s}, 
 08:             byYear
@@ -319,13 +362,15 @@ indem wir die temporären Variablen `v1`, `v2` und `v3` entfernen:
 11:     };
 12: 
 13:     auto it = std::ranges::max_element(scores);
-14:     return it != scores.end() ? *it : 0;
-15: };
+14: 
+15:     return it != scores.end() ? *it : 0;
+16: };
 ```
 
 *Hinweis*: Die `_view`-Klassen wurden dem Namensraum  `std::ranges` zugeordnet.
 
-## *Views* besitzen Bereichsadaptoren
+
+## *Views* besitzen Bereichsadaptoren <a name="link4"></a>
 
 Wie Sie bereits gesehen haben, können wir mit der &ldquo;*Ranges*&rdquo;-Bibliothek auch Ansichten erstellen,
 die mit Pipe-Operatoren &ndash; und eben dann mit Bereichsadaptoren &ndash; eine viel elegantere Syntax besitzen.
@@ -337,7 +382,7 @@ Code leichter lesbar:
 
 
 ```cpp
-01: void test()
+01: static void test()
 02: {
 03:     struct Student {
 04:         std::string m_name{};
@@ -355,55 +400,59 @@ Code leichter lesbar:
 16:     };
 17: 
 18:     int year = 2021;
-19:     auto byYear = [=](const auto& s) { return s.m_year == year; };
-20: 
-21:     auto scores = students | std::views::filter(byYear) | std::views::transform(&Student::m_score);
-22: 
-23:     auto it = std::ranges::max_element(scores);
-24:     auto score = it != scores.end() ? *it : 0;
+19: 
+20:     auto byYear = [=](const auto& s) { return s.m_year == year; };
+21: 
+22:     auto scores = students 
+23:         | std::ranges::views::filter(byYear) 
+24:         | std::ranges::views::transform(&Student::m_score);
 25: 
-26:     std::cout << score << std::endl;
-27: }
+26:     auto it = std::ranges::max_element(scores);
+27:     auto score = it != scores.end() ? *it : 0;
+28: 
+29:     std::println("Score: {}", score);
+30: }
 ```
 
 *Ausgabe*:
 
 ```
-190
+Score: 190
 ```
 
 Jede *View* in der &ldquo;*Ranges*&rdquo;-Bibliothek verfügt über ein entsprechendes Bereichsadapterobjekt, das
-zusammen mit dem Pipe-Operator verwendet werden.
+zusammen mit dem Pipe-Operator verwendet werden kann.
 
 Bei Verwendung der Bereichsadapterobjekte können wir auch das
 zusätzliche `std::ranges::ref_view`-Objekt weglassen!
 
 
-## *Views* modifizieren den zugrunde liegenden Container nicht
+## *Views* modifizieren den zugrunde liegenden Container nicht <a name="link5"></a>
 
 Auf den ersten Blick könnte eine Ansicht wie eine veränderte Version des Eingabecontainers aussehen.
 Dies ist nicht der Fall: Die gesamte Verarbeitung wird in den Iterator-Objekten durchgeführt,
 eine *View* ist nur ein *Proxy*-Objekt!
 
 ```cpp
-01: void test()
+01: static void test()
 02: {
-03:     auto ints = std::list{ 1, 2, 3, 4, 5, 6 };
+03:     auto numbers = std::list{ 1, 2, 3, 4, 5, 6 };
 04: 
-05:     auto strings = ints | std::views::transform([](auto i) {
+05:     auto strings = numbers | std::ranges::views::transform([](auto i) {
 06:         return std::string{"\""} + std::to_string(i) + std::string{ "\"" };
 07:         }
 08:     );
 09: 
 10:     for (const auto& s : strings) {
-11:         std::cout << s << ", ";
+11:         std::print("{}, ", s);
 12:     }
-13:     std::cout << std::endl;
+13:     std::println("");
 14: 
-15:     for (const auto& i : ints) {
-16:         std::cout << i << ", ";
+15:     for (const auto& n : numbers) {
+16:         std::print("{}, ", n);
 17:     }
-18: }
+18:     std::println("");
+19: }
 ```
 
 *Ausgabe*:
@@ -416,7 +465,7 @@ eine *View* ist nur ein *Proxy*-Objekt!
 Prinzipiell stellt sich damit natürlich die Frage, wie Resultate von Transformationen &ndash; also *Views* &ndash; in
 einem Ergebnis-Container abgespeichert werden können.
 
-## *Views* lassen sich in Containern &ldquo;materialisieren&rdquo;
+## &ldquo;Materialisierung&rdquo; von *Views* <a name="link6"></a>
 
 Der Ergebnis der Transformation von *Views*  kann man in einem Container abspeichern.
 Man spricht hier auch von &ldquo;die Ansicht materialisieren&rdquo;.
@@ -425,50 +474,37 @@ Alle *Views* können prinzipiell in Containern materialisiert werden, aber:
 Ein Funktions-Template namens `std::ranges::to<T>()`, das diese Funktionalität besitzt,
 wurde für C++&ndash;20 vorgeschlagen, hat es aber dann doch nicht zur Verabschiedung in den Standard geschafft.
 
-Es gibt allerdings einen einfachen Workaround mit einer selbst geschriebenen
-Funktion `to_vector`, den wir im Folgenden vorstellen:
+Mit C++&ndash;23 können wir diese Lücke nun ausmerzen:
 
 ```cpp
-01: auto to_vector(auto&& r)
+01: static void test()
 02: {
-03:     std::vector<std::ranges::range_value_t<decltype(r)>> v;
+03:     auto numbers = std::list{ 1, 2, 3, 4, 5, 6 };
 04: 
-05:     if constexpr (std::ranges::sized_range<decltype(r)>) {
-06:         v.reserve(std::ranges::size(r));
-07:     }
+05:     auto numberToString = [](auto i) {
+06:         return std::string{ "\"" } + std::to_string(i) + std::string{ "\"" };
+07:     }; 
 08: 
-09:     std::ranges::copy(r, std::back_inserter(v));
+09:     auto strings = numbers | std::ranges::views::transform(numberToString);
 10: 
-11:     return v;
-12: }
-13: 
+11:     std::vector<std::string> vec{};
+12: 
+13:     std::ranges::copy(strings, std::back_inserter(vec));
 14: 
-15: void test()
-16: {
-17:     auto ints = std::list{ 1, 2, 3, 4, 5, 6 };
-18: 
-19:     auto strings = ints | std::views::transform([](auto i) {
-20:         return std::string{ "\"" } + std::to_string(i) + std::string{ "\"" };
-21:         }
-22:     );
+15:     for (const auto& n : vec) {
+16:         std::print("{}, ", n);
+17:     }
+18:     std::println("");
+19: 
+20:     vec.clear();
+21: 
+22:     vec = std::ranges::to<std::vector<std::string>>(strings);
 23: 
-24:     auto vec = std::vector<std::string>{};
-25: 
-26:     std::ranges::copy(strings, std::back_inserter(vec));
-27: 
-28:     for (const auto& s : vec) {
-29:         std::cout << s << ", ";
-30:     }
-31:     std::cout << std::endl;
-32: 
-33:     vec.clear();
-34: 
-35:     vec = to_vector(strings);
-36: 
-37:     for (const auto& s : vec) {
-38:         std::cout << s << ", ";
-39:     }
-40: }
+24:     for (const auto& n : vec) {
+25:         std::print("{}, ", n);
+26:     }
+27:     std::println("");
+28: }
 ```
 
 *Ausgabe*:
@@ -478,18 +514,12 @@ Funktion `to_vector`, den wir im Folgenden vorstellen:
 "1", "2", "3", "4", "5", "6",
 ```
 
-*Hinweis*:
-Mit einem Aufruf von `reserve()` lässt sich die Performance der Funktion `to_vector` optimieren.
-Es wird vorab genug Platz für alle Elemente im Ergebnis-Container allokiert,
-um weitere, überflüssige Allokationen zu vermeiden.
-Jedoch kann man `reserve()` nur aufrufen, wenn die Methode am Ausgangscontainer vorhanden ist.
-Dies kann man mit `if constexpr`  und dem Test der Methode `sized_range` bewerkstelligen!
-
-## *Views* werden &ldquo;*lazy*&rdquo; evaluiert
+## &ldquo;*Lazy*&rdquo; Evaluierung <a name="link7"></a>
 
 Die gesamte Arbeit, die eine *View* verrichtet, basiert auf der *lazy*-Vorgehensweise.
 Dies erfolgt somit im Gegensatz zu allen Funktionen aus der `<algorithm>`-Headerdatei,
-die ihre Arbeit *immediately*, also sofort ausführen, wenn sie aufgerufen werden.
+die ihre Arbeit *immediately* (auch als *eager* bezeichnet),
+also sofort ausführen, wenn sie aufgerufen werden.
 
 Wenn wir *Views* als Bausteine in Ketten verwenden,
 profitieren wir von der *lazy*-Auswertungsvorgehensweise, da wir unnötige Kopien vermeiden.
@@ -500,33 +530,43 @@ Zum Beispiel `std::sort`? Die Antwort lautet: Dies geht nicht!
 Wir müssen in diesem Fall die Ansicht vorher materialisieren, wenn wir sie sortieren möchten:
 
 ```cpp
-01: void test()
+01: static void test()
 02: {
-03:     auto vec = std::vector{ 4, 2, 7, 1, 2, 6, 1, 5 };
-04:     print(vec);
-05: 
-06:     // filter range
-07:     auto isOdd = [](auto i) { return i % 2 == 1; };
-08:     auto odd_numbers = vec | std::views::filter(isOdd);
-09: 
-10:     // std::ranges::sort(odd_numbers); // doesn't compile !!!
+03:     auto vec = std::vector{ 4, 2, 7, 1, 2, 6, 3, 5 };
+04:     for (auto&& s : vec) {
+05:         std::print("{} ", s);
+06:     }
+07:     std::println("");
+08: 
+09:     // filter range
+10:     auto isOdd = [](auto i) { return i % 2 == 1; };
 11: 
-12:     // materialize the view before sorting
-13:     auto result = to_vector(odd_numbers);
-14:     print(result);
+12:     auto odd_numbers = vec | std::ranges::views::filter(isOdd);
+13: 
+14:     // std::ranges::sort(odd_numbers); // doesn't compile !!!
 15: 
-16:     // sort range
-17:     std::ranges::sort(result);
-18:     print(result);
-19: }
+16:     // materialize the view before sorting
+17:     auto result = std::ranges::to<std::vector<int>>(odd_numbers);
+18:     for (auto&& s : result) {
+19:         std::print("{} ", s);
+20:     }
+21:     std::println("");
+22: 
+23:     // sort range
+24:     std::ranges::sort(result);
+25:     for (auto&& s : result) {
+26:         std::print("{} ", s);
+27:     }
+28:     std::println("");
+29: }
 ```
 
 *Ausgabe*:
 
 ```
-4 2 7 1 2 6 1 5
-7 1 1 5
-1 1 5 7
+4 2 7 1 2 6 3 5
+7 1 3 5
+1 3 5 7
 ```
 
 *Hinweis*:
@@ -541,7 +581,7 @@ siehe das folgende Beispiel:
 
 
 ```cpp
-01: void test()
+01: static void test()
 02: {
 03:     auto vec = std::vector{ 8, 6, 10, 9, 2, 1, 3, 7, 4, 5 };
 04:     print(vec);
@@ -566,7 +606,7 @@ siehe das folgende Beispiel:
 
 ---
 
-## Der Zweck von `common_view`
+## Der Zweck von `std::common_view` <a name="link8"></a>
 
 Manche der STL-Algorithmen, wie zum Beispiel `std::accumulate`, werden von 
 der &ldquo;*Ranges*&rdquo;-Bibliothek nicht unterstützt.
@@ -574,11 +614,15 @@ Wenn wir nun *Views* und ältere STL-Algorithmen mischen,
 dann kann es zu Übersetzungsfehlern kommen:
 
 ```cpp
-01: std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
-02: 
-03: auto range = vec | std::views::take_while([](int x) { return x > 5; });
+01: static void test()
+02: {
+03:     std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 04: 
-05: auto result = std::accumulate(std::begin(range), std::end(range), 0);  // <== Compile Error
+05:     auto range = vec
+06:         | std::ranges::views::take_while([](int x) { return x > 5; });
+07: 
+08:     // auto result = std::accumulate(std::begin(range), std::end(range), 0);  // <== Compile Error
+09: }
 ```
 
 Um das Problem für `std::views::take_while` zu beheben,
@@ -590,15 +634,18 @@ und ihn an die Arbeit mit C++17-Algorithmen anzupassen (hier: `std::accumulate`)
 indem derselbe Iterator- und *Sentinel*-Typ erzeugt wird:
 
 ```cpp
-01: std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
-02: 
-03: auto range = vec
-04:     | std::views::take_while([](int x) { return x > 5; })
-05:     | std::views::common;
-06: 
-07: auto result = std::accumulate(std::begin(range), std::end(range), 0);
+01: static void test()
+02: {
+03:     std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+04: 
+05:     auto range = vec
+06:         | std::ranges::views::take_while([](int x) { return x > 5; })
+07:         | std::ranges::views::common;
 08: 
-09: std::cout << result << std::endl;
+09:     auto result = std::accumulate(std::begin(range), std::end(range), 0);
+10: 
+11:     std::println("{}", result);
+12: }
 ```
 
 *Bemerkung*: Ein *Sentinel*-Typ ist ähnlich einem Ende-Iterator-Objekt,
@@ -606,7 +653,7 @@ nur dass dieses einen anderen Typ hat.
 
 ---
 
-## Literaturhinweise:
+## Literaturhinweise: <a name="link9"></a>
 
 Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Buch
 

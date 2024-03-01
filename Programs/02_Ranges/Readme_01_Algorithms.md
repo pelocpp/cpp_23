@@ -108,6 +108,34 @@ Das Iterieren eines Bereichs betrachten wir am Beispiel einer `print`-Funktion:
 14: 
 ```
 
+
+*Hinweis*:<br />
+Wozu wird für die `print`-Methoden immer eine Parameter des Typs `auto&& range` verwendet?
+Betrachten Sie dazu dieses Beispiel:
+
+```cpp
+01: void hint()
+02: {
+03:     std::vector<bool> vec(10);
+04: 
+05:     for (auto&& elem : vec)
+06:         elem = true;
+07: }
+```
+
+Versuchen Sie, die `hint`-Methode einmal mit dem Parameter `auto&` zu übersetzen!
+Sie erhalten in diesem Fall einen Übersetzungsfehler!
+
+Der Sequenziterator liefert in diesem Fall Proxy-Referenz zurück.
+Wollten Sie diese Referenz auf eine nicht konstante Weise bearbeiten,
+dann geht das nicht. Das vom Iterator zurückgegebene *RValue* Objekt
+des Typs `std::vector<bool>::reference` kann
+nicht an eine nicht konstante *LValue*-Referenz gebunden werden.
+
+Siehe dazu auch diese
+[Beschreibung](https://stackoverflow.com/questions/13130708/what-is-the-advantage-of-using-forwarding-references-in-range-based-for-loops/13130795#13130795).
+
+
 ### Elemente umwandeln (transformieren)
 
 Der `std::transform`-Algorithmus ruft für jedes Element in einem Bereich eine Funktion auf
