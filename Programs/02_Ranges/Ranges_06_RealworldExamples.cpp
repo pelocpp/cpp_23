@@ -1,24 +1,12 @@
 // ===========================================================================
-// Ranges_Ex_06_RealworldExamples.cpp
+// Ranges_06_RealworldExamples.cpp
 // ===========================================================================
 
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <algorithm>
-#include <numeric>
-#include <list>
-#include <vector>
-#include <ranges>
-
-#define Cpp_20 202002L
-#define Cpp_17 201703L
+import std;
 
 namespace Cpp20RangesRealworldExamples
 {
-#if __cplusplus >= Cpp_20
-
-    void example_01_filterMapReduce()
+    static void example_01_filterMapReduce()
     {
         // testing 'Filter-Map-Reduce' Pattern
         struct Book {
@@ -61,7 +49,7 @@ namespace Cpp20RangesRealworldExamples
         std::cout << result << std::endl;
     }
 
-    void example_02_binaryToDecimalConversion()
+    static void example_02_binaryToDecimalConversion()
     {
         auto digits = std::vector<uint8_t>{ 1, 1, 1, 0 };
 
@@ -86,17 +74,14 @@ namespace Cpp20RangesRealworldExamples
 
         std::cout << value << std::endl;
     }
-#endif
 }
 
 void ranges_06_examples()
 {
-#if __cplusplus >= Cpp_20
     using namespace Cpp20RangesRealworldExamples;
 
     example_01_filterMapReduce();
     example_02_binaryToDecimalConversion();
-#endif
 }
 
 // ===========================================================================

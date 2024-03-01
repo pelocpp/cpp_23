@@ -126,7 +126,7 @@ Betrachten Sie dazu dieses Beispiel:
 Versuchen Sie, die `hint`-Methode einmal mit dem Parameter `auto&` zu übersetzen!
 Sie erhalten in diesem Fall einen Übersetzungsfehler!
 
-Der Sequenziterator liefert in diesem Fall Proxy-Referenz zurück.
+Der Sequenziterator liefert in diesem Fall eine Proxy-Referenz zurück.
 Wollten Sie diese Referenz auf eine nicht konstante Weise bearbeiten,
 dann geht das nicht. Das vom Iterator zurückgegebene *RValue* Objekt
 des Typs `std::vector<bool>::reference` kann

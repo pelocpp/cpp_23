@@ -104,8 +104,10 @@ namespace Cpp20Views
         std::println("{}", score);
     }
 
+    // ------------------------------------------------------------------
+
     // introduction (understanding views from the Ranges library)
-    static void views2_23_introduction_01()
+    static void views2_introduction_01()
     {
         auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
@@ -119,7 +121,7 @@ namespace Cpp20Views
         std::println("");
     }
 
-    static void views2_23_introduction_02()
+    static void views2_introduction_02()
     {
         auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
@@ -133,7 +135,7 @@ namespace Cpp20Views
         std::println("");
     }
 
-    static void views2_23_introduction_03()
+    static void views2_introduction_03()
     {
         // create a filtered view where only a part of the range is visible
         auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -149,7 +151,7 @@ namespace Cpp20Views
         std::println("");
     }
 
-    static void views2_23_introduction_04()
+    static void views2_introduction_04()
     {
         // create a filtered view where only a part of the range is visible
         auto numbers = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -163,7 +165,7 @@ namespace Cpp20Views
         std::println("");
     }
 
-    static void views2_23_introduction_05()
+    static void views2_introduction_05()
     {
         auto list_of_lists = std::vector<std::vector<int>>
         {
@@ -184,8 +186,10 @@ namespace Cpp20Views
         std::println("Maximum value: {}", maxValue);
     }
 
+    // ------------------------------------------------------------------
+
     // views are composable
-    static void views3_23_composable()
+    static void views3_composable()
     {
         struct Student {
             std::string m_name{};
@@ -242,8 +246,81 @@ namespace Cpp20Views
         std::println("scoreAlternate: {}", scoreAlternate);
     }
 
+    // ------------------------------------------------------------------
+
+    // projections
+    class Person
+    {
+    public:
+        explicit Person(std::string first, std::string last)
+            : m_firstName{ first }, m_lastName{ last }
+        {}
+
+        const std::string& getFirstName() const { return m_firstName; }
+        const std::string& getLastName() const { return m_lastName; }
+
+    private:
+        std::string m_firstName;
+        std::string m_lastName;
+    };
+
+    static void views4_projections_01()
+    {
+        std::vector<Person> persons
+        {
+            Person{ "John", "Miller" },
+            Person{ "Jack", "Wagner" }
+        };
+
+        // std::sort(std::begin(persons), std::end(persons)); 
+
+        // Error: "call to object of class type 'std::less<void>' : no matching call operator found
+    }
+
+    static void views4_projections_02()
+    {
+        std::vector<Person> persons
+        {
+            Person{ "John", "Miller" },
+            Person{ "Jack", "Wagner" }
+        };
+
+        std::ranges::sort(
+            std::begin(persons),
+            std::end(persons),
+            std::ranges::less{},
+            [](const Person& person) { return person.getLastName(); }
+        );
+
+        for (const auto& elem : persons) {
+            std::println("{} {}", elem.getFirstName(), elem.getLastName());
+        }
+    }
+
+    static void views4_projections_03()
+    {
+        std::vector<Person> persons
+        {
+            Person{ "John", "Miller" },
+            Person{ "Jack", "Wagner" }
+        };
+
+        std::ranges::sort(
+            std::begin(persons),
+            std::end(persons),
+            {},
+            &Person::getFirstName
+        );
+
+        for (const auto& elem : persons) {
+            std::println("{} {}", elem.getFirstName(), elem.getLastName());
+        }
+    }
+
+    // ------------------------------------------------------------------
+
     // range views come with range adaptors
-    static void views4_23_range_adaptors()
+    static void views5_range_adaptors()
     {
         struct Student {
             std::string m_name{};
@@ -274,8 +351,10 @@ namespace Cpp20Views
         std::println("Score: {}", score);
     }
 
+    // ------------------------------------------------------------------
+
     // views don't mutate the underlying container
-    static void views5_23_immutable()
+    static void views6_immutable()
     {
         auto numbers = std::list{ 1, 2, 3, 4, 5, 6 };
 
@@ -295,8 +374,10 @@ namespace Cpp20Views
         std::println("");
     }
 
+    // ------------------------------------------------------------------
+
     // views can be materialized into containers
-    static void views6_23_materialize()
+    static void views7_materialize()
     {
         auto numbers = std::list{ 1, 2, 3, 4, 5, 6 };
 
@@ -325,8 +406,10 @@ namespace Cpp20Views
         std::println("");
     }
 
+    // ------------------------------------------------------------------
+
     // views are lazy evaluated (sort doesn't work)
-    static void views7_23_lazy_evaluation_01()
+    static void views8_lazy_evaluation_01()
     {
         auto vec = std::vector{ 4, 2, 7, 1, 2, 6, 3, 5 };
         for (auto&& s : vec) {
@@ -356,7 +439,7 @@ namespace Cpp20Views
         std::println("");
     }
 
-    static void views7_23_lazy_evaluation_02()
+    static void views8_lazy_evaluation_02()
     {
         auto vec = std::vector{ 8, 6, 10, 9, 2, 1, 3, 7, 4, 5 };
         for (auto&& s : vec) {
@@ -380,7 +463,126 @@ namespace Cpp20Views
         std::println("");
     }
 
-    static void views8_23_views_common_01()
+    // ------------------------------------------------------------------
+
+    // range factories
+    static void printRange(std::string_view msg, auto&& range)
+    {
+        std::println("{}", msg);
+
+        for (const auto& elem : range) {
+            std::println("# {}", elem);
+        }
+        std::println("");
+    }
+
+    static void views9_rangeFactories_01()
+    {
+        auto range1{ std::ranges::iota_view{ 10 } };
+        auto range2{ std::ranges::views::iota(10) };
+    }
+
+    static void views9_rangeFactories_02()
+    {
+        // create an infinite sequence of the numbers 10, 11, 12, ...
+        auto values{ std::ranges::views::iota(10) };
+
+        auto isEven = [](const auto& value) { return value % 2 == 0; };
+
+        // filter out all odd values, leaving only the even values
+        auto result1 {
+            values | std::ranges::views::filter(isEven)
+        };
+
+        auto powerTwo = [](const auto& value) { return value * 2.0; };
+
+        // transform all values to their double value
+        auto result2 {
+            result1 | std::ranges::views::transform(powerTwo)
+        };
+
+        // take only the first five elements
+        auto result3 {
+            result2 | std::ranges::views::take(5)
+        };
+
+        printRange("Result: ", result3);
+    }
+
+    static void views9_rangeFactories_03()
+    {
+        // create an infinite sequence of the numbers 1, 2, 3, 4, .....
+        auto values{ std::ranges::views::iota(1) };
+
+        // printRange("Result: ", values);  // infinite loop !!!
+    }
+
+    static void views9_rangeFactories_04()
+    {
+        // same as views9_rangeFactories_02
+
+        auto range = std::ranges::views::iota(10);
+
+        auto result { range
+            | std::ranges::views::filter([](const auto& value) { return value % 2 == 0; })
+            | std::ranges::views::transform([](const auto& value) { return value * 2.0; })
+            | std::ranges::views::take(5)
+        };
+
+        printRange("Result: ", result);
+    }
+
+    static void views9_rangeFactories_05()
+    {
+        // repeating view
+        auto view = std::ranges::views::repeat(123, 5);
+
+        printRange("Result of std::ranges::views::repeat: ", view);
+    }
+
+    static void views9_rangeFactories_06()
+    {
+        // empty view
+        auto view = std::ranges::views::empty<int>;
+
+        printRange("Result of std::ranges::views::empty: ", view);
+
+        std::println("size: {}", view.size());
+    }
+
+    static void views9_rangeFactories_07()
+    {
+        constexpr std::ranges::single_view sv1{ 123 };
+
+        static_assert(not sv1.empty());
+
+        std::println("1) *sv1.data():  {}", *sv1.data());
+        std::println("2) *sv1.begin(): {}", *sv1.begin());
+        std::println("3)  sv1.size():  {}", sv1.size());
+        std::println("4)  distance():  {}", std::distance(sv1.begin(), sv1.end()));
+    }
+
+    static void views9_rangeFactories_08()
+    {
+        std::println("Type integers, an integer >= 5 stops the program.");
+
+        auto range = std::ranges::istream_view<int>{ std::cin };
+
+        auto view = range
+            | std::ranges::views::take_while([](const auto& v) { return v < 5; })
+            | std::ranges::views::transform([](const auto& v) { return v * 2; });
+
+        for (auto value : view) {
+            std::println("> {}", value);
+        }
+
+        std::println("Terminating...");
+    }
+
+    // ------------------------------------------------------------------
+
+    // std::ranges::views::common
+    static void views10_views_common_01()
     {
         std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
@@ -391,7 +593,7 @@ namespace Cpp20Views
         // auto result = std::accumulate(std::begin(range), std::end(range), 0);
     }
 
-    static void views8_23_views_common_02()
+    static void views10_views_common_02()
     {
         std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
@@ -404,7 +606,7 @@ namespace Cpp20Views
         std::println("{}", result);
     }
 
-    static void views8_23_views_common_03()
+    static void views10_views_common_03()
     {
         std::vector<int> vec{ 9, 8, 7, 6, 5, 4, 3, 2, 1 };
 
@@ -416,7 +618,26 @@ namespace Cpp20Views
 
         std::println("{}", result);
     }
+
+    // ------------------------------------------------------------------
+
+    // borrowed iterators
+    static std::vector<int> getData()
+    {
+        return std::vector<int> { 1, 2, 3, 4, 5};
+    }
+
+    static void views11_borrowedIterators_01()
+    {
+        auto pos = std::ranges::find(getData(), 123); // returns iterator to temporary vector
+
+        // temporary vector returned by getData() is destroyed here
+
+        // std::cout << *pos;    // OOPS: using a dangling iterator // DOES NOT COMPILE !!!
+    }
 }
+
+// ------------------------------------------------------------------
 
 void ranges_02_views()
 {
@@ -424,20 +645,42 @@ void ranges_02_views()
 
     views1_17_motivation();
     views1_23_motivation();
-    views2_23_introduction_01();
-    views2_23_introduction_02();
-    views2_23_introduction_03();
-    views2_23_introduction_04();
-    views2_23_introduction_05();
-    views3_23_composable();
-    views4_23_range_adaptors();
-    views5_23_immutable();
-    views6_23_materialize();
-    views7_23_lazy_evaluation_01();
-    views7_23_lazy_evaluation_02();
-    views8_23_views_common_01();
-    views8_23_views_common_02();
-    views8_23_views_common_03();
+    
+    views2_introduction_01();
+    views2_introduction_02();
+    views2_introduction_03();
+    views2_introduction_04();
+    views2_introduction_05();
+    
+    views3_composable();
+
+    views4_projections_01();
+    views4_projections_02();
+    views4_projections_03();
+
+    views5_range_adaptors();
+
+    views6_immutable();
+
+    views7_materialize();
+
+    views8_lazy_evaluation_01();
+    views8_lazy_evaluation_02();
+
+    views9_rangeFactories_01();
+    views9_rangeFactories_02();
+    views9_rangeFactories_03();
+    views9_rangeFactories_04();
+    views9_rangeFactories_05();
+    views9_rangeFactories_06();
+    views9_rangeFactories_07();
+    views9_rangeFactories_08();
+
+    views10_views_common_01();
+    views10_views_common_02();
+    views10_views_common_03();
+
+    views11_borrowedIterators_01();
 }
 
 // ===========================================================================

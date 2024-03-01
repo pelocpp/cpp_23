@@ -2,15 +2,7 @@
 // Ranges_Ex_04_ViewImplementation.cpp
 // ===========================================================================
 
-#include <algorithm>
-#include <ranges>
-#include <string>
-
-#include <algorithm>
-#include <cassert>
-#include <iostream>
-#include <ranges>
-#include <vector>
+import std;
 
 namespace Cpp20RangesViewImplementationExample_01
 {

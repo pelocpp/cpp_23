@@ -1,28 +1,14 @@
 // ===========================================================================
-// Ranges_Ex_05_MiscExamples.cpp
+// Ranges_05_MiscExamples.cpp
 // ===========================================================================
 
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <sstream>
-#include <string>
-#include <algorithm>
-#include <numeric>
-#include <list>
-#include <vector>
-#include <ranges>
-
-#define Cpp_20 202002L
-#define Cpp_17 201703L
+import std;
 
 namespace Cpp20RangesMiscellaneousExamples
 {
-#if __cplusplus >= Cpp_20
-
-    auto printElem = [](auto n) { std::cout << n << ' '; };
+    auto printElem = [](auto n) { std::print("{} ", n); };
     
-    auto printElemNL = [](auto n) { std::cout << n << std::endl; };
+    auto printElemNewLine = [](auto n) { std::println("{} ", n); };
 
     // print the all the elements of a range 
     void example_01()
@@ -137,7 +123,7 @@ namespace Cpp20RangesMiscellaneousExamples
         auto range = std::views::iota(1, 51)
             | std::views::transform([](auto i) { return toRoman(i); });
 
-        std::ranges::for_each(range, printElemNL);
+        std::ranges::for_each(range, printElemNewLine);
     }
 
     // print the Roman numerals of the last three numbers divisible by 7 in the range [1, 50], in reverse order
@@ -149,7 +135,7 @@ namespace Cpp20RangesMiscellaneousExamples
             | std::views::reverse
             | std::views::take(3);
 
-        std::ranges::for_each(range, printElemNL);
+        std::ranges::for_each(range, printElemNewLine);
     }
 
     // =======================================================================
@@ -296,13 +282,10 @@ namespace Cpp20RangesMiscellaneousExamples
             std::cout << std::quoted(word) << std::endl;
         }
     }
-#endif
 }
 
 void ranges_05_examples()
 {
-#if __cplusplus >= Cpp_20
-
     using namespace Cpp20RangesMiscellaneousExamples;
 
     example_01();
@@ -336,7 +319,6 @@ void ranges_05_examples()
     std::cout << std::endl;
     example_strings_04();
     std::cout << std::endl;
-#endif
 }
 
 // ===========================================================================

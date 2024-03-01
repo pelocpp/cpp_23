@@ -10,16 +10,16 @@
 
 ### Numerische Beispiele
 
-##### Beispiel 1: Alle Elemente eines Bereichs iterieren / ausgeben
-
 Die folgenden Beispiele verwenden folgende Hilfsfunktionen:
 
 ```cpp
-auto printElem = [](auto n) { std::cout << n << ' '; };
-auto printElemNL = [](auto n) { std::cout << n << std::endl; };
+auto printElem = [](auto n) { std::print("{} ", n); };
+auto printElemNewLine = [](auto n) { std::println("{} ", n); };
 ```
 
 Damit zum ersten Beispiel:
+
+##### Beispiel 1: Alle Elemente eines Bereichs iterieren / ausgeben
 
 ```cpp
 01: auto vec = std::vector{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
