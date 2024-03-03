@@ -1,4 +1,4 @@
-# *Ranges* und *Views* in Standard C++&ndash;20
+# *Ranges* und *Views* in Standard C++&ndash;20 und C++&ndash;23
 
 [Zurück](Readme.md)
 
@@ -66,10 +66,10 @@ In C++&ndash;23 sind weitere *Views* hinzugekommen:
 
 *Tabelle* 3. Zusätzliche *Views* in Standard C++&ndash;23.
 
-**Bemerkung*:<br />
+*Bemerkung*:<br />
 Die vorgestellten Tabellen sollen nur einen Eindruck von den aktuell in Standard C++ verfügbaren *Views* zeigen.
 Wollen Sie hierzu genaue Informationen haben, so verweise ich auf die aktuellen Dokumentationen im
-[Netz](https://en.cppreference.com/w/cpp/ranges/adjacent_view)!
+[Netz](https://en.cppreference.com/w/cpp/ranges)!
 
 ---
 

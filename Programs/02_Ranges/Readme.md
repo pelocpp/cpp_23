@@ -16,7 +16,7 @@
 
 ## [Bereiche und Ansichten: Erläuterungen und Beispiele](Readme_02_Ranges_Views.md)
 
-## [Ranges und Views in Standard C++&ndash;20](Readme_03_Standard_Views.md)
+## [Ranges und Views in Standard C++&ndash;20 und C++&ndash;23](Readme_03_Standard_Views.md)
 
 ## [Implementierung einer View](Readme_04_ViewImplementation.md)
 
