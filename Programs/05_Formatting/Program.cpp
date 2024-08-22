@@ -3,10 +3,12 @@
 // ===========================================================================
 
 void test_formatting();
+void test_formatting_02();
+void test_formatting_03();
 
 int main()
 {
-    test_formatting();
+    test_formatting_03();
     return 0;
 }
 

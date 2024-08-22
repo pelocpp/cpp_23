@@ -20,10 +20,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Formatting.cpp">
+    <ClCompile Include="Formatting_01.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Formatting_02.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Formatting_03.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
