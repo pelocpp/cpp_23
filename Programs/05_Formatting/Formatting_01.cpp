@@ -21,7 +21,9 @@
 
 // https://en.cppreference.com/w/cpp/utility/format/spec
 
+// Gutes Bild
 
+// https://vitaut.net/posts/2023/print-in-cpp23/
 
 namespace Formatting_Examples
 {
