@@ -1,4 +1,4 @@
-# `std::format` in C++20
+# The Return of &bdquo;`printf`&rdquo;: `std::print` in C++ 23
 
 [Zurück](../../Readme.md)
 
@@ -10,18 +10,17 @@
 
 ## Überblick
 
-Wer hat sie nicht vermisst? Die C-Bibliotheksfunktion `printf` war uns &ndash; trotz all ihrer Schwächen  &ndash; 
-ans Herz gewachsen.
+&bdquo;`printf`&rdquo;: Wer hat sie nicht vermisst? Die C-Bibliotheksfunktion war uns &ndash; trotz all ihrer Schwächen &ndash; 
+doch sehr ans Herz gewachsen.
 
-Ab C++ 23 ist sie zurückgekehrt, und wenn wir so wollen: Stärker denn je zuvor!
+<img src="StdPrintln_02.png" width="400">
+
+*Abbildung* 1: The Return of &bdquo;`printf`&rdquo;: `std::print` in C++ 23.
+
+In C++ 23 ist sie zurückgekehrt, und wenn wir so wollen: Stärker denn je zuvor!
 Typsicherheit, Erweiterbarkeit, Unterstützung von Unicode und Performanz sind 
-einige der Stärken der neuen Funktionen std::print und  std::println,
+einige der Stärken der neuen Funktionen `std::print` und  `std::println`,
 die große Ähnlichkeiten zu `printf` aufweisen.
-
-<img src="StdPrintln_02.png" width="500">
-
-*Abbildung* 1: Die Rangfolge der ersten zehn Programmiersprachen auf Basis des *TIOBE Programming Community Index* im Januar 2023.
-
 
 ---
 
@@ -30,10 +29,14 @@ die große Ähnlichkeiten zu `printf` aufweisen.
 Eine genaue Beschreibung der Formatzeichenkette findet man in der
 &bdquo;[Standard Format Specification](https://en.cppreference.com/w/cpp/utility/format/spec)&rdquo; wieder.
 
-Aus diesem Grund macht es wenig Sinn, hier eine Beschreibung zu wiederholen.
+Aus diesem Grund macht es wenig Sinn, hier die Spezifikation zu wiederholen.
 
-Ich versuche, mit einer Reihe ausdrucksstarker Beispiele die wesentlichen Features der beiden
-Funktionen vorzustellen.
+Ich versuche, mit einer Reihe möglichst ausdrucksstarker Beispiele die wesentlichen Features der `std::print(ln)`
+Funktion vorzustellen.
+
+---
+
+## Beispiele
 
 ---
 

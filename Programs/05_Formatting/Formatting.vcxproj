@@ -150,6 +150,7 @@
     <ClCompile Include="Formatting_02.cpp" />
     <ClCompile Include="Formatting_03.cpp" />
     <ClCompile Include="Formatting_REVISED.cpp" />
+    <ClCompile Include="Formatting_REVISED_02.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>

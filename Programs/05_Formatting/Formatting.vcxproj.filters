@@ -38,6 +38,9 @@
     <ClCompile Include="Formatting_REVISED.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Formatting_REVISED_02.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="StdPrintln_02.png">

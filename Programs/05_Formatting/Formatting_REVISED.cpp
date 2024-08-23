@@ -11,33 +11,59 @@
 
 // import std;
 
+// import std;
+
 // custom formatter for displaying vectors
 template <typename T>
-struct std::formatter<std::vector<T>> : std::formatter<T>
+
+struct std::formatter<std::vector<T>> : std::formatter<std::string_view>
 {
     constexpr auto parse(format_parse_context& ctx) {
         return ctx.begin();
     }
 
-    template <typename FormatContext>
-    auto format(std::vector<T> v, FormatContext& ctx) const {
-        std::vector<std::string> v_str;
-        v_str.reserve(v.size());
-        const auto fmt_str = [&]() {
-            if constexpr (std::is_integral<T>::value) {
-                return "{:+5}";
-            }
-            else if constexpr (std::is_floating_point<T>::value) {
-                return "{:+5.2}";
-            }
-            else {
-                return "{}";
-            }
-            }();
-        for (auto& e : v) {
-            v_str.push_back(std::format(fmt_str, e));
+    //template <typename FormatContext>
+    //auto format(std::vector<T> v, FormatContext& ctx) const {
+    //    
+    //    std::vector<std::string> v_str;
+    //    
+    //    v_str.reserve(v.size());
+    //    
+    //    const auto fmt_str = [&] () {
+    //        if constexpr (std::is_integral<T>::value) {
+    //            return "{:+5}";
+    //        }
+    //        else if constexpr (std::is_floating_point<T>::value) {
+    //            return "{:+5.2}";
+    //        }
+    //        else {
+    //            return "{}";
+    //        }
+    //    }();
+
+    //    for (auto& e : v) {
+    //        v_str.push_back(std::format(fmt_str, e));
+    //    }
+    //    
+    //    return format_to(ctx.out(), "{}", v);
+    //}
+
+    auto format(const std::vector<T>& v, std::format_context& ctx) const {
+
+        std::string temp;
+
+        // std::format_to(std::back_inserter(temp), "{} - ", v.GetName());
+        std::format_to(std::back_inserter(temp), "{} - ", "Hans");
+
+        //for (const auto& elem : obj.GetValues()) {
+        //    std::format_to(std::back_inserter(temp), "{}, ", elem);
+        //}
+
+        for (const auto& elem : v) {
+            std::format_to(std::back_inserter(temp), "{}, ", elem);
         }
-        return format_to(ctx.out(), "{}", v);
+
+        return std::formatter<string_view>::format(temp, ctx);
     }
 };
 
@@ -67,21 +93,73 @@ namespace Formatting_Examples_Revised
     {
         std::vector<int> vec = { 1, 2, 3, 4, 5 };
         std::println("{}", vec);
-
-        //std::vector<double> v = { 1.324353, 4.432345 };
-        //std::print("{::+5.2}\n", v);
     }
 
     static void test_05()
     {
         int value{ 123 };
 
-        std::println("{}", value);         // 123
-        std::println("{0}", value);        // 123
-        std::println("{:10}", value);      //        123
-        std::println("!{:_<10}!", value);  // !123_______!
-        std::println("!{:_>10}!", value);  // !_______123!
+        std::println("{}", value);             // "123"
+        std::println("{0}", value);            // "123"
+        std::println("{:10}", value);          // "       123"
+        std::println("!{:_<10}!", value);      // "!123_______!"
+        std::println("!{:_>10}!", value);      // "!_______123!"
     }
+
+    static void test_06()
+    {
+        int value{ 123 };
+
+        std::println("{}", value);             // "123"
+        std::println("{:d}", value);           // "123"
+        std::println("{:010}", value);         // "0000000123"
+        std::println("{:010d}", value);        // "0000000123"
+        std::println("{:0}", value);           // "123"
+        std::println("{:+}", value);           // "+123"
+        std::println("{:+}", -value);          // "-123"
+        std::println("{:+10}", value);         // "      +123"
+        std::println("{:+10}", -value);        // "      -123"
+        std::println("{:+010}", value);        // "+000000123"
+        std::println("{:+010}", -value);       // "-000000123"
+    }
+
+    static void test_07()
+    {
+        float pi{ 3.1415926535f };
+
+        std::println("{}", pi);                // "3.1415927"
+        std::println("{0}", pi);               // "3.1415927"
+        std::println("{:15f}", pi);            // "       3.141593"    (width = 15)
+        std::println("{:{}f}", pi, 15);        // "       3.141593"    (width = 15)
+        std::println("{:.12f}", pi);           // "3.141592741013"     (precision = 12)
+        std::println("{:.{}f}", pi, 3);        // "3.142"              (precision = 3)
+        std::println("{:15.12f}", pi);         // " 3.141592741013"    (width = 15, precision = 12)
+        std::println("{:{}.{}f}", pi, 15, 12); // " 3.141592741013"    (width = 15, precision = 12)
+    }
+
+    static void test_08()
+    {
+        double pi{ 3.1415926535f };
+
+        std::println("{}", pi);                // "3.1415927"
+        std::println("{0}", pi);               // "3.1415927"
+        std::println("{:15g}", pi);            // "       3.141593"    (width = 15)
+        std::println("{:{}g}", pi, 15);        // "       3.141593"    (width = 15)
+        std::println("{:.12g}", pi);           // "3.141592741013"     (precision = 12)
+        std::println("{:.{}g}", pi, 3);        // "3.142"              (precision = 3)
+        std::println("{:15.12g}", pi);         // " 3.141592741013"    (width = 15, precision = 12)
+        std::println("{:{}.{}g}", pi, 15, 12); // " 3.141592741013"    (width = 15, precision = 12)
+    }
+
+    // Ganze Zahlen in unterschiedlichen Formaten
+    static void test_09()
+    {
+        std::println("Hexadecimal: {:x} {:x} {:X} {:#x} {:#X}", 6, 30, 30, 30, 30);
+        std::println("Octal:       {:o} {:#o} {:#o}", 12, 12, 4);
+        std::println("Binary:      {:b} {:#b} {:#B}", 15, 15, 5);
+    }
+
+
 
     // ===========================================================================
     // ===========================================================================
@@ -89,95 +167,9 @@ namespace Formatting_Examples_Revised
 
 
 
-    static void test_01b()
-    {
-        int age = 30;
-        std::string name{ "Hans" };
-
-        std::string result{
-            std::format("My name is {} and I'm {} years old", name, age)
-        };
-        std::cout << result << std::endl;
-    }
-
-    //static void test_01()
-    //{
-    //    //test_01a();
-    //    //test_01b();
-    //}
-
-    // Reihenfolge der Argumente definieren
-    static void test_02a(std::string_view format)
-    {
-        std::string_view one{ "One" };
-        std::string_view two{ "Two" };
-        std::string_view three{ "Three" };
-
-        // doesn't compile with the lastest C++ compiler version -  needs to be fixed
-         //std::string result = std::format(format, one, two, three);
-         //std::cout << result << std::endl;
-    }
-
-    static void test_02b(std::string_view format)
-    {
-        std::string_view one{ "One" };
-        std::string_view two{ "Two" };
-        std::string_view three{ "Three" };
-
-        // doesn't compile with the lastest C++ compiler version -  needs to be fixed
-        // std::string result = std::format(format, one, two, three);
-        // std::cout << result << std::endl;
-    }
-
-    static void test_02222()
-    {
-        std::string_view format1{ "{0}, {1}, {2}" };
-        test_02a(format1);
-
-        // doesn't compile with the lastest C++ compiler version -  needs to be fixed
-        // std::string_view format2{ "{2}, {1}, {0}" };
-        // test_02b(format2);
-    }
 
 
 
-    // from https://en.cppreference.com/w/cpp/utility/format/formatter#Standard_format_specification
-    static void test_04444()
-    {
-        float pi = 3.14f;
-        std::cout << std::format("{:10f}", pi) << std::endl;           // s1 = "  3.140000" (width = 10)
-        std::cout << std::format("{:{}f}", pi, 10) << std::endl;       // s2 = "  3.140000" (width = 10)
-        std::cout << std::format("{:.3f}", pi) << std::endl;           // s3 = "3.14000" (precision = 3)
-        std::cout << std::format("{:.{}f}", pi, 3) << std::endl;       // s4 = "3.14000" (precision = 3)
-        std::cout << std::format("{:10.5f}", pi) << std::endl;         // s5 = "   3.14000" (width = 10, precision = 5)
-        std::cout << std::format("{:{}.{}f}", pi, 10, 5) << std::endl; // s6 = "   3.14000" (width = 10, precision = 5)
-    }
-
-    // Ganze Zahlen in unterschiedlichen Formaten
-    static void test_05555()
-    {
-        std::cout << std::format("Decimal:     {} {:d} {:06} {:06d} {:0} {:+} {:+}", 1, 2, 3, 4, 5, 6, -7) << std::endl;
-        std::cout << std::format("Hexadecimal: {:x} {:x} {:X} {:#x}", 5, 10, 10, 5) << std::endl;
-        std::cout << std::format("Octal:       {:o} {:#o} {:#o}", 12, 12, 4) << std::endl;
-        std::cout << std::format("Binary:      {:b} {:#b} {:#B}", 15, 15, 5) << std::endl;
-    }
-
-    // Fließkommazahlen
-    static void test_06666()
-    {
-        std::cout << std::format("Default:     {} {:} {:g} {:g}", 1.5, 1.5, 1.5, 1e20) << std::endl;
-        std::cout << std::format("Rounding:    {:f} {:.0f} {:.20f}", 1.5, 1.5, 1.5) << std::endl;
-        std::cout << std::format("Padding:     {:05.2f} {:.2f} {:5.2f}", 1.5, 1.5, 1.5) << std::endl;
-        std::cout << std::format("Scientific:  {:E} {:e}", 1.5, 1.5) << std::endl;
-    }
-
-    static void test_0777()
-    {
-        std::cout << std::format("Default:     {} {:} {:g} {:g}", 1.5, 1.5, 1.5, 1e20) << std::endl;
-        std::cout << std::format("Rounding:    {:f} {:.0f} {:.20f}", 1.5, 1.5, 1.5) << std::endl;
-        std::cout << std::format("Padding:     {:05.2f} {:.2f} {:5.2f}", 1.5, 1.5, 1.5) << std::endl;
-        std::cout << std::format("Scientific:  {:E} {:e}", 1.5, 1.5) << std::endl;
-    }
 }
 
 // ===============================================================
@@ -302,12 +294,13 @@ void test_formatting_revised()
     //test_01();
     //test_02();
     //test_03();
-    test_04();
+    //test_04();
     //test_05();
-    //test_06();
+   // test_06();
+    //std::println("===============");
     //test_07();
     //test_08();
-    //test_09();
+    test_09();
 }
 
 // ===========================================================================
