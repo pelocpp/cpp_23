@@ -18,6 +18,11 @@ Typsicherheit, Erweiterbarkeit, Unterstützung von Unicode und Performanz sind
 einige der Stärken der neuen Funktionen std::print und  std::println,
 die große Ähnlichkeiten zu `printf` aufweisen.
 
+<img src="StdPrintln_02.png" width="500">
+
+*Abbildung* 1: Die Rangfolge der ersten zehn Programmiersprachen auf Basis des *TIOBE Programming Community Index* im Januar 2023.
+
+
 ---
 
 ## Dokumentation

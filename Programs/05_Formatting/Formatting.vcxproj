@@ -152,6 +152,9 @@
     <ClCompile Include="Formatting_REVISED.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="StdPrintln_02.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
