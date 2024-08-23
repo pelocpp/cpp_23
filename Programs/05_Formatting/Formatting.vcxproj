@@ -143,11 +143,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Readme.md" />
+    <None Include="Readme_02.md" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Formatting_01.cpp" />
     <ClCompile Include="Formatting_02.cpp" />
     <ClCompile Include="Formatting_03.cpp" />
+    <ClCompile Include="Formatting_REVISED.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

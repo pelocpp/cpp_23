@@ -5,10 +5,11 @@
 void test_formatting();
 void test_formatting_02();
 void test_formatting_03();
+void test_formatting_revised();
 
 int main()
 {
-    test_formatting_03();
+    test_formatting_revised();
     return 0;
 }
 
