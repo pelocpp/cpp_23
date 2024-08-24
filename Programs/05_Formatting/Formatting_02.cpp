@@ -121,42 +121,69 @@ namespace std
 
 namespace Formatting_Examples_Josuttis
 {
-    enum class MyColor { red, green, blue };
+    enum class Color { red, green, blue };
 }
 
 namespace std
 {
     using namespace Formatting_Examples_Josuttis;
 
-    //*** formatter for enum type Color:
+    // *** formatter for enum type Color:
     template<>
-    struct formatter<MyColor> : public std::formatter<std::string>
+    struct std::formatter<Color> : public std::formatter<std::string>
     {
-        auto format(MyColor c, format_context& ctx) const {
+        auto format(Color c, format_context& ctx) const {
             // initialize a string for the value:
-
-            std::string value{};
-
+            std::string value;
             switch (c) {
-                
-            case MyColor::red:
+             //   using enum Color;
+            case Color::red:
                 value = "red";
                 break;
-            case MyColor::green:
+            case Color::green:
                 value = "green";
                 break;
-            case MyColor::blue:
+            case Color::blue:
                 value = "blue";
                 break;
             default:
                 value = std::format("Color{}", static_cast<int>(c));
                 break;
             }
-
             // and delegate the rest of formatting to the string formatter:
             return std::formatter<std::string>::format(value, ctx);
         }
     };
+
+    //*** formatter for enum type Color:
+    //template<>
+    //struct formatter<MyColor> : public std::formatter<std::string>
+    //{
+    //    auto format(MyColor c, format_context& ctx) const {
+    //        // initialize a string for the value:
+
+    //        std::string value{};
+
+    //        switch (c) {
+    //            
+    //        case MyColor::red:
+    //            value = "red";
+    //            break;
+    //        case MyColor::green:
+    //            value = "green";
+    //            break;
+    //        case MyColor::blue:
+    //            value = "blue";
+    //            break;
+    //        default:
+    //            value = std::format("Color{}", static_cast<int>(c));
+    //            break;
+    //        }
+
+    //        // and delegate the rest of formatting to the string formatter:
+    //        return std::formatter<std::string>::format(value, ctx);
+    //    }
+    //};
 }
 
 //namespace std
@@ -270,10 +297,7 @@ namespace Formatting_Examples_Josuttis
 
     static void test_05()
     {
-        for (auto val : { MyColor::red, MyColor::green, MyColor::blue, MyColor{13} }) {
-            // use user-provided formatter for enum Color:
-            std::cout << std::format("Color {:>8} has value {:02}\n", val, static_cast<int>(val));
-        }
+
     }
 }
 
