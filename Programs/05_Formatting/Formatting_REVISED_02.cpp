@@ -14,11 +14,14 @@
 
 
 // #define StdFormatter_01_Basic_Formatter_API
-// #define StdFormatter_02_Parsing_Format_String
+#define StdFormatter_02_Parsing_Format_String
 // #define StdFormatter_03_Delegating_Formatting_to_Standard_Formatters
 // #define StdFormatter_04_Inheriting_From_Standard_Formatters
 // #define StdFormatter_05_Using_Standard_Formatters_for_Strings
-#define StdFormatter_06_Using_Standard_Formatters_for_StdVector
+// #define StdFormatter_06_Using_Standard_Formatters_for_StdVector
+// #define StdFormatter_07_Custom_Parsing_01
+// #define StdFormatter_07_Custom_Parsing_02
+// #define StdFormatter_07_Custom_Parsing_03
 
 namespace Formatting_Examples_Revised
 {
@@ -102,10 +105,10 @@ namespace std
                     throw std::format_error{ std::format("invalid format '{}'", *pos) };
                 }
 
-                m_width = m_width * 10 + *pos - '0'; // new digit for the width
+                m_width = m_width * 10 + (*pos - '0'); // new digit for the width
                 ++pos;
             }
-            return pos; // shpuld return position of '}'
+            return pos; // should return position of '}'
         }
 
         // format by always writing its value
@@ -300,7 +303,7 @@ namespace std
 
             std::string tmp{};
 
-            const auto fmt_str = [&] () {
+            const auto fmt_str = [&]() {
                 if constexpr (std::is_integral<T>::value) {
                     return "{:+5}";
                 }
@@ -310,7 +313,7 @@ namespace std
                 else {
                     return "{}";
                 }
-            }();
+                }();
 
             const auto header = [&]() {
 
@@ -332,7 +335,7 @@ namespace std
                 else {
                     return "std::vector<>";
                 }
-            }();
+                }();
 
             std::format_to(std::back_inserter(tmp), "{} - ", header);
 
@@ -341,7 +344,7 @@ namespace std
             std::for_each(
                 vec.begin(),
                 std::prev(vec.end()),
-                [&](const auto& elem){
+                [&](const auto& elem) {
                     std::format_to(std::back_inserter(tmp), "{}, ", elem);
                 }
             );
@@ -363,6 +366,152 @@ static void test()
 }
 
 #endif // StdFormatter_06_Using_Standard_Formatters_for_StdVector
+
+// ===========================================================================
+// ===========================================================================
+
+namespace Formatting_Examples_Revised
+{
+    class Color
+    {
+    private:
+        uint8_t m_red;
+        uint8_t m_green;
+        uint8_t m_blue;
+
+    public:
+        Color() : Color{ 0, 0, 0 } {}
+
+        Color(uint8_t red, uint8_t green, uint8_t blue)
+            : m_red{ red }, m_green{ green }, m_blue{ blue }
+        {}
+
+        uint8_t getRed() const { return m_red; }
+        uint8_t getGreen() const { return m_green; }
+        uint8_t getBlue() const { return m_blue; }
+    };
+}
+
+#ifdef StdFormatter_07_Custom_Parsing_01
+
+namespace std
+{
+    using namespace Formatting_Examples_Revised;
+
+    // formatter for class Color
+    template<>
+    struct std::formatter<Color> {
+        constexpr auto parse(std::format_parse_context& ctx) {
+            return ctx.begin();
+        }
+
+        auto format(const Color& col, std::format_context& ctx) const {
+
+            return
+                std::format_to(ctx.out(), "[{}, {}, {}]", col.getRed(), col.getGreen(), col.getBlue());
+        }
+    };
+}
+
+static void test()
+{
+    using namespace Formatting_Examples_Revised;
+
+    std::println("Color {}", Color{ 100, 200, 255 });
+}
+
+#endif // StdFormatter_07_Custom_Parsing_01
+
+// ===========================================================================
+// ===========================================================================
+
+#ifdef StdFormatter_07_Custom_Parsing_02
+
+namespace std
+{
+    using namespace Formatting_Examples_Revised;
+
+    // formatter for class Color
+    template<>
+    struct std::formatter<Color> : std::formatter<string_view>
+    {
+        auto format(const Color& col, std::format_context& ctx) const {
+
+            std::string tmp{};
+
+            std::format_to(std::back_inserter(tmp), "({}, {}, {})",
+                col.getRed(), col.getGreen(), col.getBlue());
+
+            return std::formatter<string_view>::format(tmp, ctx);
+        }
+    };
+}
+
+static void test()
+{
+    using namespace Formatting_Examples_Revised;
+
+    std::println("Color {}", Color{ 100, 200, 255 });
+    // std::println("col {:h}\n", Color{ 100, 200, 255 });
+}
+
+#endif // StdFormatter_07_Custom_Parsing_02
+
+// ===========================================================================
+// ===========================================================================
+
+#ifdef StdFormatter_07_Custom_Parsing_03
+
+namespace std
+{
+    using namespace Formatting_Examples_Revised;
+
+    // formatter for class Color
+    template <>
+    class std::formatter<Color>
+    {
+    private:
+        bool m_isHex;
+
+    public:
+        constexpr formatter() : m_isHex{ false } {}
+
+        constexpr auto parse(std::format_parse_context& ctx)
+        {
+            auto pos{ ctx.begin() };
+            while (pos != ctx.end() && *pos != '}') {
+                if (*pos == 'h' || *pos == 'H')
+                    m_isHex = true;
+                ++pos;
+            }
+
+            return pos; // should return position of '}'
+        }
+
+        auto format(const Color& col, std::format_context& ctx) const {
+
+            if (m_isHex) {
+                uint32_t val{ static_cast<uint32_t>(col.getRed() << 16 | col.getGreen() << 8 | col.getBlue()) };
+                return std::format_to(ctx.out(), "#{:X}", val);
+            }
+            else {
+                return std::format_to(ctx.out(), "[{}, {}, {}]", col.getRed(), col.getGreen(), col.getBlue());
+            }
+        };
+    };
+}
+
+static void test()
+{
+    using namespace Formatting_Examples_Revised;
+
+    Color color{ 100, 200, 255 };
+
+    std::println("Color {}", color);
+    std::println("Color {:h}\n", color);
+}
+
+#endif // StdFormatter_07_Custom_Parsing_03
 
 // ===========================================================================
 // ===========================================================================
