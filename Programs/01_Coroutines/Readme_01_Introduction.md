@@ -19,7 +19,7 @@ Ganz kurz und prägant:
 Zur Motivation von Coroutinen betrachten wir eine Funktion `getNumbers`:
 
 ```cpp
-01: static std::vector<int> getNumbers(int begin, int end)
+01: std::vector<int> getNumbers(int begin, int end)
 02: {
 03:     std::vector<int> numbers;
 04: 
