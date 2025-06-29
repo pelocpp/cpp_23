@@ -19,16 +19,16 @@ Ganz kurz und prägant:
 Zur Motivation von Coroutinen betrachten wir eine Funktion `getNumbers`:
 
 ```cpp
-std::vector<int> getNumbers(int begin, int end)
-{
-    std::vector<int> numbers;
-    
-    for (int i = begin; i <= end; ++i) {
-        numbers.push_back(i);
-    }
-
-    return numbers;
-}
+01: static std::vector<int> getNumbers(int begin, int end)
+02: {
+03:     std::vector<int> numbers;
+04: 
+05:     for (int i = begin; i <= end; ++i) {
+06:         numbers.push_back(i);
+07:     }
+08: 
+09:     return numbers;
+10: }
 ```
 
 Folgende Beobachtungen sind wichtig:
@@ -46,26 +46,26 @@ Mit Hilfe von Coroutinen könnten Sie eine Variation von  `getNumbers ` auf Basis
 umsetzen.
 
 ```cpp
-Generator generatorForNumbers(int begin, int end)
-{
-    for (int i = begin; i <= end; ++i) {
-        co_yield i;
-    }
-}
+01: Generator generatorForNumbers(int begin, int end)
+02: {
+03:     for (int i = begin; i <= end; ++i) {
+04:         co_yield i;
+05:     }
+06: }
 ```
 
 Eine Anwendung könnte nun so aussehen:
 
 ```cpp
-Generator coroutine = generatorForNumbers(1, 10);
-
-while (true) {
-
-    int value = coroutine.next();
-    if (value == -1) {
-        break;
-    }
-}
+01: Generator coroutine = generatorForNumbers(1, 10);
+02: 
+03: while (true) {
+04: 
+05:     int value = coroutine.next();
+06:     if (value == -1) {
+07:         break;
+08:     }
+09: }
 ```
 
 Diese beiden Code-Fragmente sind nicht unmittelbar übersetzungsfähig.
@@ -99,7 +99,7 @@ Daten, die zur Wiederaufnahme der Ausführung erforderlich sind, werden getrennt 
 Coroutinen eigen sich zur Implementierung von sequentiellem Code, der asynchron ausgeführt wird
 (z. B. um nicht blockierende E / A ohne explizite Rückrufe zu verarbeiten) und unterstützt auch Algorithmen für verzögert berechnete unendliche Sequenzen und andere Verwendungen.
 
-<img src="cpp_20_coroutine_vs_subroutine_02.svg" width="700">
+<img src="cpp_20_coroutine_vs_subroutine_02.svg" width="600">
 
 *Abbildung* 1: Subroutines (links) und Coroutines (rechts) im Vergleich.
 
@@ -167,37 +167,204 @@ Per Definition wird in C++ 20 eine Funktion als *Coroutine* bezeichnet, wenn
 Ein *Generator* stellt einen Datentyp für eine Coroutine dar, die eine Folge von Werten des Typs `T` erzeugt,
 wobei die Werte *on-demand* (*lazy*) und synchron (im Kontext der Coroutine) erzeugt werden.
 
+Bis zur Version 20 musste man diese Klasse selbst schreiben bzw. aus einer geeigneten Vorlage entnehmen und hinzufügen.
+
+Eine mögliche Vorlage findet man [hier](https://en.cppreference.com/w/cpp/coroutine/coroutine_handle.html).
+
+Ab C++ 23 findet man eine Vorlage in der C++ Standardklassenbibliothek vor.
+Dazu muss man nur noch die Dateien `<generator>` und `<coroutine>` inkludieren.
+
+Da es mich bei meinen ersten Schritten mit Coroutinen viel arbeitet gekostet hatte,
+eine Generator-Klasse selbst zu schreiben, will ich an dieser Stelle zumindest ihren Quellcode aufheben.
+Aber um es noch einmal zu verdeutlichen: Es dient nur noch illustrativen Zwecken!
+
+```cpp
+001: template<std::movable T>
+002: class Generator {
+003: public:
+004:     struct promise_type {
+005:         Generator<T> get_return_object() {
+006:             return Generator{ Handle::from_promise(*this) };
+007:         }
+008:         static std::suspend_always initial_suspend() noexcept {
+009:             return {};
+010:         }
+011:         static std::suspend_always final_suspend() noexcept {
+012:             return {};
+013:         }
+014:         std::suspend_always yield_value(T value) noexcept {
+015:             current_value = std::move(value);
+016:             return {};
+017:         }
+018:         void return_void() {}
+019: 
+020:         // Disallow co_await in generator coroutines.
+021:         void await_transform() = delete;
+022:         [[noreturn]]
+023:         static void unhandled_exception() {
+024:             throw;
+025:         }
+026: 
+027:         std::optional<T> current_value;
+028:     };
+029: 
+030:     using Handle = std::coroutine_handle<promise_type>;
+031: 
+032:     explicit Generator(const Handle coroutine) :
+033:         m_coroutine{ coroutine }
+034:     {}
+035: 
+036:     Generator() = default;
+037:     ~Generator() {
+038:         if (m_coroutine) {
+039:             m_coroutine.destroy();
+040:         }
+041:     }
+042: 
+043:     Generator(const Generator&) = delete;
+044:     Generator& operator=(const Generator&) = delete;
+045: 
+046:     Generator(Generator&& other) noexcept :
+047:         m_coroutine{ other.m_coroutine }
+048:     {
+049:         other.m_coroutine = {};
+050:     }
+051:     Generator& operator=(Generator&& other) noexcept {
+052:         if (this != &other) {
+053:             if (m_coroutine) {
+054:                 m_coroutine.destroy();
+055:             }
+056:             m_coroutine = other.m_coroutine;
+057:             other.m_coroutine = {};
+058:         }
+059:         return *this;
+060:     }
+061: 
+062:     // Range-based for loop support.
+063:     class Iter {
+064:     public:
+065:         void operator++() {
+066:             m_coroutine.resume();
+067:         }
+068:         const T& operator*() const {
+069:             return *m_coroutine.promise().current_value;
+070:         }
+071:         bool operator==(std::default_sentinel_t) const {
+072:             return !m_coroutine || m_coroutine.done();
+073:         }
+074: 
+075:         explicit Iter(const Handle coroutine) :
+076:             m_coroutine{ coroutine }
+077:         {}
+078: 
+079:     private:
+080:         Handle m_coroutine;
+081:     };
+082: 
+083:     Iter begin() {
+084:         if (m_coroutine) {
+085:             m_coroutine.resume();
+086:         }
+087:         return Iter{ m_coroutine };
+088:     }
+089:     std::default_sentinel_t end() {
+090:         return {};
+091:     }
+092: 
+093: private:
+094:     Handle m_coroutine;
+095: };
+096: 
+097: template<std::integral T>
+098: Generator<T> range(T first, const T last) {
+099:     while (first < last) {
+100:         co_yield first++;
+101:     }
+102: }
+```
+
+---
+
+## Ein &bdquo;Hello World&rdquo;-Beispiel
+
+*Beispiel*:
+
+```cpp
+01: std::generator<char> hello() {
+02:     co_yield 'h';
+03:     co_yield 'e';
+04:     co_yield 'l';
+05:     co_yield 'l';
+06:     co_yield 'o';
+07:     co_return;
+08: }
+```
+
+*Aufruf*:
+
+
+```cpp
+01: void simple_coroutine() {
+02: 
+03:     for (auto ch : hello()) {
+04:         std::println("{}", ch);
+05:     }
+06: }
+```
+
+*Ausgabe*:
+
+```
+h
+e
+l
+l
+o
+```
+
+
+---
 
 ## Ein Beispiel für Fibonacci-Zahlen
 
 *Beispiel*:
 
 ```cpp
-Generator<long long> fibonacci() {
-    long long a = 0;
-    long long b = 1;
-    while (true) {
-        co_yield b;
-        auto tmp = a;
-        a = b;
-        b += tmp;
-    }
-}
+01: std::generator<long long> fibonacci() {
+02:     long long a = 0;
+03:     long long b = 1;
+04:     while (true) {
+05:         co_yield b;
+06:         auto tmp = a;
+07:         a = b;
+08:         b += tmp;
+09:     }
+10: }
 ```
+
+Der Rückgabetyp der Generator-Funktion `fibonacci` muss den *Coroutine*-Anforderungen entsprechen.
+
+Ferner muss die Coroutine mindestens ein Coroutine-Schlüsselwort verwenden, in unserem Beispiel ist es `co_yield`.
+
 
 *Anwendung*:
 
-Man beachte bei diesem Beispiel, dass es sich bei der Generator-Funktion um einen so genannten *unendlichen* Generator
+Man beachte bei diesem Beispiel, dass es sich bei der Generator-Funktion `fibonacci` um einen so genannten *unendlichen* Generator
 handelt. Es obliegt folglich der Anwendung, für einen kontrollierten Abbruch zu sorgen. 
 Natürlich könnte man einen Generator auch so implementieren, dass es nur endlich viele Werte erzeugt.
 
 ```cpp
-for (auto i : fibonacci()) {
-    if (i > 1'000'000)
-        break;
-
-    std::cout << i << std::endl;
-}
+01: void simple_coroutine() {
+02: 
+03:     for (auto i : fibonacci()) {
+04:         if (i > 1'000'000)
+05:             break;
+06: 
+07:         std::cout << i << std::endl;
+08:     }
+09: 
+10:     std::cout << std::endl;
+11: }
 ```
 
 *Ausgabe*:
