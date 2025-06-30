@@ -185,7 +185,7 @@ Damit könnte es zu Problemen beim Kopieren eines Coroutinen-Anwenderobjekts komm
 Das Kopieren eines Coroutinen-Objekts ist kein abwegiger Gedanke, da dieses im Regelfall Anwenderdaten besitzt (berechnet, verwaltet ...)
 und damit auch kopiert werden können sollte. Die Frage ist nur, mit welchem Verhalten (*Behaviour*): *Copy-Semantics* oder *Move-Semantics*?
 Sie sind auf der sicheren Seite, wenn Sie sich für das Verhalten *move-only* entscheiden.
-Betrachten Sie damit die folgenden exemplarische Implementierung:
+Betrachten Sie damit die folgende exemplarische Implementierung:
 
 <pre>
 01: Generator(const Generator&) = delete;

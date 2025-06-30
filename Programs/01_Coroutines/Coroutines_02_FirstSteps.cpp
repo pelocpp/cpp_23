@@ -2,6 +2,17 @@
 // Coroutines_02_FirstSteps.cpp
 // ===========================================================================
 
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
+
 #include <coroutine>
 #include <memory>
 #include <print>
@@ -85,10 +96,6 @@ namespace Coroutines_FirstSteps
         std::println("{}", coroutine.next());
         std::println("{}", coroutine.next());
         std::println();
-
-        //std::cout << coroutine.next() << std::endl;
-        //std::cout << coroutine.next() << std::endl;
-        //std::cout << std::endl;
     }
 
     static void coroutines_hello_world_02()
@@ -96,7 +103,6 @@ namespace Coroutines_FirstSteps
         auto coroutine = generator();
         std::string s{};
         while ((s = coroutine.next()) != std::string{}) {
-            // std::cout << s << std::endl;
             std::println("{}", s);
         }
     }
@@ -192,22 +198,27 @@ namespace Coroutines_CustomImplementation
 {
     struct RoutinePromise;
 
-    struct Routine {
-        // The return type has to contain a promise_type
+    struct Routine
+    {
+        // type has to contain a 'promise_type' definition
         using promise_type = RoutinePromise;
     };
 
-    struct RoutinePromise {
+    struct RoutinePromise
+    {
         // This function is used to create the instance
         // of the return type for the caller
         Routine get_return_object() { return {}; }
 
         // What should happen before the coroutine body starts
         std::suspend_never initial_suspend() noexcept { return {}; }
+
         // What should happen after the coroutine body has finished
         std::suspend_never final_suspend() noexcept { return {}; }
+
         // What should happen when the coroutine executes co_return;
         void return_void() {}
+
         // What should happen when there is an unhandled exception
         void unhandled_exception() {}
     };
@@ -231,12 +242,14 @@ namespace Coroutines_CustomImplementation
 
 void coroutines_02()
 {
-    //using namespace Coroutines_FirstSteps;
-    //coroutines_hello_world_01();
-    //coroutines_hello_world_02();
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    //using namespace Coroutines_Exercise;
-    //coroutines_exercise();
+    using namespace Coroutines_FirstSteps;
+    coroutines_hello_world_01();
+    coroutines_hello_world_02();
+
+    using namespace Coroutines_Exercise;
+    coroutines_exercise();
 
     using namespace Coroutines_CustomImplementation;
     coroutines_custom_implementation();

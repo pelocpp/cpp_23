@@ -21,9 +21,9 @@ Diese recht einfache Aussage lässt sich etwas präzisieren:
 
 Eine Funktion ist eine Coroutine, wenn ihre Definition eine der folgenden Aktionen ausführt:
 
-  1. verwendet den `co_await` Operator, um die Ausführung der Funktion zu unterbrechen (*suspend*) ...
-  2. verwendet das Schlüsselwort `co_yield`, um die Ausführung der Funktion zu unterbrechen (*suspend*) und um einen Wert zurückgeben ...
-  3. verwendet das Schlüsselwort `co_return`, um die Ausführung abzuschließen und um einen Wert zurückzugeben ...
+  1. verwendet den `co_await` Operator, um die Ausführung der Funktion zu unterbrechen (*suspend*) oder
+  2. verwendet das Schlüsselwort `co_yield`, um die Ausführung der Funktion zu unterbrechen (*suspend*) und um einen Wert zurückgeben oder
+  3. verwendet das Schlüsselwort `co_return`, um die Ausführung abzuschließen und um bei Bedarf einen Wert zurückzugeben.
 
 
 ## Vorab: Eine Coroutine ist keine C-Funktion
@@ -65,11 +65,13 @@ Zum Zweiten erkennen wir, dass ein Rückgabetyp &ndash; hier der exemplarische Ty
 in Erscheinung tritt, und das, obwohl `coroutine()` keine `return`-Anweisung enthält &ndash; 
 und per Definition auch nicht enthalten kann.
 
+In *Abbildung* 1 stellen wir den Ablauf zur Laufzeit einer Funktion und einer Coroutine exemplarisch gegenüber:
+
 <img src="C20_Coroutine_vs_Function.png" width="700">
 
-*Abbildung* 2: Coroutinen können sich suspendieren.
+*Abbildung* 1: Coroutinen können sich suspendieren und liefern mehrere Werte zurück.
 
-Der Compiler ordnet diesen Codeblock neu an, um den Coroutinen-Mechanismus mit seinem
+Der Compiler ordnet den Anweisungsblock einer Coroutine neu an, um den Coroutinen-Mechanismus mit seinem
 *Save*- und *Restore*-Anweisungen auszurollen. Diese werden unter anderem durch 
 die beiden Schlüsselwörter `co_yield` und `co_return` beeinflusst.
 Grob könnte man dieses Umordnen vom Übersetzer so skizzieren:
@@ -84,6 +86,7 @@ Generator coroutine() {
     co_await <b>__context</b> -> <b>_promise</b>.initial_suspend();
 
     co_yield "Hello";
+
     co_yield "World";
 
 __final_suspend_label:
@@ -106,20 +109,20 @@ std::cout << client.next();
 std::cout << client.next();
 ```
 
-Sobald wir alle zwei via `co_yield` verfügbaren Werte verbraucht haben,
+Sobald wir alle zwei via `co_yield` verfügbaren Werte konsumiert haben,
 wird die Coroutine beendet und der gesamte Speicher freigegeben,
 der zum Speichern des Coroutinen-Zustands verwendet wurde.
 
 Das Zusammenspiel zwischen `co_yield` (Coroutine / Produzent) und `next` (Anwendung / Konsument)
 kann exakter so beschrieben werden:
 
-1. den aktuellen Client-Code suspendieren (Konsument)
-2. den Zustand der Coroutine wiederherstellen (Produzent)
-3. den Coroutinen-Code ab der letzten `co_yield`-Anweisung fortsetzen
-4. speichern des Werts der nächsten `co_yield`-Anweisung
-5. den Coroutinen-Zustand abspeichern (Produzent)
-6. den Zustand des Client-Codes wiederherstellen (Konsument)
-7. den Client-Code fortsetzen, indem diesem der gespeicherte Wert aus der `co_yield`-Anweisung zugeführt wird
+1. Den aktuellen Client-Code suspendieren (Konsument).
+2. Den Zustand der Coroutine wiederherstellen (Produzent).
+3. Den Coroutinen-Code ab der letzten `co_yield`-Anweisung fortsetzen.
+4. Speichern des Werts der nächsten `co_yield`-Anweisung.
+5. Den Coroutinen-Zustand abspeichern (Produzent).
+6. Den Zustand des Client-Codes wiederherstellen (Konsument).
+7. Den Client-Code fortsetzen, indem diesem der gespeicherte Wert aus der `co_yield`-Anweisung zugeführt wird.
 
 
 ## Der C++ *Coroutine Framework* 
@@ -157,7 +160,7 @@ dass wir zwei miteinander verbundene, unterstützende Klassen bereitstellen:
   * eine Klasse zur Verwaltung des Coroutinen-(Promise-)Objekts &ndash; das ist die *Generator*-Klasse.
 
 Im *Promise*-Objekt sind die Lebenszyklusmethoden einer Coroutine bereitzustellen.
-
+Hierauf kommen wir noch zu sprechen.
 
 ### Das *Promise*-Objekt
 
@@ -188,13 +191,15 @@ std::suspend_always yield_value(std::string value) {
 
 Die `return`-Anweisung entspricht &ldquo;Modern C++&rdquo;:
 `return {}` bedeutet einfach, ein Objekt des Rückgabetyps (Standard-Konstruktor)
-für diese Methode zu erstellen. Man könnte auch
+zu erstellen. Man könnte auch
 
 ```cpp
 return std::suspend_always{}
 ```
 
 schreiben.
+
+Es folgt eine exemplarische Realisierung eines *Promise*-Objekts.
 
 ---
 
@@ -228,7 +233,11 @@ schreiben.
 25: };
 ```
 
-### Beispielquellcode: Der Generator
+Bis zur Zeile 24 dürfte grob gesehen aller klar sein.
+In Zeile 24 tritt eine Klasse `Generator` in Erscheinung.
+
+
+### Beispiel: Der Generator
 
 ```cpp
 01: class Generator
@@ -264,7 +273,7 @@ schreiben.
 31: }
 ```
 
-### Beispielquellcode: Die Coroutine
+### Beispiel: Die Coroutine
 
 ```cpp
 01: // coroutine
@@ -299,61 +308,64 @@ aufsteigende, ganze Zahlen zu implementieren?
 
 Im zweiten Beispiel wollen wir die Konzepte aus dem ersten Beispiel etwas anders anordnen.
 
-Zu diesem Zweck erstellen wir eine benutzerdefinierte Coroutine und betrachten dabei zwei Hauptteile:
+Zu diesem Zweck erstellen wir erneut eine benutzerdefinierte Coroutine und betrachten dabei zwei Hauptteile:
 
-  * den Promise-Typ: Die allgemeine Beschreibung des Coroutine-Verhaltens.
-  * die *awaitable* Typen: Steuerung der Mechanismen auf einer niedrigeren Ebene, wie Coroutine anhalten und fortsetzen.
+  * den *Promise*-Datentyp: Die allgemeine Beschreibung des Coroutine-Verhaltens.
+  * die *Awaitable* Datentyp: Steuerung der Mechanismen auf einer niedrigeren Ebene, wie Coroutine anhalten und fortsetzen.
 
 
 ```cpp
 01: struct RoutinePromise;
 02: 
-03: struct Routine {
-04:     // The return type has to contain a promise_type
+03: struct Routine
+04: {
 05:     using promise_type = RoutinePromise;
 06: };
 07: 
-08: struct RoutinePromise {
-09:     // This function is used to create the instance
-10:     // of the return type for the caller
-11:     Routine get_return_object() { return {}; }
-12: 
-13:     // What should happen before the coroutine body starts
-14:     std::suspend_never initial_suspend() noexcept { return {}; }
-15:     // What should happen after the coroutine body has finished
-16:     std::suspend_never final_suspend() noexcept { return {}; }
-17:     // What should happen when the coroutine executes co_return;
-18:     void return_void() {}
-19:     // What should happen when there is an unhandled exception
-20:     void unhandled_exception() {}
-21: };
+08: struct RoutinePromise
+09: {
+10:     Routine get_return_object() { return {}; }
+11: 
+12:     std::suspend_never initial_suspend() noexcept { return {}; }
+13:     std::suspend_never final_suspend() noexcept { return {}; }
+14:     void return_void() {}
+15:     void unhandled_exception() {}
+16: };
 ```
 
 Auf folgende wichtige Stellen wollen wir hinweisen:
 
-  * Zeile XXX: Definition des Promise-Typs `promise_type`, in unserem Fall die Klasse `RoutinePromise`
+  * Zeile 5: Definition des Promise-Typs `promise_type`, in unserem Fall die Klasse `RoutinePromise`.
 
-Die drei Anpassungspunkte (*Customization Points*), die wir jetzt berücksichtigen müssen,
+Die zwei Anpassungspunkte (*Customization Points*), die wir jetzt berücksichtigen müssen,
 sind `initial_suspend()` und `final_suspend()`.
-Beide Funktionen geben einen *awaitable* Typ zurück (auf den wir später noch eingehen werden).
+Beide Funktionen geben einen *Awaitable* Typ zurück (auf den wir später noch eingehen werden).
 
-  * Zeile XXX: `initial_suspend()` wird unmittelbar vor dem Start des Rumpfes der Coroutine aufgerufen,
-  * Zeile XXX: `final_suspend()` unmittelbar nach dessen Beendigung.
+  * Zeile 12: `initial_suspend()` wird unmittelbar vor dem Start des Rumpfes der Coroutine aufgerufen,
+  * Zeile 13: `final_suspend()` unmittelbar nach dessen Beendigung.
 
+Die drei Hauptverhaltensweisen (*Behaviours*),
+die mit einem *Awaitable* Typ modelliert werden können, sind:
 
-WEITER WEITER 
+  * Die Coroutine läuft weiter.
+  * Die Steuerung wird an den Aufrufer (oder den letzten *Resumer*) zurückgegeben.
+  * Die Steuerung wird an eine andere Coroutine übergeben.
 
-https://simontoth.substack.com/p/daily-bite-of-c-coroutines-step-by
+Der Standard definiert zwei *Awaitable* Datentypen vor: `std::suspend_never` (die Coroutine läuft weiter) und `std::suspend_always` (die Steuerung kehrt zum Aufrufer zurück).
 
+Im Falle unseres einfachen Beispiels, wo die Coroutine den Charakter einer gewöhnlichen Funktion haben soll,
+wollen wir, dass die Coroutine bis zu ihrer Beendigung weiterläuft.
 
-Die drei Hauptverhaltensweisen, die mit einem erwartbaren Typ modelliert werden können, sind:
+Deshalb verwenden wir `std::suspend_never` sowohl für den ersten Anpassungspunkte (`initial_suspend()`) als auch den zweiten (`final_suspend()`).
 
-Die Coroutine läuft weiter.
+*Bemerkung*:<br />
+Wenn Sie das erste und zweite Beispiel vergleichen, stellen Sie fest,
+dass die beiden Methoden `initial_suspend` und `final_suspend` unterschiedlich realisiert sind:
+Sie haben einen unterschiedlichen Rückgabetyp.
 
-Die Steuerung wird an den Aufrufer (oder den letzten Wiederaufnehmer) zurückgegeben.
-
-Die Steuerung wird an eine andere Coroutine übergeben.
-
+Aus diesem Grund sind die Anwendungsprogramme unterschiedlich:
+Im ersten Fall muss der Client mit einem Aufruf von `resume` die Coroutine explizit wieder anstoßen,
+im zweiten Beispiel ist dies nicht notwendig!
 
 
 ## Literaturhinweise:
@@ -367,3 +379,8 @@ von Martin Bond.
 [Zurück](Readme.md)
 
 ---
+
+
+WEITER WEITER 
+
+https://simontoth.substack.com/p/daily-bite-of-c-coroutines-step-by

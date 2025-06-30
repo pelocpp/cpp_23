@@ -34,5 +34,3 @@ die bereits fest in den C++ 20 Standard eingeflossen sind.
 ## [Literatur](Literature.md)
 
 ---
-
-

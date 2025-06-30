@@ -1,6 +1,6 @@
 # Literatur zu C++ 20
 
-[Zurück](Readme.md)
+[Zurück](../Readme.md)
 
 ---
 
@@ -28,6 +28,6 @@
 
 ---
 
-[Zurück](Readme.md)
+[Zurück](../Readme.md)
 
 ---
