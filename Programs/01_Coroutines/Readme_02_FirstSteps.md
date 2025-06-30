@@ -295,6 +295,66 @@ Wie müssen Sie den Quellcode für den &ldquo;Hello World&rdquo;-Generator umschre
 um die in der Einleitung skizzierte Idee eines &ldquo;Lazy&rdquo;-Generators für
 aufsteigende, ganze Zahlen zu implementieren?
 
+## Ein zweites Beispiel
+
+Im zweiten Beispiel wollen wir die Konzepte aus dem ersten Beispiel etwas anders anordnen.
+
+Zu diesem Zweck erstellen wir eine benutzerdefinierte Coroutine und betrachten dabei zwei Hauptteile:
+
+  * den Promise-Typ: Die allgemeine Beschreibung des Coroutine-Verhaltens.
+  * die *awaitable* Typen: Steuerung der Mechanismen auf einer niedrigeren Ebene, wie Coroutine anhalten und fortsetzen.
+
+
+```cpp
+01: struct RoutinePromise;
+02: 
+03: struct Routine {
+04:     // The return type has to contain a promise_type
+05:     using promise_type = RoutinePromise;
+06: };
+07: 
+08: struct RoutinePromise {
+09:     // This function is used to create the instance
+10:     // of the return type for the caller
+11:     Routine get_return_object() { return {}; }
+12: 
+13:     // What should happen before the coroutine body starts
+14:     std::suspend_never initial_suspend() noexcept { return {}; }
+15:     // What should happen after the coroutine body has finished
+16:     std::suspend_never final_suspend() noexcept { return {}; }
+17:     // What should happen when the coroutine executes co_return;
+18:     void return_void() {}
+19:     // What should happen when there is an unhandled exception
+20:     void unhandled_exception() {}
+21: };
+```
+
+Auf folgende wichtige Stellen wollen wir hinweisen:
+
+  * Zeile XXX: Definition des Promise-Typs `promise_type`, in unserem Fall die Klasse `RoutinePromise`
+
+Die drei Anpassungspunkte (*Customization Points*), die wir jetzt berücksichtigen müssen,
+sind `initial_suspend()` und `final_suspend()`.
+Beide Funktionen geben einen *awaitable* Typ zurück (auf den wir später noch eingehen werden).
+
+  * Zeile XXX: `initial_suspend()` wird unmittelbar vor dem Start des Rumpfes der Coroutine aufgerufen,
+  * Zeile XXX: `final_suspend()` unmittelbar nach dessen Beendigung.
+
+
+WEITER WEITER 
+
+https://simontoth.substack.com/p/daily-bite-of-c-coroutines-step-by
+
+
+Die drei Hauptverhaltensweisen, die mit einem erwartbaren Typ modelliert werden können, sind:
+
+Die Coroutine läuft weiter.
+
+Die Steuerung wird an den Aufrufer (oder den letzten Wiederaufnehmer) zurückgegeben.
+
+Die Steuerung wird an eine andere Coroutine übergeben.
+
+
 
 ## Literaturhinweise:
 

@@ -1,12 +1,12 @@
 // ===========================================================================
-// Coroutines09_Scratch.cpp
+// Coroutines_02_FirstSteps.cpp
 // ===========================================================================
 
-#include <iostream>
-#include <string>
-#include <vector>
 #include <coroutine>
 #include <memory>
+#include <print>
+#include <string>
+#include <vector>
 
 namespace Coroutines_FirstSteps
 {
@@ -71,28 +71,33 @@ namespace Coroutines_FirstSteps
     }
 
     // coroutine
-    Generator generator()
+    static Generator generator()
     {
         co_yield std::string{ "Hello " };
         co_yield std::string{ "World" };
         co_return;
     }
 
-    void coroutines_hello_world_01()
+    static void coroutines_hello_world_01()
     {
         auto coroutine = generator();
 
-        std::cout << coroutine.next() << std::endl;
-        std::cout << coroutine.next() << std::endl;
-        std::cout << std::endl;
+        std::println("{}", coroutine.next());
+        std::println("{}", coroutine.next());
+        std::println();
+
+        //std::cout << coroutine.next() << std::endl;
+        //std::cout << coroutine.next() << std::endl;
+        //std::cout << std::endl;
     }
 
-    void coroutines_hello_world_02()
+    static void coroutines_hello_world_02()
     {
         auto coroutine = generator();
         std::string s{};
         while ((s = coroutine.next()) != std::string{}) {
-            std::cout << s << std::endl;
+            // std::cout << s << std::endl;
+            std::println("{}", s);
         }
     }
 }
@@ -160,14 +165,14 @@ namespace Coroutines_Exercise
     }
 
     // coroutine
-    Generator generatorForNumbers(int begin, int end)
+    static Generator generatorForNumbers(int begin, int end)
     {
         for (int i = begin; i <= end; ++i) {
             co_yield i;
         }
     }
 
-    void coroutines_exercise()
+    static void coroutines_exercise()
     {
         Generator coroutine = generatorForNumbers(1, 10);
 
@@ -177,7 +182,48 @@ namespace Coroutines_Exercise
             if (value == -1) {
                 break;
             }
+
+            std::println("{}", value);
         }
+    }
+}
+
+namespace Coroutines_CustomImplementation
+{
+    struct RoutinePromise;
+
+    struct Routine {
+        // The return type has to contain a promise_type
+        using promise_type = RoutinePromise;
+    };
+
+    struct RoutinePromise {
+        // This function is used to create the instance
+        // of the return type for the caller
+        Routine get_return_object() { return {}; }
+
+        // What should happen before the coroutine body starts
+        std::suspend_never initial_suspend() noexcept { return {}; }
+        // What should happen after the coroutine body has finished
+        std::suspend_never final_suspend() noexcept { return {}; }
+        // What should happen when the coroutine executes co_return;
+        void return_void() {}
+        // What should happen when there is an unhandled exception
+        void unhandled_exception() {}
+    };
+
+    static void coroutines_custom_implementation()
+    {
+        auto coro = [] -> Routine {
+            std::println("Running...");
+            co_return;
+        };
+
+        auto x = coro(); // coroutine starts and runs to completion
+        // decltype(x) == Routine
+        static_assert(std::is_same_v<decltype(x), Routine>);
+
+        coro(); // Because the return type is empty, this is the same as above
     }
 }
 
@@ -185,12 +231,15 @@ namespace Coroutines_Exercise
 
 void coroutines_02()
 {
-    using namespace Coroutines_FirstSteps;
+    //using namespace Coroutines_FirstSteps;
     //coroutines_hello_world_01();
-    coroutines_hello_world_02();
+    //coroutines_hello_world_02();
 
-    using namespace Coroutines_Exercise;
+    //using namespace Coroutines_Exercise;
     //coroutines_exercise();
+
+    using namespace Coroutines_CustomImplementation;
+    coroutines_custom_implementation();
 }
 
 // ===========================================================================
