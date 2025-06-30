@@ -28,7 +28,7 @@ Eine Funktion ist eine Coroutine, wenn ihre Definition eine der folgenden Aktion
 
 ## Vorab: Eine Coroutine ist keine C-Funktion
 
-Wollten wir eines der Coroutinen-Schlüsselwörter im Kontext einer &ldquo;normalen&rdquo; C/C++&ndash;Funktion
+Wollten wir eines der Coroutinen-Schlüsselwörter im Kontext einer &bdquo;normalen&rdquo; C/C++&ndash;Funktion
 verwenden, erhalten wir ein nicht übersetzungsfähiges C++-Programm:
 
 <pre>
@@ -189,7 +189,7 @@ std::suspend_always yield_value(std::string value) {
 }
 ```
 
-Die `return`-Anweisung entspricht &ldquo;Modern C++&rdquo;:
+Die `return`-Anweisung entspricht &bdquo;Modern C++&rdquo;:
 `return {}` bedeutet einfach, ein Objekt des Rückgabetyps (Standard-Konstruktor)
 zu erstellen. Man könnte auch
 
@@ -300,8 +300,8 @@ In Zeile 24 tritt eine Klasse `Generator` in Erscheinung.
 
 ## Übung:
 
-Wie müssen Sie den Quellcode für den &ldquo;Hello World&rdquo;-Generator umschreiben,
-um die in der Einleitung skizzierte Idee eines &ldquo;Lazy&rdquo;-Generators für
+Wie müssen Sie den Quellcode für den &bdquo;Hello World&rdquo;-Generator umschreiben,
+um die in der Einleitung skizzierte Idee eines &bdquo;Lazy&rdquo;-Generators für
 aufsteigende, ganze Zahlen zu implementieren?
 
 ## Ein zweites Beispiel
@@ -310,8 +310,8 @@ Im zweiten Beispiel wollen wir die Konzepte aus dem ersten Beispiel etwas anders
 
 Zu diesem Zweck erstellen wir erneut eine benutzerdefinierte Coroutine und betrachten dabei zwei Hauptteile:
 
-  * den *Promise*-Datentyp: Die allgemeine Beschreibung des Coroutine-Verhaltens.
-  * die *Awaitable* Datentyp: Steuerung der Mechanismen auf einer niedrigeren Ebene, wie Coroutine anhalten und fortsetzen.
+  * den *Promise*-Datentyp: Die allgemeine Beschreibung des Coroutinen-Verhaltens.
+  * die *Awaitable* Datentypen: Steuerung der Mechanismen auf einer niedrigeren Ebene, wie Coroutine anhalten und fortsetzen.
 
 
 ```cpp
@@ -367,20 +367,17 @@ Aus diesem Grund sind die Anwendungsprogramme unterschiedlich:
 Im ersten Fall muss der Client mit einem Aufruf von `resume` die Coroutine explizit wieder anstoßen,
 im zweiten Beispiel ist dies nicht notwendig!
 
-
 ## Literaturhinweise:
 
-Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Artikel
-&ldquo;[C++20 Coroutines](https://blog.feabhas.com/2021/09/c20-coroutines/#Promise_data_holder)&rdquo;
+Die Anregungen zum ersten Beispiel stammen zum großen Teil aus dem Artikel
+&bdquo;[C++20 Coroutines](https://blog.feabhas.com/2021/09/c20-coroutines/#Promise_data_holder)&rdquo;
 von Martin Bond.
+
+Das zweite Beispiel ist dem Artikel &bdquo;[Daily bit(e) of C++ | Coroutines: step by step](https://simontoth.substack.com/p/daily-bite-of-c-coroutines-step-by)&rdquo;
+von Simon Toth entnommen worden.
 
 ---
 
 [Zurück](Readme.md)
 
 ---
-
-
-WEITER WEITER 
-
-https://simontoth.substack.com/p/daily-bite-of-c-coroutines-step-by
