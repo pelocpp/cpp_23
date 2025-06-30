@@ -94,7 +94,7 @@ Für die Ansicht `std::views::inner_product` gibt es alternativ den STL-Algorithm
 
 ---
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Gute Beispiele zu Ranges und Views findet man unter
 

@@ -700,7 +700,7 @@ Finish homework: Priority: 5
 
 ---
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zu den Beispielen stammen zum groﬂen Teil aus dem Buch
 

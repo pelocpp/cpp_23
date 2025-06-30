@@ -163,7 +163,7 @@ Buzz
 ---
 
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zu dem Beispiel stammen zum großen Teil aus dem Artikel
 

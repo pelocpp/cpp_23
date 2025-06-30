@@ -227,7 +227,7 @@ Ich schließe diese einführenden Erläuterungen mit folgenden ergänzenden Bemerkun
 
 ---
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zu den Beispielen stammen aus
 

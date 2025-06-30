@@ -338,7 +338,7 @@ Done.
 
 ---
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Artikel
 

@@ -114,7 +114,7 @@ Tabelle 1.  C++&ndash;Beziehungsstärken und verfügbare Operatoren.
 ---
 
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Interessante Informationen und Beschreibungen des *Spaceship*-Operators finden sich zum Beispiel hier vor:
 

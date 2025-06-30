@@ -275,7 +275,7 @@ HelloWorldCoro printHelloWorldEx() {
 ---
 
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zu den Beispielen stammen zum groﬂen Teil aus dem Artikel
 

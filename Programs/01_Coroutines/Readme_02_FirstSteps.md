@@ -367,7 +367,7 @@ Aus diesem Grund sind die Anwendungsprogramme unterschiedlich:
 Im ersten Fall muss der Client mit einem Aufruf von `resume` die Coroutine explizit wieder anstoﬂen,
 im zweiten Beispiel ist dies nicht notwendig!
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zum ersten Beispiel stammen zum groﬂen Teil aus dem Artikel
 &bdquo;[C++20 Coroutines](https://blog.feabhas.com/2021/09/c20-coroutines/#Promise_data_holder)&rdquo;

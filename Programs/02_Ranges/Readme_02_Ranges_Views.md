@@ -872,7 +872,7 @@ das möglicherweise zerstört wurde. Zu weiteren Informationen verweise ich auf di
 ---
 
 
-## Literaturhinweise: 
+## Literaturhinweise
 
 Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Buch
 

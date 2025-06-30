@@ -314,7 +314,7 @@ C. Als so genannter *Constrained Template Parameter*:
 ---
 
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zu den Beispielen stammen aus einem Blog von *Sandor Dargo*:
 

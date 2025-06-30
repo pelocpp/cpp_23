@@ -12,7 +12,7 @@ To be Done.
 
 ---
 
-## Literaturhinweise:
+## Literaturhinweise
 
 ---
 

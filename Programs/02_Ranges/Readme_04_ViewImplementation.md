@@ -15,7 +15,7 @@ von Andreas Fertig.
 
 ---
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Folgende WebSites erläutern, wie man eine *View* selbst implementieren kann:
 

@@ -117,7 +117,7 @@ die im Hauptteil eines Funktions-Templates verwendet werden:
 ---
 
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zu den Beispielen stammen aus einem Blog von *Marius Bancila*:
 

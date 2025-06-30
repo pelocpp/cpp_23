@@ -437,7 +437,7 @@ Lorem-ipsum-dolor-sit-amet
 
 ---
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die numerischen Beispiele sind zum groﬂen Teil aus dem Blog von *Marius Bancila* entnommen &ndash; in leicht modifizierter Form:
 

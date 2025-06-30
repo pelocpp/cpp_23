@@ -202,7 +202,7 @@ std::cout << *view.begin() << std::endl;
 ```
 ---
 
-## Literaturhinweise:
+## Literaturhinweise
 
 Die Anregungen zu den Beispielen stammen aus
 
