@@ -160,6 +160,7 @@
     <ClCompile Include="Coroutines_09_Future.cpp" />
     <ClCompile Include="Coroutines_02_FirstSteps.cpp" />
     <ClCompile Include="Coroutines_08_Scratch.cpp" />
+    <ClCompile Include="Coroutines_10_Producer_Consumer.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Coroutines_03_Yield_Return.cpp" />
   </ItemGroup>

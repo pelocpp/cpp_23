@@ -71,6 +71,9 @@
     <ClCompile Include="Coroutines_05_Iterators.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Coroutines_10_Producer_Consumer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Coroutines_01_Toth.png">
