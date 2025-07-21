@@ -233,7 +233,7 @@ Es folgt eine exemplarische Realisierung eines *Promise*-Objekts.
 25: };
 ```
 
-Bis zur Zeile 24 dürfte grob gesehen aller klar sein.
+Bis zur Zeile 24 dürfte grob gesehen alles klar sein.
 In Zeile 24 tritt eine Klasse `Generator` in Erscheinung.
 
 

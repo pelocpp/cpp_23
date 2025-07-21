@@ -3,8 +3,8 @@
 // ===========================================================================
 
 #define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
 #include <crtdbg.h>
+#include <cstdlib>
 
 #ifdef _DEBUG
 #ifndef DBG_NEW
@@ -24,9 +24,15 @@
 #include <thread>
 #include <utility>
 #include <vector>
+#include <source_location>
+
 
 #define FUNC() std::cout << __func__ << '\n'
-// siehe auch std::source_location
+
+//void FUNC(const std::source_location location = std::source_location::current())
+//{
+//    std::cout << location.function_name() << '\n';
+//}
 
 namespace details
 {
@@ -53,85 +59,111 @@ namespace details
     }
 }
 
-
-class [[nodiscard]] AudioDataResult final
+class AudioDataResult final
 {
 public:
     class promise_type;
+
     using handle_type = std::coroutine_handle<promise_type>;
 
-    // Predefined interface that has to be specify in order to implement
+    // Predefined interface that has to be specified in order to implement
     // coroutine's state-machine transitions
     class promise_type
     {
-
     public:
-
         using value_type = std::vector<int>;
 
+    private:
+        value_type m_data;
+        std::atomic<bool> m_data_ready;
+
+    public:
         AudioDataResult get_return_object()
         {
             return AudioDataResult{ handle_type::from_promise(*this) };
         }
-        std::suspend_never initial_suspend() noexcept { return {}; }
-        std::suspend_always final_suspend() noexcept { return {}; }
+
+        std::suspend_never initial_suspend() noexcept { 
+            return {};
+        }
+
+        std::suspend_always final_suspend() noexcept {
+            return {};
+        }
+
         void return_void() {}
+
         void unhandled_exception()
         {
             std::rethrow_exception(std::current_exception());
         }
 
-        // Generates the value and suspend the "producer"
+        // generates the value and suspends the "producer"
         template <typename Data>
             requires std::convertible_to<std::decay_t<Data>, value_type>
         std::suspend_always yield_value(Data&& value)
         {
-            data_ = std::forward<Data>(value);
-            data_ready_.store(true, std::memory_order::relaxed);
+            m_data = std::forward<Data>(value);
+            m_data_ready.store(true, std::memory_order::relaxed);
             return {};
         }
 
         // Awaiter interface: for consumer waiting on data being ready
-        struct AudioDataAwaiter
+        class AudioDataAwaiter
         {
-            explicit AudioDataAwaiter(promise_type& promise) noexcept : promise_(promise) {}
+        private:
+            promise_type& m_promise;
 
-            bool await_ready() const { return promise_.data_ready_.load(std::memory_order::relaxed); }
+        public:
+            explicit AudioDataAwaiter(promise_type& promise) noexcept : m_promise(promise) {}
+
+            bool await_ready() const {
+                std::cout << "> await_ready" << std::endl;
+
+                std::this_thread::sleep_for(std::chrono::milliseconds{ 1000 });
+                return m_promise.m_data_ready.load(std::memory_order::relaxed);
+
+                // return false;
+            }
 
             void await_suspend(handle_type) const
             {
-                while (not promise_.data_ready_.exchange(false)) {
+                std::cout << "> await_suspend" << std::endl;
+
+                while (not m_promise.m_data_ready.exchange(false)) {
+                    std::cout << "yielding .............." << std::endl;
                     std::this_thread::yield();
                 }
+
+                //while (true) {
+                //    std::cout << "yielding .............." << std::endl;
+                //    std::this_thread::yield();
+                //}
             }
-            // move assignment at client invocation side: const auto data = co_await audioDataResult;
+
+            // move assignment at client invocation side:
+            // const auto data = co_await audioDataResult;
             // This requires that coroutine's result type provides the co_await unary operator
             value_type&& await_resume() const
             {
-                return std::move(promise_.data_);
+                std::cout << "> await_resume" << std::endl;
+
+                return std::move(m_promise.m_data);
             }
-
-        private:
-            promise_type& promise_;
         };//Awaiter interface
-
-
-    private:
-        value_type data_;
-        std::atomic<bool> data_ready_;
     }; //promise_type interface
 
 
     auto operator co_await() noexcept
     {
-        return promise_type::AudioDataAwaiter{ handle_.promise() };
+        return promise_type::AudioDataAwaiter{ m_handle.promise() };
     }
 
     // Make the result type move-only, due to ownership over the handle
     AudioDataResult(const AudioDataResult&) = delete;
     AudioDataResult& operator=(const AudioDataResult&) = delete;
 
-    AudioDataResult(AudioDataResult&& other) noexcept : handle_(std::exchange(other.handle_, nullptr)) {}
+    AudioDataResult(AudioDataResult&& other) noexcept : m_handle(std::exchange(other.m_handle, nullptr)) {}
     AudioDataResult& operator=(AudioDataResult&& other) noexcept
     {
         using namespace std;
@@ -142,37 +174,56 @@ public:
     }
 
     // d-tor: RAII
-    ~AudioDataResult() { if (handle_) { FUNC(); handle_.destroy(); } }
+    ~AudioDataResult() {
+        if (m_handle) {
+            FUNC(); 
+            m_handle.destroy();
+        } 
+    }
 
     // For resuming the producer - at the point when the data are consumed
-    void resume() { if (not handle_.done()) { FUNC(); handle_.resume(); } }
+    void resume() {
+        if (not m_handle.done()) {
+            FUNC(); 
+            m_handle.resume();
+        }
+    }
 
 private:
-    AudioDataResult(handle_type handle) noexcept : handle_(handle) {}
+    AudioDataResult(handle_type handle) noexcept : m_handle{ handle } {}
 
 private:
-    handle_type handle_;
+    handle_type m_handle;
 };
 
 using data_type = std::vector<int>;
-AudioDataResult producer(const data_type& data)
+
+static AudioDataResult producer(const data_type& data)
 {
     for (std::size_t i = 0; i < 5; ++i) {
         FUNC();
         co_yield data;
+
+       // details::printContainer(data);
     }
     co_yield data_type{}; // exit criteria
 
     co_return;
 }
 
-AudioDataResult consumer(AudioDataResult& audioDataResult)
+static AudioDataResult consumer(AudioDataResult& audioDataResult)
 {
     for (;;)
     {
         FUNC();
+
         const auto data = co_await audioDataResult;  // Wieso keine Referenz... sondern eine Kopie 
-        if (data.empty()) { std::cout << "No data - exit!\n"; break; }
+
+        if (data.empty()) { 
+            std::cout << "No data - exit!\n";
+            break;
+        }
+        
         std::cout << "Data received:";
         details::printContainer(data);
 
@@ -192,7 +243,7 @@ void coroutines_10()
         t.join();
     }
 
-    std::cout << "bye-bye!\n";
+    std::cout << "Done" << std::endl;
 }
 
 // ===========================================================================

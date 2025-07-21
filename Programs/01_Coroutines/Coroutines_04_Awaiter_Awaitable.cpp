@@ -42,7 +42,7 @@ namespace Coroutines_Awaiter_Awaitable_01_Simplest_Variant
         std::cout << "after coroutine" << std::endl;;
     }
 
-    void test_01() {
+    static void test_01() {
         myCoroutine();
     }
 }
@@ -93,7 +93,7 @@ namespace Coroutines_Awaiter_Awaitable_02_Simplest_Variant_Instrumented
         std::cout << "Second Hello from coroutine\n";
     }
 
-    void test_02() {
+    static void test_02() {
         myCoroutine();
     }
 }
@@ -144,7 +144,7 @@ namespace Coroutines_Awaiter_Awaitable_03_Awaitable
         std::cout << "Now on thread " << std::this_thread::get_id() << std::endl;
     }
 
-    void test_03()
+    static void test_03()
     {
         myCoroutine();
     }
@@ -211,7 +211,6 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
         }
     };
 
-
     Generator myCoroutine() {
         std::cout << "myCoroutine starts" << std::endl;
         using namespace std::chrono_literals;
@@ -221,7 +220,7 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
         std::cout << "myCoroutine done: slept for " << (after - before) / 1ms << " ms\n";
     }
 
-    void test_04() {
+    static void test_04() {
         myCoroutine();
     }
 }
@@ -251,7 +250,7 @@ namespace Coroutines_Awaiter_Awaitable_05_Terminology
         std::cout << "World!" << std::endl;
     }
 
-    void test_05() {
+    static void test_05() {
         printHelloWorld();
     }
 
@@ -269,7 +268,7 @@ namespace Coroutines_Awaiter_Awaitable_05_Terminology
         std::cout << "World (2) !" << std::endl;
     }
 
-    void test_06() {
+    static void test_06() {
         printHelloWorldEx();
     }
 
@@ -292,7 +291,7 @@ namespace Coroutines_Awaiter_Awaitable_05_Terminology
         std::cout << "World (3) !" << std::endl;
     }
 
-    void test_07() {
+    static void test_07() {
         printHelloWorldExEx();
     }
 }
