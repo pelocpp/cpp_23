@@ -34,11 +34,11 @@ namespace Coroutines_MinimalisticApproach_01_Simplest_Variant
         };
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
         co_return; // make it a coroutine
     }
 
-    void test_01()
+    static void test_01()
     {
         Generator t = myCoroutine();
     }
@@ -68,7 +68,7 @@ namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented
                 return {};
             }
 
-            std::suspend_always initial_suspend() {  // <== change here: std::suspend_always
+            std::suspend_never initial_suspend() {  // <== change here: std::suspend_always
                 std::cout << "  initial_suspend" << std::endl;
                 return {};
             }
@@ -96,12 +96,12 @@ namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented
         }
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
         std::cout << "inside coroutine" << std::endl;
         co_return; // make it a coroutine
     }
 
-    void test_02()
+    static void test_02()
     {
         std::cout << "before coroutine call" << std::endl;
         Generator t = myCoroutine();
@@ -189,12 +189,12 @@ namespace Coroutines_MinimalisticApproach_03_CoroutineHandle
         }
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
         std::cout << "inside coroutine" << std::endl;
         co_return; // make it a coroutine
     }
 
-    void test_03()
+    static void test_03()
     {
         std::cout << "before coroutine call" << std::endl;
         Generator t = myCoroutine();
@@ -259,14 +259,14 @@ namespace Coroutines_MinimalisticApproach_04_Generator
         promise_type::Handle m_coro;
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
         int x = 0;
         while (true) {
             co_yield x++;
         }
     }
 
-    void test_04()
+    static void test_04()
     {
         Generator c = myCoroutine();
         int x = 0;
@@ -282,7 +282,7 @@ namespace Coroutines_MinimalisticApproach_05_Generator_Instrumented
 
         struct promise_type {
 
-            promise_type() : current_value{} {
+            promise_type() : m_currentValue{} {
                 std::cout << "  c'tor promise" << std::endl;
             }
 
@@ -309,7 +309,7 @@ namespace Coroutines_MinimalisticApproach_05_Generator_Instrumented
 
             std::suspend_always yield_value(int value) {
                 std::cout << "  yield_value" << std::endl;
-                current_value = value;
+                m_currentValue = value;
                 return {};
             }
 
@@ -321,7 +321,7 @@ namespace Coroutines_MinimalisticApproach_05_Generator_Instrumented
                 std::cout << "  unhandled_exception" << std::endl;
             }
 
-            int current_value;
+            int m_currentValue;
         };
 
         explicit Generator(promise_type::Handle coro) : m_coro{ coro } {
@@ -352,21 +352,25 @@ namespace Coroutines_MinimalisticApproach_05_Generator_Instrumented
         int get_next() {
             std::cout << "get_next" << std::endl;
             m_coro.resume();
-            return m_coro.promise().current_value;
+
+            const auto& promise = m_coro.promise();
+            auto value = promise.m_currentValue;
+            return value;
         }
 
     private:
         promise_type::Handle m_coro;
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
         int x = 0;
         while (true) {
+            std::cout << "  before co_yield ..." << std::endl;
             co_yield x++;
         }
     }
 
-    void test_05() {
+    static void test_05() {
         Generator c = myCoroutine();
         int x = 0;
         while ((x = c.get_next()) < 3) {
@@ -381,25 +385,25 @@ void coroutines_03()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    //using namespace Coroutines_MinimalisticApproach_01_Simplest_Variant;
-    //test_01();
-    //std::cout << "Done." << std::endl;
+    using namespace Coroutines_MinimalisticApproach_01_Simplest_Variant;
+    test_01();
+    std::cout << "Done." << std::endl;
 
-    //using namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented;
-    //test_02();
-    //std::cout << "Done." << std::endl;
+    using namespace Coroutines_MinimalisticApproach_02_Simplest_Variant_Instrumented;
+    test_02();
+    std::cout << "Done." << std::endl;
 
     using namespace Coroutines_MinimalisticApproach_03_CoroutineHandle;
     test_03();
     std::cout << "Done." << std::endl;
 
-    //using namespace Coroutines_MinimalisticApproach_04_Generator;
-    //test_04();
-    //std::cout << "Done." << std::endl;
+    using namespace Coroutines_MinimalisticApproach_04_Generator;
+    test_04();
+    std::cout << "Done." << std::endl;
 
-    //using namespace Coroutines_MinimalisticApproach_05_Generator_Instrumented;
-    //test_05();
-    //std::cout << "Done." << std::endl;
+    using namespace Coroutines_MinimalisticApproach_05_Generator_Instrumented;
+    test_05();
+    std::cout << "Done." << std::endl;
 }
 
 // ===========================================================================

@@ -321,7 +321,7 @@ Done.
   * Das *Promise*-Objekt wird innerhalb der Coroutine verwendet. Die Coroutine übermittelt ihr Ergebnis (oder Exceptions) durch dieses Objekt.
   * Der *Promise*-Typ wird vom Compiler aus dem Rückgabetyp der Coroutine mit `std::coroutine_traits` ermittelt.
 
-### Coroutine Handle (std::coroutine_handle<promise_type>)
+### Coroutine Handle (`std::coroutine_handle<promise_type>`)
  
   * Das Coroutine-Handle wird verwendet, um die Ausführung der Coroutine fortzusetzen oder
     um den (dynamisch allokierten) *Coroutine Frame* wieder freizugeben.
@@ -346,7 +346,7 @@ Die Anregungen zu den Beispielen stammen zum großen Teil aus dem Artikel
 von Simon Tóth.
 
 Die Beschreibungen zur Terminologie stammen aus
-[C++20 Coroutine: Under The Hood](http://www.vishalchovatiya.com/cpp20-coroutine-under-the-hood/).
+[C++20 Coroutine: Under The Hood](https://vishalchovatiya.com/posts/cpp20-coroutine-under-the-hood/).
 
 ---
 

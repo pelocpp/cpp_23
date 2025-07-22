@@ -52,7 +52,7 @@ Bevor auf eine allgemeingültige Definition eines *Awaitable* Ausdrucks eingehen,
 dass wir zwei *Awaitable* Objekte bereits kennen gelernt haben:
 
   * `std::suspend_always` &ndash; weist `co_await` an, die Coroutine zu unterbrechen
-  * `std::suspend_never` &ndash; weist `co_await` an, die Corutine nicht zu suspendieren. 
+  * `std::suspend_never` &ndash; weist `co_await` an, die Coroutine nicht zu suspendieren. 
 
 Damit sind
 
@@ -93,6 +93,25 @@ struct awaitable {
     void await_resume() {}
 };
 ```
+
+Wenn ein *Awaitable*-Datentyp Ziel eines `co_await`-Aufrufs ist,
+wird der Operator `co_await` ausgeführt und das *Awaiter*-Objekt daraus gewonnen.
+
+Anschließend wird `awaiter.await_ready()` aufgerufen. Gibt der Aufruf `true` zurück,
+wird die Coroutine nicht angehalten und `await_resume` wird sofort aufgerufen,
+wodurch der Rückgabewert des Ausdrucks erzeugt wird.
+
+So funktioniert `std::suspend_never` – es gibt einfach `true` von `await_ready()` zurück!
+
+Wenn `await_ready()` den Wert `false` zurückliefert, wird die Coroutine angehalten,
+d. h. der gesamte Status, der zu ihrer späteren Fortsetzung nötig ist, wird im Status der Coroutine gespeichert
+und `await_suspend()` wird aufgerufen, wobei ein `std::coroutine_handle` an die angehaltene Coroutine übergeben wird.
+
+Unter anderem und vor allem kann dieses Handle verwendet werden, um die Coroutine später fortzusetzen.
+
+Wenn eine angehaltene Coroutine fortgesetzt wird, wird `await_resume()` aufgerufen und das
+vom `co_await`-Ausdruck zu erzeugende Ergebnis zurückgegeben.
+
 
 Auf der Basis dieser drei Methoden wird vom *Coroutine Framework* Code
 mit folgender Architektur generiert:
@@ -249,7 +268,7 @@ HelloWorldCoro printHelloWorld() {
   * Ein *Awaiter* ist ein Datentyp, der drei spezielle Methoden implementiert, die als Teil eines `co_await` Ausdrucks aufgerufen werden:
     `await_ready()`, `await_suspend()` und `await_resume()`.
   * Durch die include-Datei `<coroutine>` sind zwei triviale *Awaiter* vordefiniert: `std::suspend_always` und `std::suspend_never`.
-  * *Bemerkung*: Ein Typ sowohl ein *Awaitable*-Typ als auch ein *Awaiter*-Typ sein.
+  * *Bemerkung*: Ein Datentyp kann sowohl ein *Awaitable*-Typ als auch ein *Awaiter*-Typ sein.
 
 *Beispiel*:
 
@@ -284,7 +303,10 @@ von Simon Tóth und [Painless C++ Coroutines](https://isocpp.org/blog/2021/06/pai
 von Gajendra Gulgulia.
 
 Die Beschreibungen zur Terminologie stammen aus
-[C++20 Coroutine: Under The Hood](http://www.vishalchovatiya.com/cpp20-coroutine-under-the-hood/).
+[C++20 Coroutine: Under The Hood](https://vishalchovatiya.com/posts/cpp20-coroutine-under-the-hood/).
+
+Eine detaillierte Beschreibung zu `co_await` findet
+man auch in dem Artikel [Yet Another C++ Coroutine Tutorial](https://theshoemaker.de/posts/yet-another-cpp-coroutine-tutorial).
 
 ---
 

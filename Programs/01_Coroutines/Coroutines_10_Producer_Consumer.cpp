@@ -59,28 +59,31 @@ namespace details
     }
 }
 
+using DataType = std::vector<int>;
+
+// Generator
 class AudioDataResult final
 {
 public:
     class promise_type;
 
-    using handle_type = std::coroutine_handle<promise_type>;
+    using Handle = std::coroutine_handle<promise_type>;
 
-    // Predefined interface that has to be specified in order to implement
+    // Predefined interface 'promise_type' that has to be specified in order to implement
     // coroutine's state-machine transitions
     class promise_type
     {
     public:
-        using value_type = std::vector<int>;
+        using value_type = DataType;
 
     private:
-        value_type m_data;
+        value_type        m_data;
         std::atomic<bool> m_data_ready;
 
     public:
         AudioDataResult get_return_object()
         {
-            return AudioDataResult{ handle_type::from_promise(*this) };
+            return AudioDataResult{ Handle::from_promise(*this) };
         }
 
         std::suspend_never initial_suspend() noexcept { 
@@ -99,6 +102,9 @@ public:
         }
 
         // generates the value and suspends the "producer"
+        // note: co_yield is called in two flavours:
+        // with named and unnamed objects - therefore for this method 'yield_value'
+        // code is generated twice: with value being an lvalue or an rvalue
         template <typename Data>
             requires std::convertible_to<std::decay_t<Data>, value_type>
         std::suspend_always yield_value(Data&& value)
@@ -108,7 +114,8 @@ public:
             return {};
         }
 
-        // Awaiter interface: for consumer waiting on data being ready
+        // Awaiter interface:
+        // for consumer waiting on data being ready
         class AudioDataAwaiter
         {
         private:
@@ -126,7 +133,7 @@ public:
                 // return false;
             }
 
-            void await_suspend(handle_type) const
+            void await_suspend(Handle handle) const
             {
                 std::cout << "> await_suspend" << std::endl;
 
@@ -150,9 +157,10 @@ public:
 
                 return std::move(m_promise.m_data);
             }
-        };//Awaiter interface
-    }; //promise_type interface
 
+        }; //Awaiter interface
+
+    }; //promise_type interface
 
     auto operator co_await() noexcept
     {
@@ -190,23 +198,36 @@ public:
     }
 
 private:
-    AudioDataResult(handle_type handle) noexcept : m_handle{ handle } {}
+
+    AudioDataResult() {
+        FUNC();
+    }
+
+    AudioDataResult(Handle handle) noexcept 
+        : AudioDataResult{}
+    {
+        m_handle = handle;
+    }
 
 private:
-    handle_type m_handle;
+    Handle m_handle;
 };
 
-using data_type = std::vector<int>;
-
-static AudioDataResult producer(const data_type& data)
+static AudioDataResult producer(DataType& data)
 {
-    for (std::size_t i = 0; i < 5; ++i) {
+    for (int i = 1; i != 5; ++i) {
+
         FUNC();
+        data.push_back(i);
+
+        std::cout << "producer: vor co_yield:" << std::endl;
         co_yield data;
+        std::cout << "producer: nach co_yield:" << std::endl;
 
        // details::printContainer(data);
     }
-    co_yield data_type{}; // exit criteria
+
+    co_yield DataType{}; // exit criteria
 
     co_return;
 }
@@ -217,18 +238,20 @@ static AudioDataResult consumer(AudioDataResult& audioDataResult)
     {
         FUNC();
 
-        const auto data = co_await audioDataResult;  // Wieso keine Referenz... sondern eine Kopie 
+        std::cout << "consumer: vor co_await:" << std::endl;;
+        const auto& data = co_await audioDataResult;
 
         if (data.empty()) { 
-            std::cout << "No data - exit!\n";
+            std::cout << "consumer: no data - exit!\n";
             break;
         }
         
-        std::cout << "Data received:";
+        std::cout << "consumer: data received:";
         details::printContainer(data);
 
         audioDataResult.resume(); // resume producer
     }
+
     co_return;
 }
 
@@ -237,8 +260,10 @@ void coroutines_10()
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     {
-        const data_type data = { 1, 2, 3, 4 };
+        DataType data{ };
+
         auto audioDataProducer = producer(data);
+        
         std::thread t([&] {auto audioRecorded = consumer(audioDataProducer); });
         t.join();
     }

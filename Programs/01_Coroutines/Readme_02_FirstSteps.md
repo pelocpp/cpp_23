@@ -370,7 +370,7 @@ im zweiten Beispiel ist dies nicht notwendig!
 ## Literaturhinweise
 
 Die Anregungen zum ersten Beispiel stammen zum groﬂen Teil aus dem Artikel
-&bdquo;[C++20 Coroutines](https://blog.feabhas.com/2021/09/c20-coroutines/#Promise_data_holder)&rdquo;
+&bdquo;[C++20 Coroutines](https://blog.feabhas.com/2021/09/c20-coroutines/)&rdquo;
 von Martin Bond.
 
 Das zweite Beispiel ist dem Artikel &bdquo;[Daily bit(e) of C++ | Coroutines: step by step](https://simontoth.substack.com/p/daily-bite-of-c-coroutines-step-by)&rdquo;

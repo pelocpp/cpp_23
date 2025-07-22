@@ -36,7 +36,7 @@ namespace Coroutines_Awaiter_Awaitable_01_Simplest_Variant
         };
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
         std::cout << "before coroutine" << std::endl;
         co_await std::suspend_never{};
         std::cout << "after coroutine" << std::endl;;
@@ -85,7 +85,7 @@ namespace Coroutines_Awaiter_Awaitable_02_Simplest_Variant_Instrumented
         };
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
 
         std::cout << "First Hello from coroutine\n";
         co_await std::suspend_never{};     // never suspend the coroutine at this point
@@ -131,7 +131,7 @@ namespace Coroutines_Awaiter_Awaitable_03_Awaitable
         };
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
         using namespace std::chrono_literals;
         auto before = std::chrono::steady_clock::now();
         std::cout << "Going to sleep on thread " <<
@@ -153,7 +153,10 @@ namespace Coroutines_Awaiter_Awaitable_03_Awaitable
 // Simon Toth
 namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
 {
+    // Awaiter
     struct Sleeper {
+
+        Sleeper(std::chrono::duration<int, std::milli> length) : Length{ length } {}
 
         bool await_ready() const noexcept {
             std::cout << "  Sleeper::await_ready" << std::endl;
@@ -162,7 +165,7 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
 
         void await_suspend(std::coroutine_handle<> h) const {
             std::cout << "  Sleeper::await_suspend" << std::endl;
-            auto t = std::jthread([h, l = length] {
+            auto t = std::jthread([h, l = Length] {
                 std::cout << "  Sleeper::jthread (1)" << std::endl;
                 std::this_thread::sleep_for(l);
                 std::cout << "  Sleeper::jthread (2)" << std::endl;
@@ -176,7 +179,7 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
             std::cout << "  Sleeper::await_resume" << std::endl;
         }
 
-        const std::chrono::duration<int, std::milli> length;
+        const std::chrono::duration<int, std::milli> Length;
     };
 
     struct Generator {
@@ -211,7 +214,7 @@ namespace Coroutines_Awaiter_Awaitable_04_Awaitable_Instrumented
         }
     };
 
-    Generator myCoroutine() {
+    static Generator myCoroutine() {
         std::cout << "myCoroutine starts" << std::endl;
         using namespace std::chrono_literals;
         auto before = std::chrono::steady_clock::now();
@@ -244,7 +247,7 @@ namespace Coroutines_Awaiter_Awaitable_05_Terminology
         std::suspend_never operator co_await() { return {}; }
     };
 
-    HelloWorldCoro printHelloWorld() {
+    static HelloWorldCoro printHelloWorld() {
         std::cout << "Hello ";
         co_await dummy{};
         std::cout << "World!" << std::endl;
@@ -262,7 +265,7 @@ namespace Coroutines_Awaiter_Awaitable_05_Terminology
         void await_resume() {}
     };
 
-    HelloWorldCoro printHelloWorldEx() {
+    static HelloWorldCoro printHelloWorldEx() {
         std::cout << "Hello (2) ";
         co_await my_awaiter{};
         std::cout << "World (2) !" << std::endl;
@@ -285,7 +288,7 @@ namespace Coroutines_Awaiter_Awaitable_05_Terminology
         };
     };
 
-    HelloWorldCoroExEx printHelloWorldExEx() {
+    static HelloWorldCoroExEx printHelloWorldExEx() {
         std::cout << "Hello (3) ";
         co_await dummy{};
         std::cout << "World (3) !" << std::endl;
