@@ -74,6 +74,12 @@
     <ClCompile Include="Coroutines_10_Producer_Consumer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Coroutines_20_Await_Suspend_Resume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Coroutines_21_Yield_Return.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Coroutines_01_Toth.png">

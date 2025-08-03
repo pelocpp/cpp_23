@@ -225,16 +225,16 @@ namespace Coroutines_CustomImplementation
 
     static void coroutines_custom_implementation()
     {
-        auto coro = [] -> Routine {
-            std::println("Running...");
-            co_return;
-        };
+        //auto coro = [] -> Routine {
+        //    std::println("Running...");
+        //    co_return;
+        //};
 
-        auto x = coro(); // coroutine starts and runs to completion
-        // decltype(x) == Routine
-        static_assert(std::is_same_v<decltype(x), Routine>);
+        //auto x = coro(); // coroutine starts and runs to completion
+        //// decltype(x) == Routine
+        //static_assert(std::is_same_v<decltype(x), Routine>);
 
-        coro(); // Because the return type is empty, this is the same as above
+        //coro(); // Because the return type is empty, this is the same as above
     }
 }
 
