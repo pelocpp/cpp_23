@@ -12,6 +12,8 @@ void coroutines_10();
 void coroutines_20();
 void coroutines_21();
 
+void coroutines_23();
+
 int main()
 {
     //coroutines_01();
@@ -22,8 +24,10 @@ int main()
     //coroutines_08();
     //coroutines_10();
 
-   // coroutines_20();
-    coroutines_21();
+    //coroutines_20();
+    //coroutines_21();
+
+    coroutines_23();
 
     return 0;
 }

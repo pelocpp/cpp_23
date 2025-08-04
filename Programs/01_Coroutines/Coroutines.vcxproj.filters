@@ -77,7 +77,16 @@
     <ClCompile Include="Coroutines_20_Await_Suspend_Resume.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines_21_Yield_Return.cpp">
+    <ClCompile Include="Coroutines_21_Yield.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Coroutines_22_Return.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Coroutines_23_Awaiter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Coroutines_30_Skuril.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

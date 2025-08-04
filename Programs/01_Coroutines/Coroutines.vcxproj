@@ -162,7 +162,10 @@
     <ClCompile Include="Coroutines_08_Scratch.cpp" />
     <ClCompile Include="Coroutines_10_Producer_Consumer.cpp" />
     <ClCompile Include="Coroutines_20_Await_Suspend_Resume.cpp" />
-    <ClCompile Include="Coroutines_21_Yield_Return.cpp" />
+    <ClCompile Include="Coroutines_21_Yield.cpp" />
+    <ClCompile Include="Coroutines_22_Return.cpp" />
+    <ClCompile Include="Coroutines_23_Awaiter.cpp" />
+    <ClCompile Include="Coroutines_30_Skuril.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Coroutines_03_Yield_Return.cpp" />
   </ItemGroup>

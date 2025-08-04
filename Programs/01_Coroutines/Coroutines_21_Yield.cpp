@@ -1,5 +1,5 @@
 // ===========================================================================
-// Coroutines_21_Yield_Return.cpp
+// Coroutines_21_Yield.cpp
 // ===========================================================================
 
 #define _CRTDBG_MAP_ALLOC
@@ -35,7 +35,6 @@ namespace Coroutines_Motivation_Generator
         struct promise_type
         {
             int m_yieldValue = 0;                  // latest value from co_yield
-            int m_returnValue = 0;                  // value from co_return
 
             auto get_return_object() {             // init and return the coroutine interface
                 return CoroutineGen{ CoroutineHandle::from_promise(*this) };
@@ -59,11 +58,7 @@ namespace Coroutines_Motivation_Generator
                 return std::suspend_always{};      // - suspend coroutine
             }
 
-            // void return_void() {}               // deal with the end or co_return;
-
-            void return_value(const auto& value) { // reaction to co_return
-                m_returnValue = value;             // - store value locally
-            }
+            void return_void() {}                  // deal with end of coroutine
         };
 
         // c'tor / d'tor
@@ -103,11 +98,6 @@ namespace Coroutines_Motivation_Generator
 
             return m_hdl.promise().m_yieldValue;
         }
-
-        // => to get the last value from co_return ?!??!?!??!?!
-        int getResult() const {
-            return m_hdl.promise().m_returnValue;
-        }
     };
 
     static CoroutineGen coroutine(int max)
@@ -123,10 +113,7 @@ namespace Coroutines_Motivation_Generator
             std::println("      coroutine: nach co_yield");
         }
 
-        std::println("      coroutine leaving: Max = {}", max);
-
-        co_return max;                                           // demonstrating 'co_return'
-
+        std::println("      coroutine leaving: Max = {}", max);  // demonstrating 'co_return'
     }
 
     static void motivation_01()
@@ -144,11 +131,6 @@ namespace Coroutines_Motivation_Generator
         }
 
         std::println("coroutine done");
-
-        std::println("result: {}", coroutineGen.getResult());
-
-        // print return value of coroutine:
-    //    std::cout << "result: " << task.getResult() << '\n';
     }
 }
 
