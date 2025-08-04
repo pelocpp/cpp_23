@@ -22,17 +22,20 @@ namespace Coroutines_Motivation_Generator
     // - providing resume() to resume the coroutine
     class [[nodiscard]] CoroutineGen {
     public:
-        struct promise_type;    // forward declaration
+        struct promise_type;      // forward declaration
 
         using CoroutineHandle = std::coroutine_handle<promise_type>;
 
     private:
-        CoroutineHandle m_hdl;                                   // native coroutine handle
+        CoroutineHandle m_hdl;    // native coroutine handle
 
     public:
+
+        // Nested Implementation - using class explicitly in outer class 
         struct promise_type
         {
-            int m_coroutineValue = 0;              // last value from co_yield
+            int m_yieldValue = 0;                  // latest value from co_yield
+            int m_returnValue = 0;                  // value from co_return
 
             auto get_return_object() {             // init and return the coroutine interface
                 return CoroutineGen{ CoroutineHandle::from_promise(*this) };
@@ -46,23 +49,22 @@ namespace Coroutines_Motivation_Generator
                 std::terminate();                  // - terminate the program
             }
 
+            auto final_suspend() noexcept {        // final suspend point
+                return std::suspend_always{};      // - suspend immediately
+            }
+
             // reaction to co_yield
             auto yield_value(int val) {
-                m_coroutineValue = val;           // - store value locally
-                return std::suspend_always{};     // - suspend coroutine
+                m_yieldValue = val;                // - store value locally
+                return std::suspend_always{};      // - suspend coroutine
             }
 
-            void return_void() {                   // deal with the end or co_return;
-            }
+            // void return_void() {}               // deal with the end or co_return;
 
-            auto final_suspend() noexcept {    // final suspend point
-                return std::suspend_always{};  // - suspend immediately
+            void return_value(const auto& value) { // reaction to co_return
+                m_returnValue = value;             // - store value locally
             }
         };
-
-
-
-
 
         // c'tor / d'tor
         CoroutineGen(std::coroutine_handle<promise_type> hdl)
@@ -73,7 +75,7 @@ namespace Coroutines_Motivation_Generator
         ~CoroutineGen() {
 
             if (m_hdl) {
-                m_hdl.destroy();                                // destroy coroutine handle
+                m_hdl.destroy();                                 // destroy coroutine handle
             }
         }
 
@@ -85,7 +87,7 @@ namespace Coroutines_Motivation_Generator
         CoroutineGen& operator=(CoroutineGen&&) noexcept = delete;
 
         // API
-        // - resume the coroutine
+        // => resume the coroutine
         bool resume() const {
 
             if (!m_hdl || m_hdl.done()) {
@@ -96,42 +98,17 @@ namespace Coroutines_Motivation_Generator
             return !m_hdl.done();
         }
 
-        // - yield value from co_yield
+        // => yield value from co_yield
         int getValue() const {
 
-            return m_hdl.promise().m_coroutineValue;
+            return m_hdl.promise().m_yieldValue;
+        }
+
+        // => to get the last value from co_return ?!??!?!??!?!
+        int getResult() const {
+            return m_hdl.promise().m_returnValue;
         }
     };
-
-    //struct CoroutineGen::promise_type
-    //{
-    //    int m_coroutineValue = 0;              // last value from co_yield
-
-    //    auto get_return_object() {             // init and return the coroutine interface
-    //        return CoroutineGen{ CoroutineHandle::from_promise(*this) };
-    //    }
-
-    //    auto initial_suspend() {               // initial suspend point
-    //        return std::suspend_always{};      // - suspend immediately
-    //    }
-
-    //    void unhandled_exception() {           // deal with exceptions
-    //        std::terminate();                  // - terminate the program
-    //    }
-
-    //    // reaction to co_yield
-    //    auto yield_value(int val) {
-    //        m_coroutineValue = val;           // - store value locally
-    //        return std::suspend_always{};     // - suspend coroutine
-    //    }
-
-    //    void return_void() {                   // deal with the end or co_return;
-    //    }
-
-    //    auto final_suspend() noexcept {    // final suspend point
-    //        return std::suspend_always{};  // - suspend immediately
-    //    }
-    //};
 
     static CoroutineGen coroutine(int max)
     {
@@ -141,33 +118,38 @@ namespace Coroutines_Motivation_Generator
 
             std::println("      coroutine: {}/{}", val, max);
 
-            std::println("      coroutine: vor co_await");
-            //co_await std::suspend_always{};                 // suspending
-            co_yield val; // suspending with value
-            std::println("      coroutine: nach co_await");
+            std::println("      coroutine: vor co_yield");
+            co_yield val;                                        // suspending with value
+            std::println("      coroutine: nach co_yield");
         }
 
         std::println("      coroutine leaving: Max = {}", max);
+
+        co_return max;                                           // demonstrating 'co_return'
+
     }
 
     static void motivation_01()
     {
-        auto coroutineGen = coroutine(3);                            // initializing coroutine
+        auto coroutineGen = coroutine(3);                        // initializing coroutine
 
         std::println("coroutine started");
 
         // loop to resume the coroutine until it is done
-        while (coroutineGen.resume()) {                         // resuming coroutine once
-          //  std::println("coroutine resumed");
-
+        while (coroutineGen.resume()) {                          // resuming coroutine once
+            
             auto val = coroutineGen.getValue();
-        //    std::cout << "coro() suspended with " << val << '\n';
+
             std::println("coroutine resumed with {}", val);
         }
 
         std::println("coroutine done");
-    }
 
+        std::println("result: {}", coroutineGen.getResult());
+
+        // print return value of coroutine:
+    //    std::cout << "result: " << task.getResult() << '\n';
+    }
 }
 
 // ===============================================================

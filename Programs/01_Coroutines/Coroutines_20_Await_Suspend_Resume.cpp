@@ -22,7 +22,7 @@ namespace Coroutines_Motivation_Task
     // - providing resume() to resume the coroutine
     class [[nodiscard]] CoroutineTask {
     public:
-        struct promise_type;    // forward declaration
+        struct promise_type;                                     // forward declaration
 
         using CoroutineHandle = std::coroutine_handle<promise_type>;
     
@@ -38,7 +38,7 @@ namespace Coroutines_Motivation_Task
         ~CoroutineTask() {
 
             if (m_hdl) {
-                m_hdl.destroy();                                // destroy coroutine handle
+                m_hdl.destroy();                                 // destroy coroutine handle
             }
         }
 
@@ -49,15 +49,16 @@ namespace Coroutines_Motivation_Task
         CoroutineTask(CoroutineTask&&) noexcept = delete;
         CoroutineTask& operator=(CoroutineTask&&) noexcept = delete;
 
-        // API to resume the coroutine
-        // (returns whether there is still something to process)
+        // API:
+        // => to resume the coroutine
+        // => returns whether there is still something to process
         bool resume() const {
 
             if (!m_hdl || m_hdl.done()) {
-                return false;                       // nothing (more) to process
+                return false;                  // nothing (more) to process
             }
 
-            m_hdl.resume();                         // resume (blocks until suspended again or the end)
+            m_hdl.resume();                    // resume (blocks until suspended again or the end)
             return !m_hdl.done();
         }
     };
@@ -102,12 +103,12 @@ namespace Coroutines_Motivation_Task
 
     static void motivation_01()
     {
-        auto coroTask = coroutine(3);                            // initializing coroutine
+        auto coroTask = coroutine(3);                       // initializing coroutine
 
         std::println("coroutine started");
 
         // loop to resume the coroutine until it is done
-        while (coroTask.resume()) {                         // resuming coroutine once
+        while (coroTask.resume()) {                         // resuming coroutine
             std::println("coroutine resumed");
         }
 
@@ -117,26 +118,26 @@ namespace Coroutines_Motivation_Task
     static void motivation_02()
     {
         // start two coroutines
-        auto coroTask1 = coroutine(3);            // initializing 1st coroutine
-        auto coroTask2 = coroutine(5);            // initializing 2nd coroutine
+        auto coroTask1 = coroutine(3);              // initializing 1st coroutine
+        auto coroTask2 = coroutine(5);              // initializing 2nd coroutine
 
         std::println("two coroutines started");
 
-        coroTask2.resume();                  // resuming 2nd coroutine once
+        coroTask2.resume();                         // resuming 2nd coroutine once
 
         // loop to resume the 1st coroutine until it is done:
-        while (coroTask1.resume()) {         // resuming 1st coroutine
+        while (coroTask1.resume()) {                // resuming 1st coroutine
             std::println("first coroutine resumed");
         }
 
         std::println("first coroutine done");
 
         std::println("resuming second coroutine");
-        coroTask2.resume();                  //resuming 2nd coroutine again once
-        coroTask2.resume();                  //resuming 2nd coroutine again once
-        coroTask2.resume();                  //resuming 2nd coroutine again once
-        coroTask2.resume();                  //resuming 2nd coroutine again once
-        coroTask2.resume();                  //resuming 2nd coroutine again once
+        coroTask2.resume();                         //resuming 2nd coroutine again once
+        coroTask2.resume();                         //resuming 2nd coroutine again once
+        coroTask2.resume();                         //resuming 2nd coroutine again once
+        coroTask2.resume();                         //resuming 2nd coroutine again once
+        coroTask2.resume();                         //resuming 2nd coroutine again once
 
         std::println("Done");
     }
