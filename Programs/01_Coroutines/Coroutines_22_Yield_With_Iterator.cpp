@@ -1,10 +1,11 @@
 // ===========================================================================
-// Coroutines_21_Yield.cpp
+// Coroutines_22_Yield_With_Iterator.cpp
 // ===========================================================================
 
 #define _CRTDBG_MAP_ALLOC
 #include <cstdlib>
 #include <crtdbg.h>
+#include <cassert>
 
 #ifdef _DEBUG
 #ifndef DBG_NEW
@@ -16,10 +17,11 @@
 #include <coroutine>
 #include <print>
 
-namespace Coroutines_Motivation_Generator
+namespace Coroutines_Motivation_Generator_With_Iterator
 {
-    // coroutine interface to deal with a simple task
-    // - providing resume() to resume the coroutine
+     // coroutine interface to deal with a simple task
+     // - providing resume() to resume the coroutine
+    template<typename T>
     class [[nodiscard]] CoroutineGen {
     public:
         struct promise_type;      // forward declaration
@@ -34,7 +36,7 @@ namespace Coroutines_Motivation_Generator
         // Nested Implementation - using class explicitly in outer class 
         struct promise_type
         {
-            int m_yieldValue = 0;                  // latest value from co_yield
+            T m_yieldValue{};                      // latest value from co_yield
 
             auto get_return_object() {             // init and return the coroutine interface
                 return CoroutineGen{ CoroutineHandle::from_promise(*this) };
@@ -53,7 +55,7 @@ namespace Coroutines_Motivation_Generator
             }
 
             // reaction to co_yield
-            auto yield_value(int val) {
+            auto yield_value(T val) {
                 m_yieldValue = val;                // - store value locally
                 return std::suspend_always{};      // - suspend coroutine
             }
@@ -82,25 +84,53 @@ namespace Coroutines_Motivation_Generator
         CoroutineGen& operator=(CoroutineGen&&) noexcept = delete;
 
         // API
-        // => resume the coroutine
-        bool resume() const {
+        // => Iterator interface with begin() and end()
+        struct iterator
+        {
+            std::coroutine_handle<promise_type> m_hdl;  // nullptr on end
 
-            if (!m_hdl || m_hdl.done()) {
-                return false;                       // nothing (more) to process
+            iterator(auto hdl) : m_hdl{ hdl } {}
+
+            void getNext() {
+                if (m_hdl) {
+                    m_hdl.resume();        // resume
+                    if (m_hdl.done()) {
+                        m_hdl = nullptr;
+                    }
+                }
             }
 
-            m_hdl.resume();                         // resume (blocks until suspended again or the end)
-            return !m_hdl.done();
+            T operator*() const {
+                assert(m_hdl != nullptr);
+                return m_hdl.promise().m_yieldValue;
+            }
+
+            iterator operator++() {
+                getNext();             // resume for next value
+                return *this;
+            }
+
+            bool operator== (const iterator& other) const { 
+                return m_hdl == other.m_hdl;
+            };
+        };
+
+        iterator begin() const {
+            if (!m_hdl || m_hdl.done()) {
+                return iterator{ nullptr };
+            }
+
+            iterator itor{ m_hdl };      // initialize iterator
+            itor.getNext();              // resume for first value
+            return itor;
         }
 
-        // => yield value from co_yield
-        int getValue() const {
-
-            return m_hdl.promise().m_yieldValue;
+        iterator end() const {
+            return iterator{ nullptr };
         }
     };
 
-    static CoroutineGen coroutine(int max)
+    static CoroutineGen<int> coroutine(int max)
     {
         std::println("      coroutine entered: Max = {}", max);
 
@@ -118,18 +148,16 @@ namespace Coroutines_Motivation_Generator
 
     static void motivation_01()
     {
-        // simple example demonstrating co_yield 
+        // simple example demonstrating
+        // iterating over values that a coroutine yields 
 
         auto coroutineGen = coroutine(3);                        // initializing coroutine
 
-        std::println("coroutine started");
+        std::println("coroutine started (range-based for-loop)");
 
-        // loop to resume the coroutine until it is done
-        while (coroutineGen.resume()) {                          // resuming coroutine once
-            
-            auto val = coroutineGen.getValue();
-
-            std::println("coroutine resumed with {}", val);
+        // loop to resume the coroutine for the next value
+        for (const auto& val : coroutineGen) {
+            std::println("coroutine: val = {}", val);
         }
 
         std::println("coroutine done");
@@ -138,11 +166,11 @@ namespace Coroutines_Motivation_Generator
 
 // ===============================================================
 
-void coroutines_21()
+void coroutines_22()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    using namespace Coroutines_Motivation_Generator;
+    using namespace Coroutines_Motivation_Generator_With_Iterator;
     motivation_01();
 }
 

@@ -150,7 +150,7 @@ void coroutines_20()
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     using namespace Coroutines_Motivation_Task;
-    motivation_01();
+    //motivation_01();
     motivation_02();
 }
 

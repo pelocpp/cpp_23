@@ -14,6 +14,7 @@
 #endif  // _DEBUG
 
 #include <algorithm>
+#include <condition_variable>
 #include <atomic>
 #include <chrono>
 #include <coroutine>
@@ -25,9 +26,11 @@
 #include <utility>
 #include <vector>
 #include <source_location>
+#include <print>
+#include <mutex>
 
 
-#define FUNC() std::cout << __func__ << '\n'
+// #define FUNC() std::cout << __func__ << '\n'
 
 //void FUNC(const std::source_location location = std::source_location::current())
 //{
@@ -69,16 +72,18 @@ public:
 
     using Handle = std::coroutine_handle<promise_type>;
 
-    // Predefined interface 'promise_type' that has to be specified in order to implement
-    // coroutine's state-machine transitions
     class promise_type
     {
     public:
         using value_type = DataType;
 
     private:
-        value_type        m_data;
-        std::atomic<bool> m_data_ready;
+        value_type              m_data;
+        std::atomic<bool>       m_data_ready;
+
+        std::mutex              m_mutex;
+        std::condition_variable m_condition;
+        bool                    m_data_ready2;
 
     public:
         AudioDataResult get_return_object()
@@ -105,13 +110,26 @@ public:
         // note: co_yield is called in two flavours:
         // with named and unnamed objects - therefore for this method 'yield_value'
         // code is generated twice: with value being an lvalue or an rvalue
-        template <typename Data>
-            requires std::convertible_to<std::decay_t<Data>, value_type>
-        std::suspend_always yield_value(Data&& value)
+        template <typename TData>
+        std::suspend_always yield_value(TData&& value)
         {
-            m_data = std::forward<Data>(value);
+            m_data = std::forward<TData>(value);
+
+            std::cout << "> yield_value: store" << std::endl;
+            std::cout << "> blocking 1 second" << std::endl;
+
+            std::this_thread::sleep_for(std::chrono::milliseconds{ 1000 });
+
             m_data_ready.store(true, std::memory_order::relaxed);
-            return {};
+
+            {
+                std::lock_guard<std::mutex> guard{ m_mutex };
+                m_data_ready2 = true;
+            }
+
+             m_condition.notify_one();
+
+            return std::suspend_always{};
         }
 
         // Awaiter interface:
@@ -122,13 +140,34 @@ public:
             promise_type& m_promise;
 
         public:
-            explicit AudioDataAwaiter(promise_type& promise) noexcept : m_promise(promise) {}
+            explicit AudioDataAwaiter(promise_type& promise) noexcept 
+                : m_promise(promise) 
+            {}
 
-            bool await_ready() const {
-                std::cout << "> await_ready" << std::endl;
+            bool await_ready() const
+            {
+                std::println("> await_ready");
 
-                std::this_thread::sleep_for(std::chrono::milliseconds{ 1000 });
-                return m_promise.m_data_ready.load(std::memory_order::relaxed);
+               //  std::this_thread::sleep_for(std::chrono::milliseconds{ 1000 });
+
+                {
+                    std::unique_lock<std::mutex> guard{ m_promise.m_mutex };
+
+                    m_promise.m_condition.wait(
+                        guard,
+                        [&]() {
+                            std::println("  ... check for data being present: {}", m_promise.m_data_ready2 == true);
+                            return  m_promise.m_data_ready2 == true;
+                        }
+                    );
+                }
+
+
+               // auto l = m_promise.m_data_ready.load(std::memory_order::relaxed);
+
+             //   std::println("> m_data_ready.load ===> {}", l);
+
+                return m_promise.m_data_ready2;
 
                 // return false;
             }
@@ -137,10 +176,27 @@ public:
             {
                 std::cout << "> await_suspend" << std::endl;
 
-                while (not m_promise.m_data_ready.exchange(false)) {
-                    std::cout << "yielding .............." << std::endl;
-                    std::this_thread::yield();
+                while (true) {
+                    std::println("yielding ..............");
+                    bool b;
+
+                    {
+                        std::lock_guard<std::mutex> guard{ m_promise.m_mutex };
+                        b = m_promise.m_data_ready2;
+                    }
+
+                    if (b) {
+                        break;
+                    }
+                    else {
+                        std::this_thread::yield();
+                    }
                 }
+
+                //while (not m_promise.m_data_ready.exchange(false)) {
+                //    std::println("yielding ..............");
+                //    std::this_thread::yield();
+                //}
 
                 //while (true) {
                 //    std::cout << "yielding .............." << std::endl;
@@ -153,7 +209,7 @@ public:
             // This requires that coroutine's result type provides the co_await unary operator
             value_type&& await_resume() const
             {
-                std::cout << "> await_resume" << std::endl;
+                std::println("> await_resume");
 
                 return std::move(m_promise.m_data);
             }
@@ -184,7 +240,8 @@ public:
     // d-tor: RAII
     ~AudioDataResult() {
         if (m_handle) {
-            FUNC(); 
+            //FUNC();
+            std::println("~AudioDataResult");
             m_handle.destroy();
         } 
     }
@@ -192,7 +249,8 @@ public:
     // For resuming the producer - at the point when the data are consumed
     void resume() {
         if (not m_handle.done()) {
-            FUNC(); 
+           // FUNC(); 
+            std::println("vor resume");
             m_handle.resume();
         }
     }
@@ -200,7 +258,8 @@ public:
 private:
 
     AudioDataResult() {
-        FUNC();
+        //FUNC();
+        std::print("c'tor AudioDataResult");
     }
 
     AudioDataResult(Handle handle) noexcept 
@@ -217,7 +276,8 @@ static AudioDataResult producer(DataType& data)
 {
     for (int i = 1; i != 5; ++i) {
 
-        FUNC();
+        //FUNC();
+        std::print("producer: push_back");
         data.push_back(i);
 
         std::cout << "producer: vor co_yield:" << std::endl;
@@ -236,7 +296,7 @@ static AudioDataResult consumer(AudioDataResult& audioDataResult)
 {
     for (;;)
     {
-        FUNC();
+        //FUNC();
 
         std::cout << "consumer: vor co_await:" << std::endl;;
         const auto& data = co_await audioDataResult;
@@ -264,11 +324,11 @@ void coroutines_10()
 
         auto audioDataProducer = producer(data);
         
-        std::thread t([&] {auto audioRecorded = consumer(audioDataProducer); });
+        std::thread t([&] () {auto audioRecorded = consumer(audioDataProducer); });
         t.join();
     }
 
-    std::cout << "Done" << std::endl;
+    std::print("Done.");
 }
 
 // ===========================================================================

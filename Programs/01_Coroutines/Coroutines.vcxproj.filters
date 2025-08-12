@@ -80,13 +80,13 @@
     <ClCompile Include="Coroutines_21_Yield.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines_22_Return.cpp">
+    <ClCompile Include="Coroutines_23_Return.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines_23_Awaiter.cpp">
+    <ClCompile Include="Coroutines_24_Awaiter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Coroutines_30_Skuril.cpp">
+    <ClCompile Include="Coroutines_22_Yield_With_Iterator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
