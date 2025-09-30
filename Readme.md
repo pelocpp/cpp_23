@@ -10,7 +10,7 @@ in den Einstellung des Übersetzers (Microsoft Visual Studio: *Properties* Lasche
 dann weiter unter &ldquo;*General*&rdquo; und hier &ldquo;*C++ Language Standard*&rdquo;)
 die Einstellung *Preview - Features from the Latest C++ Working Draft (/std:c++latest)* auswählt:
 
-<img src="VisualStudioSettings.png" style="padding-left: 10px;" width="600" />
+<img src="./Resources/VisualStudioSettings.png" style="padding-left: 10px;" width="600" />
 
 Abbildung 1: Projekteinstellungen unter Visual Studio 2022.
 
@@ -31,6 +31,6 @@ die bereits fest in den C++ 20 Standard eingeflossen sind.
 
 ---
 
-## [Literatur](Literature.md)
+## [Literatur](./Resources/Literature.md)
 
 ---
