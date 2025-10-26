@@ -22,7 +22,7 @@ int main()
     //coroutines_04();
     //coroutines_05();
     //coroutines_08();
-    coroutines_10();
+    //coroutines_10();
 
     //coroutines_20();
     //coroutines_21();
